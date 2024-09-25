@@ -66,11 +66,10 @@ Fiche Descriptive 3
 
 - **Scénario nominal**: 
 
-1.
-2.
-3.
+1. Le client clique sur la fonctonnalité "Classifier"
+2. Le systéme vérifie les données, affiche un message de confirmation et enregistre les nouvelles données
 
 - **Scénarios alternatifs**:
-    + **A** : /
-    - ?(A) : /
-    - ?(A) : /
+- A l'étape 2, si les données ne sont pas valide
+- 2(A) : Le systéme affiche un message d'erreur informant des données non valide
+- reprend à l'étape 2
