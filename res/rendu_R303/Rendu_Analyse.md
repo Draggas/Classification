@@ -10,9 +10,8 @@ LAMOUR Enzo
 *Expliquez en 2-3 lignes comment vous avez contribué au projet dans son ensemble et plus particulièrement au dossier d'analyse.*
 
 **DE JESUS TEIXEIRA Lucas :**
--
--
--
+J'ai contribué au rendu, dans la réalisation des prototypes et dans les fiches descriptives... *A completer*
+
 
 **RANDOUX Martin :**
 -
@@ -40,8 +39,7 @@ LAMOUR Enzo
 
 ### Prototypes pour l'interface
 
-*Mettre sur ce fichier à la version finale*
-[Lien vers le fichier contenant les prototypes de l'interface](Prototypes_Interface.md)
+[Lien vers les prototypes de l'interface](https://www.figma.com/design/UkQAUDAZHdLqFkSxj90ojb/SAE-H3?node-id=1-3371&t=kHTXrBXVV5nbXf4y-1)
 
 
 ## Diagramme de classes

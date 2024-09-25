@@ -34,18 +34,18 @@ Fiche Descriptive 2
 - **Déclencheur**: /
 - **Autre acteurs**: /
 
-- **Préconditions**:  être sur l’application et avoir des données à ajouter
-- **Garanties en cas de succès**: un nouveau point apparaît sur le graphique
-- **Garanties minimales**: une des valeurs saisie est incorrecte ce qui n’ajoute aucun point
+- **Préconditions**: Le client doit avoir déjà fourni des données et avoir des données à ajouter.
+- **Garanties en cas de succès**: La donnée est enregistré. Le modèle est reconstruit avec cette nouvelle donnée.
+- **Garanties minimales**: Si le scénario ne finit pas, cette donnée ne sera pas enregistré et le modèle restera comme il était.
 
 - **Scénario nominal**: 
 
-1. L’utilisateur saisie les valeurs dans le champ correspondant et appuie sur ajouter
-2. Le système calcul la catégorie de la nouvelle donnée et l’ajoute sur le graphique
+1. L’utilisateur saisie les valeurs dans les champs correspondants et valide sa donnée
+2. Le système enregistre cette nouvelle donnée et classifie cette nouvelle donnée dans une catégorie puis modifie le modèle.
 
 - **Scénarios alternatifs**:
-+ **A** : A l’étape 2, les données saisie par l’utilisateur ne sont pas correcte
-- 2(A) :  Le système avertie l’utilisateur que les données ne sont pas correcte
++ **A** : A l’étape 2, les données saisie par l’utilisateur sont incorrects
+- 2(A) :  Le système averti l’utilisateur en émettant un message d'erreur et lui demande de corriger ses données
 - 3(A) : Retour à l’étape 1
 
 -------------------
