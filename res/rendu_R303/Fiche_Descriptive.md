@@ -14,19 +14,10 @@ Fiche Descriptive 1
 
 - **Scénario nominal**: 
 
-1. L'utilisateur sélectionne la fonctionnalité "faire un don"
-2. L'utilisateur spécifie le projet et la somme qu'il veut donner
-3. Il saisit si il veut profiter de la contrepartie offerte et valide
-4. Le système affiche le formulaire de saisie de paiement
-5. L'utilisateur rentre ses informations de paiement et valide
-6. Le système envoie une requête (ordre de paiement) au service de paiement
-7. Le service de paiement confirme le paiement
-8. Le système enregistre le don et met à jour la cagnotte de ce projet et envoie un message de confirmation à l'utilisateur.
+
 
 - **Scénarios alternatifs**:
-    + **A** : A l'étape 7, le paiement est refusé
-    - 7(A) : Le service de paiement refuse le paiement et affiche un message d'erreur informant que le paiement a été refusé par le service de paiement.
-    - 8(A) : Retour à l'étape 5
+
 
 -------------------
 Fiche Descriptive 2
@@ -39,9 +30,9 @@ Fiche Descriptive 2
 - **Déclencheur**: /
 - **Autre acteurs**: /
 
-- **Préconditions**: /
-- **Garanties en cas de succès**: /
-- **Garanties minimales**: /
+- **Préconditions**: Le client doit avoir déjà fourni des données.
+- **Garanties en cas de succès**: La donnée est enregistré. Le modèle est reconstruit avec cette nouvelle donnée.
+- **Garanties minimales**: Si le scénario ne finit pas, cette donnée ne sera pas enregistré et le modèle restera comme il était.
 
 - **Scénario nominal**: 
 
@@ -59,15 +50,15 @@ Fiche Descriptive 3
 -------------------
 
 - **Système**: Système de visualisation et classification
-- **Cas d'utilisation**: Ajouter une donnée
+- **Cas d'utilisation**: Classifier la donnée non classifiée
 
 - **Acteur principal**: Client
 - **Déclencheur**: /
 - **Autre acteurs**: /
 
-- **Préconditions**: /
-- **Garanties en cas de succès**: /
-- **Garanties minimales**: /
+- **Préconditions**: Avoir ajouté une donnée
+- **Garanties en cas de succès**: Cette donnée a été classifié dans la catégorie la plus probable pour cette donnée.
+- **Garanties minimales**: Aucune catégorie lui convient donc elle est supprimée.
 
 - **Scénario nominal**: 
 
