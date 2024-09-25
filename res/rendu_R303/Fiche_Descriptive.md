@@ -66,8 +66,8 @@ Fiche Descriptive 3
 
 - **Scénario nominal**: 
 
-1. Le client clique sur la fonctonnalité "Classifier"
-2. Le systéme vérifie les données, affiche un message de confirmation et enregistre les nouvelles données
+1. Le client clique sur la fonctionnalité "Classifier"
+2. Le systéme classifie les nouvelles données, affiche les nouvelles données mise en avant avec leur catégorie
 
 - **Scénarios alternatifs**:
 - A l'étape 2, si les données ne sont pas valide
