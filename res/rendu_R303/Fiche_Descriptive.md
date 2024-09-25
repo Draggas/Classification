@@ -13,11 +13,15 @@ Fiche Descriptive 1
 - **Garanties minimales**: Si le scénario ne finit pas, aucune donnée sera enregistré et le modèle restera vide.
 
 - **Scénario nominal**: 
-
-
+1. Le client sélectionne la fonctionnalité "Charger ses données"
+2. Le système lui demande le nom de son fichier CSV
+3. Le client donne le nom du fichier CSV correspondant aux données
+4. Le système enregistre les données en les récupérant dans ce fichier CSV et met à jour le modèle.
 
 - **Scénarios alternatifs**:
-
+    + **A** : A l'étape 4, le fichier n'a pas été trouvé ou n'est pas au bon format.
+    - 4(A) : Le système avertit le client avec un message d'erreur et lui demande de rentrer un nouveau nom.
+    - 5(A) : Retour à l'étape 3
 
 -------------------
 Fiche Descriptive 2
