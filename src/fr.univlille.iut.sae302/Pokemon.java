@@ -1,7 +1,10 @@
 package fr.univlille.iut.sae302;
+import java.io.File;
 import java.time.LocalDate;
 
 public class Pokemon {
+
+    private final String NL = File.separator;
     private String name;
     private int attack;
     private int egg_steps;
@@ -42,23 +45,20 @@ public class Pokemon {
         this.isLegendary = isLegendary;
     }
 
-    public double getScoreNormalise() {
-        return scoreNormalise;
+    public String toString() {
+        String l = "Pokémon ";
+        if(isLegendary) l = l + "Légendaire";
+        return l + NL + "name : " + name + NL +
+                "attack : " + attack + NL +
+                "egg_steps : " + egg_steps + NL +
+                ", capture_rate : " + capture_rate + NL +
+                ", defense : " + defense + NL +
+                ", experience : " + experience + NL +
+                ", hp : " + hp + NL +
+                ", sp_attack : " + sp_attack + NL +
+                ", sp_defense : " + sp_defense + NL +
+                ", type1 : " + type1 + NL +
+                ", type2 : " + type2 + NL +
+                ", speed : " + speed;
     }
-
-    public void setScoreNormalise(double scoreNormalise) {
-        this.scoreNormalise = scoreNormalise;
-    }
-
-    public String toString(){
-        String s = "Pas de souscription";
-        if(souscription) s = "Est souscris";
-        return  "Prénom + Nom : " + prenomNom + NL +
-                "Naissance : " + dateNaissance + NL +
-                "Genre : " + genre.getName() + NL +
-                "Taille : " + taille + NL +
-                "Score : " + scoreNormalise + NL +
-                "Souscription : " + s + NL;
-    }
-
 }

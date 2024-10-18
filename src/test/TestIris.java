@@ -1,6 +1,7 @@
-import java.FormatDonneeBrutIris;
-import java.ChargementDonneesUtilIris;
-import java.Iris;
+import fr.univlille.iut.sae302.Iris;
+import fr.univlille.iut.sae302.ChargementDonneesUtilIris;
+import fr.univlille.iut.sae302.FormatDonneeBrutIris;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.io.*;
@@ -37,7 +38,6 @@ public class TestIris {
         Iris f2 = ChargementDonneesUtilIris.createIris(l.get(2));
         Assertions.assertEquals(m1.toString(), m2.toString());
         Assertions.assertEquals(f1.toString(), f2.toString());
-        // à compléter avec des tests pour vérifier que le chargement s'effectue correctement
     }
 /*
     @Test
