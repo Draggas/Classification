@@ -1,41 +1,49 @@
 # Rendu Analyse
 
 ### Équipe H5
-DE JESUS TEIXEIRA Lucas
-RANDOUX Martin
-WILFART Axel
+DE JESUS TEIXEIRA Lucas\
+RANDOUX Martin\
+WILFART Axel\
 LAMOUR Enzo
 
 ### Organisation du travail
 
 **DE JESUS TEIXEIRA Lucas :**
+
 - Contribution aux prototypes
 - Contribution aux fiches descriptives 1 et 2
 - Contribution à la rédaction du dossier
 
 **RANDOUX Martin :**
+
 - Contribution aux prototypes
 - Contribution aux fiches descriptives 2
 - Contribution au diagramme des classes
 
 **WILFART Axel :**
+
 - Forte Contribution aux prototypes
 - Contribution au diagramme de cas d'utilisation
 - Contribution au diagramme des classes
 
 **LAMOUR Enzo :**
+
 - Contribution aux prototypes
 - Contribution aux fiches descriptives 3
 - Forte Contribution au diagramme des classes
+
+<div style="page-break-after: always"></div>
 
 ## Diagramme de cas d'utilisation
 
 ![Diagramme de cas d'utilisation](diagramme_utilisation.png)
 
+<div style="page-break-after: always"></div>
+
 ## Fiches descriptives
 
 Fiche Descriptive 1
--------------------
+---
 
 - **Système**: Système de visualisation et classification
 - **Cas d'utilisation**: Charger l'ensemble de données
@@ -59,9 +67,10 @@ Fiche Descriptive 1
     - 4(A) : Le système avertit le client avec un message d'erreur.
     - 5(A) : Retour à l'étape 1
 
--------------------
+<div style="page-break-after: always"></div>
+
 Fiche Descriptive 2
--------------------
+---
 
 - **Système**: Système de visualisation et classification
 - **Cas d'utilisation**: Ajouter une donnée
@@ -85,9 +94,10 @@ Fiche Descriptive 2
 - 2(A) :  Le système averti l’utilisateur en émettant un message d'erreur et lui demande de corriger ses valeurs
 - 3(A) : Retour à l’étape 1
 
--------------------
+<div style="page-break-after: always"></div>
+
 Fiche Descriptive 3
--------------------
+---
 
 - **Système**: Système de visualisation et classification
 - **Cas d'utilisation**: Classifier la donnée non classifiée
@@ -110,12 +120,16 @@ Fiche Descriptive 3
 - 2(A) : Le systéme affiche un message d'erreur informant des données non valide
 - reprend à l'étape 2
 
+<div style="page-break-after: always"></div>
+
 ## Prototypes pour l'interface
+---
 
 [Fichier contenant les prototypes de l'interface](Prototype_basse_fidelite.pdf)
 
 [Lien Figma au cas où](https://www.figma.com/design/UkQAUDAZHdLqFkSxj90ojb/SAE-H3?node-id=1-3371&t=kHTXrBXVV5nbXf4y-1)
 
 ## Diagramme de classes
+---
 
 ![Diagramme de classes](diagramme_de_classes.png)
