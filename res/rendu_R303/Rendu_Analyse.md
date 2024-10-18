@@ -7,23 +7,26 @@ WILFART Axel
 LAMOUR Enzo
 
 ### Organisation du travail
-*Expliquez en 2-3 lignes comment vous avez contribué au projet dans son ensemble et plus particulièrement au dossier d'analyse.*
 
 **DE JESUS TEIXEIRA Lucas :**
--Contribution aux prototypes
--Contribution aux fiches descriptives 1 et 2
+- Contribution aux prototypes
+- Contribution aux fiches descriptives 1 et 2
+- Contribution à la rédaction du dossier
 
 **RANDOUX Martin :**
--Contribution aux prototypes
--Contribution aux fiches descriptives 2
+- Contribution aux prototypes
+- Contribution aux fiches descriptives 2
+- Contribution au diagramme des classes
 
 **WILFART Axel :**
--Forte Contribution aux prototypes
--Contribution au diagramme de cas d'utilisation
+- Forte Contribution aux prototypes
+- Contribution au diagramme de cas d'utilisation
+- Contribution au diagramme des classes
 
 **LAMOUR Enzo :**
--Contribution aux prototypes
--Contribution aux fiches descriptives 3
+- Contribution aux prototypes
+- Contribution aux fiches descriptives 3
+- Forte Contribution au diagramme des classes
 
 ## Diagramme de cas d'utilisation
 
