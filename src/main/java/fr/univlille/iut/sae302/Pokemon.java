@@ -1,6 +1,5 @@
 package fr.univlille.iut.sae302;
 import java.io.File;
-import java.time.LocalDate;
 
 public class Pokemon {
 

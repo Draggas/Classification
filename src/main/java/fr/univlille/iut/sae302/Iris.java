@@ -1,7 +1,5 @@
 package fr.univlille.iut.sae302;
 
-import java.time.LocalDate;
-
 public class Iris {
     private static final String NL = System.getProperty("line.separator");
     private double sepal_length;

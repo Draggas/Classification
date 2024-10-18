@@ -1,5 +1,4 @@
 package fr.univlille.iut.sae302;
-import java.time.LocalDate;
 
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvDate;
