@@ -16,7 +16,7 @@ public class ChargementDonneesUtilIris {
     }
 
     public static Iris createIris(FormatDonneeBrutIris d){
-        return new Iris(d.getSepal_length(), d.getSepal_width(), d.getPetal_length(), Double.parseDouble(d.getPetal_width()), d.getVariety());
+        return new Iris(d.getSepal_length(), d.getSepal_width(), d.getPetal_length(), d.getPetal_width(), d.getVariety());
     }
 
     /*

@@ -37,8 +37,9 @@ public class FormatDonneeBrutIris {
         return petal_length;
     }
 
-    public String getPetal_width() {
-        return petal_width;
+    public double getPetal_width() {
+        if (petal_width.charAt(0) == '.') return Double.parseDouble('0'+petal_width);
+        return Double.parseDouble(petal_width);
     }
 
     public String getVariety() {
