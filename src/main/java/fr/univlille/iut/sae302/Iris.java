@@ -2,48 +2,63 @@ package fr.univlille.iut.sae302;
 
 public class Iris {
     private static final String NL = System.getProperty("line.separator");
-    private double sepal_length;
-    private double sepal_width;
-    private double petal_length;
-    private double petal_width;
-    private String variety;
+    private Number sepalLength;
+    private Number sepalWidth;
+    private Number petalLength;
+    private Number petalWidth;
+    private final String variety;
 
-    public Iris(double sepal_length, double sepal_width, double petal_length, double petal_width, String variety) {
-        this.sepal_length = sepal_length;
-        this.sepal_width = sepal_width;
-        this.petal_length = petal_length;
-        this.petal_width = petal_width;
+    public Iris(Number sepalLength, Number sepalWidth, Number petalLength, Number petalWidth, String variety) {
+        this.sepalLength = sepalLength;
+        this.sepalWidth = sepalWidth;
+        this.petalLength = petalLength;
+        this.petalWidth = petalWidth;
         this.variety = variety;
     }
+
+    @Override
     public String toString(){
-        return  "Sepal.length : " + sepal_length + NL +
-                "Sepal.width : " + sepal_width + NL +
-                "Petal.length : " + petal_length + NL +
-                "Petal.width : " + petal_width + NL +
+        return  "Sepal.length : " + sepalLength + NL +
+                "Sepal.width : " + sepalWidth + NL +
+                "Petal.length : " + petalLength + NL +
+                "Petal.width : " + petalWidth + NL +
                 "Variety : " + variety;
     }
 
-    public double getPetalLength() {
-        return petal_length;
+    public Number getPetalLength() {
+        return petalLength;
     }
 
-    public double getPetalXidth() {
-        return petal_width;
+    public Number getPetalWidth() {
+        return petalWidth;
     }
 
-    public double getSepalLength() {
-        return sepal_length;
+    public Number getSepalLength() {
+        return sepalLength;
     }
 
-    public double getSepalWidth() {
-        return sepal_width;
-    }
-
-    public static String getNL() {
-        return NL;
+    public Number getSepalWidth() {
+        return sepalWidth;
     }
 
     public String getVariety() {
         return variety;
     }
+
+    public void setPetalLength(Number petalLength) {
+        this.petalLength = petalLength;
+    }
+
+    public void setPetalWidth(Number petalWidth) {
+        this.petalWidth = petalWidth;
+    }
+
+    public void setSepalLength(Number sepalLength) {
+        this.sepalLength = sepalLength;
+    }
+
+    public void setSepalWidth(Number sepalWidth) {
+        this.sepalWidth = sepalWidth;
+    }
+
 }
