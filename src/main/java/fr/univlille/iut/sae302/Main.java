@@ -15,7 +15,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        //List<FormatDonneeBrutIris> listBrutIris = ChargementDonneesUtilIris.charger("data/iris.csv");
+        List<FormatDonneeBrutIris> listBrutIris = ChargementDonneesUtilIris.charger("data/iris.csv");
         List<Iris> listIris = new ArrayList<>();
 //        for (FormatDonneeBrutIris brut : listBrutIris) {
   //          listIris.add(new Iris(brut.getSepal_length(), brut.getSepal_width(), brut.getPetal_length(), brut.getPetal_width(), brut.getVariety()));
