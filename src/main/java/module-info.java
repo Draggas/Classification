@@ -1,7 +1,7 @@
-module sae302 {
+module sae {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.opencsv;
-    exports fr.univlille.iut.sae302;
-    exports fr.univlille.iut.sae302.utils;
+    requires java.sql;
+    opens fr.univlille.iut.sae302 to java.sql, javafx.graphics,  javafx.controls, com.opencsv, org.apache.commons.lang3;
 }
