@@ -27,7 +27,7 @@ public class Iris {
         return petal_length;
     }
 
-    public double getPetalXidth() {
+    public double getPetalWidth() {
         return petal_width;
     }
 

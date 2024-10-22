@@ -31,7 +31,16 @@ public class Systeme extends Stage implements Observer {
         chart.getData().add(series);
 
         for (Iris iris : irisData) {
-            series.getData().add(new XYChart.Data<>(iris.getSepalLength(), iris.getSepalWidth()));
+            XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(iris.getSepalWidth(), iris.getSepalLength());
+            series.getData().add(dataPoint);
+
+            if (iris.getVariety().equals("Versicolor")) {
+                dataPoint.getNode().setStyle("-fx-background-color: red;");
+            } else if(iris.getVariety().equals("Virginica")) {
+                dataPoint.getNode().setStyle("-fx-background-color: blue;");
+            } else{
+                dataPoint.getNode().setStyle("-fx-background-color: green;");
+            }
         }
 
         HBox separationNuagePoints = new HBox(chart);
