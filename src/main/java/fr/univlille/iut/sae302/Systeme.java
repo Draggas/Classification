@@ -30,6 +30,10 @@ public class Systeme extends Stage implements Observer {
         chart.setLegendVisible(false);
         chart.getData().add(series);
 
+        for (Iris iris : irisData) {
+            series.getData().add(new XYChart.Data<>(iris.getSepalLength(), iris.getSepalWidth()));
+        }
+
         HBox separationNuagePoints = new HBox(chart);
 
         VBox separationBarreNavigation = new VBox(separationNuagePoints);

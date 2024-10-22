@@ -23,4 +23,27 @@ public class Iris {
                 "Variety : " + variety;
     }
 
+    public double getPetalLength() {
+        return petal_length;
+    }
+
+    public double getPetalXidth() {
+        return petal_width;
+    }
+
+    public double getSepalLength() {
+        return sepal_length;
+    }
+
+    public double getSepalWidth() {
+        return sepal_width;
+    }
+
+    public static String getNL() {
+        return NL;
+    }
+
+    public String getVariety() {
+        return variety;
+    }
 }
