@@ -1,7 +1,6 @@
 package fr.univlille.iut.sae302;
 
 import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvDate;
 
 public class FormatDonneeBrutPokemon {
 
@@ -41,11 +40,16 @@ public class FormatDonneeBrutPokemon {
     @CsvBindByName(column = "speed")
     private double speed;
 
-    @CsvBindByName(column = "isLegendary")
-    private OuiNon legendary;
+    @CsvBindByName(column = "is_legendary")
+    private boolean legendary;
 
+    @Override
     public String toString() {
-        return "" + name + ',' + attack + ',' + egg_steps + ',' + capture_rate + ',' + defense + ',' + experience + ',' + hp + ',' + sp_attack + ',' + sp_defense + ',' + type1.getName() + ',' + type2.getName() + ',' + speed + ',' + legendary.getName();
+        String t2 = "";
+        if(type2 != null){
+            t2 = type2.getName() ;
+        }
+        return "" + name + ',' + attack + ',' + egg_steps + ',' + capture_rate + ',' + defense + ',' + experience + ',' + hp + ',' + sp_attack + ',' + sp_defense + ',' + type1.getName() + ',' + t2 + ',' + speed + ',' + legendary;
     }
 
     public String getName() {
@@ -56,11 +60,11 @@ public class FormatDonneeBrutPokemon {
         return attack;
     }
 
-    public int getEgg_steps() {
+    public int getEggSteps() {
         return egg_steps;
     }
 
-    public double getCapture_rate() {
+    public double getCaptureRate() {
         return capture_rate;
     }
 
@@ -76,11 +80,11 @@ public class FormatDonneeBrutPokemon {
         return hp;
     }
 
-    public int getSp_attack() {
+    public int getSpAttack() {
         return sp_attack;
     }
 
-    public int getSp_defense() {
+    public int getSpDefense() {
         return sp_defense;
     }
 
@@ -96,7 +100,10 @@ public class FormatDonneeBrutPokemon {
         return speed;
     }
 
-    public OuiNon getLegendary() {
+    public boolean getLegendary() {
         return legendary;
+    }
+    public void setType2(Type type2) {
+        this.type2 = type2;
     }
 }

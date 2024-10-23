@@ -1,11 +1,11 @@
 package fr.univlille.iut.sae302;
 
-import fr.univlille.iut.sae302.utils.Observable;
-
 import java.util.List;
 
+import fr.univlille.iut.sae302.utils.Observable;
+
 public class Data <E> extends Observable {
-    private List<E> eData;
+    private final List<E> eData;
 
     public Data(List<E> eData) {
         this.eData = eData;
