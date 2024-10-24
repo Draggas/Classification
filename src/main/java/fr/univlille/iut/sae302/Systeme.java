@@ -39,12 +39,37 @@ public class Systeme extends Stage implements Observer {
         chart.setLegendVisible(false);
         chart.getData().add(series);
 
-        for (Iris iris : irisData) {
-            XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(iris.getSepalWidth(), iris.getSepalLength());
-            series.getData().add(dataPoint);
-            dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
-        }
+        ComboBox<String> projectionComboBox = new ComboBox<>();
+        projectionComboBox.getItems().addAll("SepalWidth", "SepalLength", "PetalWidth", "PetalLength");
+        projectionComboBox.setValue("SepalWidth");
 
+        ComboBox<String> projectionComboBox2 = new ComboBox<>();
+        projectionComboBox2.getItems().addAll("SepalWidth", "SepalLength", "PetalWidth", "PetalLength");
+        projectionComboBox2.setValue("SepalLength");
+
+        projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue.equals(projectionComboBox2.getValue())) {
+                projectionComboBox2.setValue(null);
+            }
+        });
+
+        projectionComboBox2.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue.equals(projectionComboBox.getValue())) {
+                projectionComboBox.setValue(null);
+            }
+        });
+
+        Button buttonProjection = new Button("Projection");
+        buttonProjection.setOnAction(e -> {
+            series.getData().clear();
+            String projection = projectionComboBox.getValue();
+            String projection2 = projectionComboBox2.getValue();
+            for (Iris iris : irisData) {
+                XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(projectionIris(projection,iris), projectionIris(projection2,iris));
+                series.getData().add(dataPoint);
+                dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
+            }
+        });
 
         Button buttonIris = new Button("Ajouter un iris");
         buttonIris.setOnAction(event -> {
@@ -52,9 +77,9 @@ public class Systeme extends Stage implements Observer {
             irisStage.initModality(Modality.APPLICATION_MODAL);
             irisStage.setTitle("Ajouter un Iris");
 
-            Label sepalLengthLabel = new Label("Sepal Length:");
+            Label sepalLengthLabel = new Label(projectionComboBox.getValue());
             TextField sepalLengthField = new TextField();
-            Label sepalWidthLabel = new Label("Sepal Width:");
+            Label sepalWidthLabel = new Label(projectionComboBox2.getValue());
             TextField sepalWidthField = new TextField();
             Label varietyLabel = new Label("Variety :");
             ComboBox<String> varietyComboBox = new ComboBox<>();
@@ -95,9 +120,12 @@ public class Systeme extends Stage implements Observer {
             irisStage.setScene(scene);
             irisStage.showAndWait();
         });
-        HBox separationNuagePoints = new HBox(chart);
+        VBox vbox = new VBox(buttonProjection, projectionComboBox, projectionComboBox2, buttonIris);
+        vbox.setSpacing(20);
 
-        VBox separationBarreNavigation = new VBox(buttonIris, separationNuagePoints);
+        HBox separationNuagePoints = new HBox(vbox, chart);
+
+        VBox separationBarreNavigation = new VBox(separationNuagePoints);
 
 
         Scene scene = new Scene(separationBarreNavigation);
@@ -114,6 +142,17 @@ public class Systeme extends Stage implements Observer {
             default -> "-fx-background-color: gray;";
         };
         return  color;
+    }
+
+    private Number projectionIris(String projection, Iris iris) {
+        Number nb = switch (projection){
+            case "SepalWidth" -> iris.getSepalWidth();
+            case "SepalLength" -> iris.getSepalLength();
+            case "PetalWidth" -> iris.getPetalWidth();
+            case "PetalLength" -> iris.getPetalLength();
+            default -> null;
+        };
+        return nb;
     }
 
     @Override
