@@ -1,6 +1,7 @@
 package fr.univlille.iut.sae302;
 import fr.univlille.iut.sae302.utils.Observable;
 import fr.univlille.iut.sae302.utils.Observer;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -38,6 +40,40 @@ public class Systeme extends Stage implements Observer {
         series = new XYChart.Series<>();
         chart.setLegendVisible(false);
         chart.getData().add(series);
+
+        Label labelDefault = new Label("Default");
+        Circle cercleDefault = new Circle();
+        cercleDefault.setFill(Color.GRAY);
+        cercleDefault.setRadius(7.0);
+        HBox legendeDefault = new HBox(cercleDefault, labelDefault);
+        legendeDefault.setSpacing(3);
+
+        Label labelSetosa = new Label("Setosa");
+        Circle cercleSetosa = new Circle();
+        cercleSetosa.setFill(Color.GREEN);
+        cercleSetosa.setRadius(7.0);
+        HBox legendeSetosa = new HBox(cercleSetosa, labelSetosa);
+        legendeSetosa.setSpacing(3);
+
+        Label labelVersicolor = new Label("Versicolor");
+        Circle cercleVersicolor = new Circle();
+        cercleVersicolor.setFill(Color.RED);
+        cercleVersicolor.setRadius(7.0);
+        HBox legendeVersicolor = new HBox(cercleVersicolor, labelVersicolor);
+        legendeVersicolor.setSpacing(3);
+
+        Label labelVirginica = new Label("Virginica");
+        Circle cercleVirginica = new Circle();
+        cercleVirginica.setFill(Color.BLUE);
+        cercleVirginica.setRadius(7.0);
+        HBox legendeVirginica = new HBox(cercleVirginica, labelVirginica);
+        legendeVirginica.setSpacing(3);
+
+        HBox legende = new HBox(legendeDefault, legendeSetosa, legendeVersicolor, legendeVirginica);
+        legende.setSpacing(20);
+        legende.setAlignment(Pos.CENTER);
+
+        VBox nuage = new VBox(chart, legende);
 
         ComboBox<String> projectionComboBox = new ComboBox<>();
         projectionComboBox.getItems().addAll("SepalWidth", "SepalLength", "PetalWidth", "PetalLength");
@@ -123,7 +159,7 @@ public class Systeme extends Stage implements Observer {
         VBox vbox = new VBox(buttonProjection, projectionComboBox, projectionComboBox2, buttonIris);
         vbox.setSpacing(20);
 
-        HBox separationNuagePoints = new HBox(vbox, chart);
+        HBox separationNuagePoints = new HBox(vbox, nuage);
 
         VBox separationBarreNavigation = new VBox(separationNuagePoints);
 
