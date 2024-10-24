@@ -1,6 +1,8 @@
 package fr.univlille.iut.sae302;
 import fr.univlille.iut.sae302.utils.Observable;
 import fr.univlille.iut.sae302.utils.Observer;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -25,46 +27,57 @@ public class Systeme extends Stage implements Observer {
     private XYChart.Series<Number, Number> series;
     private Data<Iris> Data;
 
-
     public Systeme(List<Iris> irisData) {
         this.Data = new Data<>(irisData);
         this.Data.attach(this);
 
         NumberAxis xAxis = new NumberAxis(2.0, 9.0, 1.0);
         NumberAxis yAxis = new NumberAxis(2.0, 9.0, 1.0);
-        xAxis.setLabel("sepal length");
-        yAxis.setLabel("sepal width");
+        xAxis.setLabel(" ");
+        yAxis.setLabel(" ");
         chart = new ScatterChart<>(xAxis, yAxis);
         series = new XYChart.Series<>();
         chart.setLegendVisible(false);
         chart.getData().add(series);
 
         ComboBox<String> projectionComboBox = new ComboBox<>();
-        projectionComboBox.getItems().addAll("SepalWidth", "SepalLength", "PetalWidth", "PetalLength");
-        projectionComboBox.setValue("SepalWidth");
+        projectionComboBox.getItems().addAll(null, "Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
+        projectionComboBox.setValue(null);
 
         ComboBox<String> projectionComboBox2 = new ComboBox<>();
-        projectionComboBox2.getItems().addAll("SepalWidth", "SepalLength", "PetalWidth", "PetalLength");
-        projectionComboBox2.setValue("SepalLength");
+        projectionComboBox2.getItems().addAll(null, "Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
+        projectionComboBox2.setValue(null);
+
+        Button buttonProjection = new Button("Projection");
+        buttonProjection.setDisable(true);
 
         projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue.equals(projectionComboBox2.getValue())) {
-                projectionComboBox2.setValue(null);
+                projectionComboBox2.setValue(oldValue);
             }
         });
 
         projectionComboBox2.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue.equals(projectionComboBox.getValue())) {
-                projectionComboBox.setValue(null);
+                projectionComboBox.setValue(oldValue);
             }
         });
 
-        Button buttonProjection = new Button("Projection");
+        projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+            buttonProjection.setDisable((newValue == null || projectionComboBox2.getValue() == null) || newValue.equals(projectionComboBox2.getValue()));
+        });
+
+        projectionComboBox2.valueProperty().addListener((obs, oldValue, newValue) -> {
+            buttonProjection.setDisable((newValue == null || projectionComboBox.getValue() == null) || newValue.equals(projectionComboBox.getValue()));
+        });
+
         buttonProjection.setOnAction(e -> {
             series.getData().clear();
             String projection = projectionComboBox.getValue();
             String projection2 = projectionComboBox2.getValue();
             for (Iris iris : irisData) {
+                xAxis.setLabel(projectionComboBox.getValue());
+                yAxis.setLabel(projectionComboBox2.getValue());
                 XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(projectionIris(projection,iris), projectionIris(projection2,iris));
                 series.getData().add(dataPoint);
                 dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
@@ -81,6 +94,8 @@ public class Systeme extends Stage implements Observer {
             TextField sepalLengthField = new TextField();
             Label sepalWidthLabel = new Label(projectionComboBox2.getValue());
             TextField sepalWidthField = new TextField();
+            if(projectionComboBox.getValue() == null) sepalLengthLabel.setText("NULL");
+            if(projectionComboBox2.getValue() == null) sepalWidthLabel.setText("NULL");
             Label varietyLabel = new Label("Variety :");
             ComboBox<String> varietyComboBox = new ComboBox<>();
             varietyComboBox.getItems().addAll("Default", "Setosa", "Versicolor", "Virginica");
@@ -122,15 +137,16 @@ public class Systeme extends Stage implements Observer {
         });
         VBox vbox = new VBox(buttonProjection, projectionComboBox, projectionComboBox2, buttonIris);
         vbox.setSpacing(20);
-
+        vbox.setAlignment(Pos.BASELINE_CENTER);
         HBox separationNuagePoints = new HBox(vbox, chart);
 
         VBox separationBarreNavigation = new VBox(separationNuagePoints);
-
+        HBox.setMargin(vbox, new Insets(20));
 
         Scene scene = new Scene(separationBarreNavigation);
         setScene(scene);
         setTitle("Application");
+        this.centerOnScreen();
         show();
     }
 
@@ -146,10 +162,10 @@ public class Systeme extends Stage implements Observer {
 
     private Number projectionIris(String projection, Iris iris) {
         Number nb = switch (projection){
-            case "SepalWidth" -> iris.getSepalWidth();
-            case "SepalLength" -> iris.getSepalLength();
-            case "PetalWidth" -> iris.getPetalWidth();
-            case "PetalLength" -> iris.getPetalLength();
+            case "Sepal Width" -> iris.getSepalWidth();
+            case "Sepal Length" -> iris.getSepalLength();
+            case "Petal Width" -> iris.getPetalWidth();
+            case "Petal Length" -> iris.getPetalLength();
             default -> null;
         };
         return nb;
