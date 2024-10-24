@@ -1,6 +1,9 @@
 package fr.univlille.iut.sae302;
 import fr.univlille.iut.sae302.utils.Observable;
 import fr.univlille.iut.sae302.utils.Observer;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,13 +12,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -30,14 +28,14 @@ public class Systeme extends Stage implements Observer {
     public Systeme(List<Iris> irisData) {
         this.Data = new Data<>(irisData);
         this.Data.attach(this);
-
-        NumberAxis xAxis = new NumberAxis(2.0, 9.0, 1.0);
-        NumberAxis yAxis = new NumberAxis(2.0, 9.0, 1.0);
+        double x = 2.0, y = 9.0;
+        NumberAxis xAxis = new NumberAxis(x, y, 1.0);
+        NumberAxis yAxis = new NumberAxis(x, y, 1.0);
         xAxis.setLabel(" ");
         yAxis.setLabel(" ");
         chart = new ScatterChart<>(xAxis, yAxis);
         series = new XYChart.Series<>();
-        chart.setLegendVisible(false);
+        //chart.setLegendVisible(false);
         chart.getData().add(series);
 
         ComboBox<String> projectionComboBox = new ComboBox<>();
@@ -80,9 +78,20 @@ public class Systeme extends Stage implements Observer {
                 yAxis.setLabel(projectionComboBox2.getValue());
                 XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(projectionIris(projection,iris), projectionIris(projection2,iris));
                 series.getData().add(dataPoint);
-                dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
+                dataPoint.getNode().setStyle(drawIris(iris.getVariety()) + "-fx-background-radius: 5px;");
             }
         });
+        Alert a = new Alert(Alert.AlertType.NONE);
+        EventHandler<ActionEvent> AlertEventInvalidNumbers = e -> {
+            a.setAlertType(Alert.AlertType.ERROR);
+            a.setContentText("Veuillez entrer des nombres valides.");
+            a.show();
+        };
+        EventHandler<ActionEvent> AlertEventInvalidRange = e -> {
+            a.setAlertType(Alert.AlertType.ERROR);
+            a.setContentText("Veuillez entrer des valeurs entre " + x + " et " + y + ".");
+            a.show();
+        };
 
         Button buttonIris = new Button("Ajouter un iris");
         buttonIris.setOnAction(event -> {
@@ -115,7 +124,7 @@ public class Systeme extends Stage implements Observer {
                         dataPoint.getNode().setStyle(drawIris(variety));
                         irisStage.close();
                     } else {
-                        System.out.println("Veuillez entrer des valeurs entre 2.0 et 9.0.");
+                        System.out.println("Veuillez entrer des valeurs entre " + x + " et " + y + ".");
                     }
                 } catch (NumberFormatException e) {
                     System.out.println("Veuillez entrer des nombres valides.");
@@ -131,19 +140,44 @@ public class Systeme extends Stage implements Observer {
             grid.add(varietyComboBox, 1, 2);
             grid.add(buttonAdd, 0, 3);
 
+            GridPane.setMargin(sepalLengthLabel, new Insets(20, 5, 5, 20));
+            GridPane.setMargin(sepalLengthField, new Insets(20, 20, 5, 5));
+            GridPane.setMargin(sepalWidthLabel, new Insets(5, 5, 10, 20));
+            GridPane.setMargin(sepalWidthField, new Insets(5, 20, 10, 5));
+            GridPane.setMargin(varietyLabel, new Insets(10, 5, 10, 20));
+            GridPane.setMargin(varietyComboBox, new Insets(10, 20, 10, 5));
+            GridPane.setMargin(buttonAdd, new Insets(20, 0, 20, 20));
+
             Scene scene = new Scene(grid);
             irisStage.setScene(scene);
             irisStage.showAndWait();
         });
-        VBox vbox = new VBox(buttonProjection, projectionComboBox, projectionComboBox2, buttonIris);
-        vbox.setSpacing(20);
-        vbox.setAlignment(Pos.BASELINE_CENTER);
-        HBox separationNuagePoints = new HBox(vbox, chart);
 
-        VBox separationBarreNavigation = new VBox(separationNuagePoints);
-        HBox.setMargin(vbox, new Insets(20));
+        VBox leftPane = new VBox(10);
+        leftPane.setPadding(new Insets(20));
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+        leftPane.getChildren().addAll(projectionComboBox, spacer, buttonProjection, buttonIris);
+        leftPane.setAlignment(Pos.TOP_LEFT);
 
-        Scene scene = new Scene(separationBarreNavigation);
+        HBox bottomPane = new HBox();
+        bottomPane.setPadding(new Insets(20));
+        bottomPane.setAlignment(Pos.CENTER);
+        bottomPane.getChildren().add(projectionComboBox2);
+
+        BorderPane root = new BorderPane();
+        root.setLeft(leftPane);
+        root.setCenter(chart);
+        root.setBottom(bottomPane);
+
+        leftPane.setPrefWidth(150);
+        buttonProjection.setMaxWidth(leftPane.getPrefWidth());
+        buttonIris.setMaxWidth(leftPane.getPrefWidth());
+        projectionComboBox.setMaxWidth(leftPane.getPrefWidth());
+        projectionComboBox2.setMaxWidth(leftPane.getPrefWidth());
+        HBox.setMargin(projectionComboBox, new Insets(0, 0, 200, 0));
+        
+        Scene scene = new Scene(root);
         setScene(scene);
         setTitle("Application");
         this.centerOnScreen();
@@ -157,8 +191,10 @@ public class Systeme extends Stage implements Observer {
             case "Setosa" -> "-fx-background-color: green;";
             default -> "-fx-background-color: gray;";
         };
-        return  color;
+        String size = "-fx-background-radius: 7px; -fx-padding: 3.75px;"; // Size
+        return color + size;
     }
+
 
     private Number projectionIris(String projection, Iris iris) {
         Number nb = switch (projection){
@@ -170,6 +206,7 @@ public class Systeme extends Stage implements Observer {
         };
         return nb;
     }
+
 
     @Override
     public void update(Observable observable) {
