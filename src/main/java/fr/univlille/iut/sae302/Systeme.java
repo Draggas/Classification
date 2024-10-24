@@ -3,27 +3,25 @@ import fr.univlille.iut.sae302.utils.Observable;
 import fr.univlille.iut.sae302.utils.Observer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.List;
 
 public class Systeme extends Stage implements Observer {
-    private ScatterChart<Number, Number> chart;
-    private XYChart.Series<Number, Number> series;
-    private Data<Iris> Data;
+    private final ScatterChart<Number, Number> chart;
+    private final XYChart.Series<Number, Number> series;
+    private final Data<Iris> Data;
 
     public Systeme(List<Iris> irisData) {
         this.Data = new Data<>(irisData);
@@ -35,8 +33,42 @@ public class Systeme extends Stage implements Observer {
         yAxis.setLabel(" ");
         chart = new ScatterChart<>(xAxis, yAxis);
         series = new XYChart.Series<>();
-        //chart.setLegendVisible(false);
+        chart.setLegendVisible(false);
         chart.getData().add(series);
+
+        Label labelDefault = new Label("Default");
+        Circle cercleDefault = new Circle();
+        cercleDefault.setFill(Color.GRAY);
+        cercleDefault.setRadius(7.0);
+        HBox legendeDefault = new HBox(cercleDefault, labelDefault);
+        legendeDefault.setSpacing(3);
+
+        Label labelSetosa = new Label("Setosa");
+        Circle cercleSetosa = new Circle();
+        cercleSetosa.setFill(Color.GREEN);
+        cercleSetosa.setRadius(7.0);
+        HBox legendeSetosa = new HBox(cercleSetosa, labelSetosa);
+        legendeSetosa.setSpacing(3);
+
+        Label labelVersicolor = new Label("Versicolor");
+        Circle cercleVersicolor = new Circle();
+        cercleVersicolor.setFill(Color.RED);
+        cercleVersicolor.setRadius(7.0);
+        HBox legendeVersicolor = new HBox(cercleVersicolor, labelVersicolor);
+        legendeVersicolor.setSpacing(3);
+
+        Label labelVirginica = new Label("Virginica");
+        Circle cercleVirginica = new Circle();
+        cercleVirginica.setFill(Color.BLUE);
+        cercleVirginica.setRadius(7.0);
+        HBox legendeVirginica = new HBox(cercleVirginica, labelVirginica);
+        legendeVirginica.setSpacing(3);
+
+        HBox legende = new HBox(legendeDefault, legendeSetosa, legendeVersicolor, legendeVirginica);
+        legende.setSpacing(20);
+        legende.setAlignment(Pos.CENTER);
+
+        VBox nuage = new VBox(chart, legende);
 
         ComboBox<String> projectionComboBox = new ComboBox<>();
         projectionComboBox.getItems().addAll(null, "Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
@@ -157,17 +189,17 @@ public class Systeme extends Stage implements Observer {
         leftPane.setPadding(new Insets(20));
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
-        leftPane.getChildren().addAll(projectionComboBox, spacer, buttonProjection, buttonIris);
+        leftPane.getChildren().addAll(projectionComboBox2, spacer, buttonProjection, buttonIris);
         leftPane.setAlignment(Pos.TOP_LEFT);
 
         HBox bottomPane = new HBox();
         bottomPane.setPadding(new Insets(20));
         bottomPane.setAlignment(Pos.CENTER);
-        bottomPane.getChildren().add(projectionComboBox2);
+        bottomPane.getChildren().add(projectionComboBox);
 
         BorderPane root = new BorderPane();
         root.setLeft(leftPane);
-        root.setCenter(chart);
+        root.setCenter(nuage);
         root.setBottom(bottomPane);
 
         leftPane.setPrefWidth(150);
@@ -175,8 +207,8 @@ public class Systeme extends Stage implements Observer {
         buttonIris.setMaxWidth(leftPane.getPrefWidth());
         projectionComboBox.setMaxWidth(leftPane.getPrefWidth());
         projectionComboBox2.setMaxWidth(leftPane.getPrefWidth());
-        HBox.setMargin(projectionComboBox, new Insets(0, 0, 200, 0));
-        
+        HBox.setMargin(projectionComboBox2, new Insets(0, 0, 200, 0));
+
         Scene scene = new Scene(root);
         setScene(scene);
         setTitle("Application");
@@ -195,18 +227,15 @@ public class Systeme extends Stage implements Observer {
         return color + size;
     }
 
-
     private Number projectionIris(String projection, Iris iris) {
-        Number nb = switch (projection){
+        return switch (projection){
             case "Sepal Width" -> iris.getSepalWidth();
             case "Sepal Length" -> iris.getSepalLength();
             case "Petal Width" -> iris.getPetalWidth();
             case "Petal Length" -> iris.getPetalLength();
             default -> null;
         };
-        return nb;
     }
-
 
     @Override
     public void update(Observable observable) {
