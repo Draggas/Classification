@@ -1,20 +1,16 @@
 package fr.univlille.iut.sae302;
 import fr.univlille.iut.sae302.utils.Observable;
 import fr.univlille.iut.sae302.utils.Observer;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
@@ -23,19 +19,18 @@ import javafx.stage.Stage;
 import java.util.List;
 
 public class Systeme extends Stage implements Observer {
-    private ScatterChart<Number, Number> chart;
-    private XYChart.Series<Number, Number> series;
-    private Data<Iris> Data;
-
+    private final ScatterChart<Number, Number> chart;
+    private final XYChart.Series<Number, Number> series;
+    private final Data<Iris> Data;
 
     public Systeme(List<Iris> irisData) {
         this.Data = new Data<>(irisData);
         this.Data.attach(this);
-
-        NumberAxis xAxis = new NumberAxis(2.0, 9.0, 1.0);
-        NumberAxis yAxis = new NumberAxis(2.0, 9.0, 1.0);
-        xAxis.setLabel("sepal length");
-        yAxis.setLabel("sepal width");
+        double x = 2.0, y = 9.0;
+        NumberAxis xAxis = new NumberAxis(x, y, 1.0);
+        NumberAxis yAxis = new NumberAxis(x, y, 1.0);
+        xAxis.setLabel(" ");
+        yAxis.setLabel(" ");
         chart = new ScatterChart<>(xAxis, yAxis);
         series = new XYChart.Series<>();
         chart.setLegendVisible(false);
@@ -76,36 +71,59 @@ public class Systeme extends Stage implements Observer {
         VBox nuage = new VBox(chart, legende);
 
         ComboBox<String> projectionComboBox = new ComboBox<>();
-        projectionComboBox.getItems().addAll("SepalWidth", "SepalLength", "PetalWidth", "PetalLength");
-        projectionComboBox.setValue("SepalWidth");
+        projectionComboBox.getItems().addAll(null, "Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
+        projectionComboBox.setValue(null);
 
         ComboBox<String> projectionComboBox2 = new ComboBox<>();
-        projectionComboBox2.getItems().addAll("SepalWidth", "SepalLength", "PetalWidth", "PetalLength");
-        projectionComboBox2.setValue("SepalLength");
+        projectionComboBox2.getItems().addAll(null, "Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
+        projectionComboBox2.setValue(null);
+
+        Button buttonProjection = new Button("Projection");
+        buttonProjection.setDisable(true);
 
         projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue.equals(projectionComboBox2.getValue())) {
-                projectionComboBox2.setValue(null);
+                projectionComboBox2.setValue(oldValue);
             }
         });
 
         projectionComboBox2.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue.equals(projectionComboBox.getValue())) {
-                projectionComboBox.setValue(null);
+                projectionComboBox.setValue(oldValue);
             }
         });
 
-        Button buttonProjection = new Button("Projection");
+        projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+            buttonProjection.setDisable((newValue == null || projectionComboBox2.getValue() == null) || newValue.equals(projectionComboBox2.getValue()));
+        });
+
+        projectionComboBox2.valueProperty().addListener((obs, oldValue, newValue) -> {
+            buttonProjection.setDisable((newValue == null || projectionComboBox.getValue() == null) || newValue.equals(projectionComboBox.getValue()));
+        });
+
         buttonProjection.setOnAction(e -> {
             series.getData().clear();
             String projection = projectionComboBox.getValue();
             String projection2 = projectionComboBox2.getValue();
             for (Iris iris : irisData) {
+                xAxis.setLabel(projectionComboBox.getValue());
+                yAxis.setLabel(projectionComboBox2.getValue());
                 XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(projectionIris(projection,iris), projectionIris(projection2,iris));
                 series.getData().add(dataPoint);
-                dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
+                dataPoint.getNode().setStyle(drawIris(iris.getVariety()) + "-fx-background-radius: 5px;");
             }
         });
+        Alert a = new Alert(Alert.AlertType.NONE);
+        EventHandler<ActionEvent> AlertEventInvalidNumbers = e -> {
+            a.setAlertType(Alert.AlertType.ERROR);
+            a.setContentText("Veuillez entrer des nombres valides.");
+            a.show();
+        };
+        EventHandler<ActionEvent> AlertEventInvalidRange = e -> {
+            a.setAlertType(Alert.AlertType.ERROR);
+            a.setContentText("Veuillez entrer des valeurs entre " + x + " et " + y + ".");
+            a.show();
+        };
 
         Button buttonIris = new Button("Ajouter un iris");
         buttonIris.setOnAction(event -> {
@@ -117,6 +135,8 @@ public class Systeme extends Stage implements Observer {
             TextField sepalLengthField = new TextField();
             Label sepalWidthLabel = new Label(projectionComboBox2.getValue());
             TextField sepalWidthField = new TextField();
+            if(projectionComboBox.getValue() == null) sepalLengthLabel.setText("NULL");
+            if(projectionComboBox2.getValue() == null) sepalWidthLabel.setText("NULL");
             Label varietyLabel = new Label("Variety :");
             ComboBox<String> varietyComboBox = new ComboBox<>();
             varietyComboBox.getItems().addAll("Default", "Setosa", "Versicolor", "Virginica");
@@ -136,7 +156,7 @@ public class Systeme extends Stage implements Observer {
                         dataPoint.getNode().setStyle(drawIris(variety));
                         irisStage.close();
                     } else {
-                        System.out.println("Veuillez entrer des valeurs entre 2.0 et 9.0.");
+                        System.out.println("Veuillez entrer des valeurs entre " + x + " et " + y + ".");
                     }
                 } catch (NumberFormatException e) {
                     System.out.println("Veuillez entrer des nombres valides.");
@@ -152,21 +172,47 @@ public class Systeme extends Stage implements Observer {
             grid.add(varietyComboBox, 1, 2);
             grid.add(buttonAdd, 0, 3);
 
+            GridPane.setMargin(sepalLengthLabel, new Insets(20, 5, 5, 20));
+            GridPane.setMargin(sepalLengthField, new Insets(20, 20, 5, 5));
+            GridPane.setMargin(sepalWidthLabel, new Insets(5, 5, 10, 20));
+            GridPane.setMargin(sepalWidthField, new Insets(5, 20, 10, 5));
+            GridPane.setMargin(varietyLabel, new Insets(10, 5, 10, 20));
+            GridPane.setMargin(varietyComboBox, new Insets(10, 20, 10, 5));
+            GridPane.setMargin(buttonAdd, new Insets(20, 0, 20, 20));
+
             Scene scene = new Scene(grid);
             irisStage.setScene(scene);
             irisStage.showAndWait();
         });
-        VBox vbox = new VBox(buttonProjection, projectionComboBox, projectionComboBox2, buttonIris);
-        vbox.setSpacing(20);
 
-        HBox separationNuagePoints = new HBox(vbox, nuage);
+        VBox leftPane = new VBox(10);
+        leftPane.setPadding(new Insets(20));
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+        leftPane.getChildren().addAll(projectionComboBox2, spacer, buttonProjection, buttonIris);
+        leftPane.setAlignment(Pos.TOP_LEFT);
 
-        VBox separationBarreNavigation = new VBox(separationNuagePoints);
+        HBox bottomPane = new HBox();
+        bottomPane.setPadding(new Insets(20));
+        bottomPane.setAlignment(Pos.CENTER);
+        bottomPane.getChildren().add(projectionComboBox);
 
+        BorderPane root = new BorderPane();
+        root.setLeft(leftPane);
+        root.setCenter(nuage);
+        root.setBottom(bottomPane);
 
-        Scene scene = new Scene(separationBarreNavigation);
+        leftPane.setPrefWidth(150);
+        buttonProjection.setMaxWidth(leftPane.getPrefWidth());
+        buttonIris.setMaxWidth(leftPane.getPrefWidth());
+        projectionComboBox.setMaxWidth(leftPane.getPrefWidth());
+        projectionComboBox2.setMaxWidth(leftPane.getPrefWidth());
+        HBox.setMargin(projectionComboBox2, new Insets(0, 0, 200, 0));
+
+        Scene scene = new Scene(root);
         setScene(scene);
         setTitle("Application");
+        this.centerOnScreen();
         show();
     }
 
@@ -177,18 +223,18 @@ public class Systeme extends Stage implements Observer {
             case "Setosa" -> "-fx-background-color: green;";
             default -> "-fx-background-color: gray;";
         };
-        return  color;
+        String size = "-fx-background-radius: 7px; -fx-padding: 3.75px;"; // Size
+        return color + size;
     }
 
     private Number projectionIris(String projection, Iris iris) {
-        Number nb = switch (projection){
-            case "SepalWidth" -> iris.getSepalWidth();
-            case "SepalLength" -> iris.getSepalLength();
-            case "PetalWidth" -> iris.getPetalWidth();
-            case "PetalLength" -> iris.getPetalLength();
+        return switch (projection){
+            case "Sepal Width" -> iris.getSepalWidth();
+            case "Sepal Length" -> iris.getSepalLength();
+            case "Petal Width" -> iris.getPetalWidth();
+            case "Petal Length" -> iris.getPetalLength();
             default -> null;
         };
-        return nb;
     }
 
     @Override
