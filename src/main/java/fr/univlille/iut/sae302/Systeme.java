@@ -8,11 +8,13 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -40,14 +42,7 @@ public class Systeme extends Stage implements Observer {
         for (Iris iris : irisData) {
             XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(iris.getSepalWidth(), iris.getSepalLength());
             series.getData().add(dataPoint);
-
-            if (iris.getVariety().equals("Versicolor")) {
-                dataPoint.getNode().setStyle("-fx-background-color: red;");
-            } else if (iris.getVariety().equals("Virginica")) {
-                dataPoint.getNode().setStyle("-fx-background-color: blue;");
-            } else {
-                dataPoint.getNode().setStyle("-fx-background-color: green;");
-            }
+            dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
         }
 
 
@@ -61,18 +56,23 @@ public class Systeme extends Stage implements Observer {
             TextField sepalLengthField = new TextField();
             Label sepalWidthLabel = new Label("Sepal Width:");
             TextField sepalWidthField = new TextField();
+            Label varietyLabel = new Label("Variety :");
+            ComboBox<String> varietyComboBox = new ComboBox<>();
+            varietyComboBox.getItems().addAll("Default", "Setosa", "Versicolor", "Virginica");
+            varietyComboBox.setValue("Default");
 
             Button buttonAdd = new Button("Ajouter");
             buttonAdd.setOnAction(ev -> {
                 try {
                     double sepalLength = Double.parseDouble(sepalLengthField.getText());
                     double sepalWidth = Double.parseDouble(sepalWidthField.getText());
+                    String variety = varietyComboBox.getValue();
 
                     if (sepalLength >= 2.0 && sepalLength <= 9.0 && sepalWidth >= 2.0 && sepalWidth <= 9.0) {
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(sepalLength, sepalWidth);
                         series.getData().add(dataPoint);
 
-                        dataPoint.getNode().setStyle("-fx-background-color: grey;");
+                        dataPoint.getNode().setStyle(drawIris(variety));
                         irisStage.close();
                     } else {
                         System.out.println("Veuillez entrer des valeurs entre 2.0 et 9.0.");
@@ -87,7 +87,9 @@ public class Systeme extends Stage implements Observer {
             grid.add(sepalLengthField, 1, 0);
             grid.add(sepalWidthLabel, 0, 1);
             grid.add(sepalWidthField, 1, 1);
-            grid.add(buttonAdd, 1, 2);
+            grid.add(varietyLabel, 0, 2);
+            grid.add(varietyComboBox, 1, 2);
+            grid.add(buttonAdd, 0, 3);
 
             Scene scene = new Scene(grid);
             irisStage.setScene(scene);
@@ -102,6 +104,16 @@ public class Systeme extends Stage implements Observer {
         setScene(scene);
         setTitle("Application");
         show();
+    }
+
+    private String drawIris(String variety) {
+        String color = switch (variety) {
+            case "Versicolor" -> "-fx-background-color: red;";
+            case "Virginica" -> "-fx-background-color: blue;";
+            case "Setosa" -> "-fx-background-color: green;";
+            default -> "-fx-background-color: gray;";
+        };
+        return  color;
     }
 
     @Override
