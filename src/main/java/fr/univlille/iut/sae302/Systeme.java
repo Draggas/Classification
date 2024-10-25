@@ -71,11 +71,11 @@ public class Systeme extends Stage implements Observer {
         VBox nuage = new VBox(chart, legende);
 
         ComboBox<String> projectionComboBox = new ComboBox<>();
-        projectionComboBox.getItems().addAll(null, "Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
+        projectionComboBox.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
         projectionComboBox.setValue(null);
 
         ComboBox<String> projectionComboBox2 = new ComboBox<>();
-        projectionComboBox2.getItems().addAll(null, "Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
+        projectionComboBox2.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
         projectionComboBox2.setValue(null);
 
         Button buttonProjection = new Button("Projection");
@@ -135,8 +135,8 @@ public class Systeme extends Stage implements Observer {
             TextField sepalLengthField = new TextField();
             Label sepalWidthLabel = new Label(projectionComboBox2.getValue());
             TextField sepalWidthField = new TextField();
-            if(projectionComboBox.getValue() == null) sepalLengthLabel.setText("NULL");
-            if(projectionComboBox2.getValue() == null) sepalWidthLabel.setText("NULL");
+            if(projectionComboBox.getValue() == null) sepalLengthLabel.setText("INDEFINI :");
+            if(projectionComboBox2.getValue() == null) sepalWidthLabel.setText("INDEFINI :");
             Label varietyLabel = new Label("Variety :");
             ComboBox<String> varietyComboBox = new ComboBox<>();
             varietyComboBox.getItems().addAll("Default", "Setosa", "Versicolor", "Virginica");
@@ -149,17 +149,17 @@ public class Systeme extends Stage implements Observer {
                     double sepalWidth = Double.parseDouble(sepalWidthField.getText());
                     String variety = varietyComboBox.getValue();
 
-                    if (sepalLength >= 2.0 && sepalLength <= 9.0 && sepalWidth >= 2.0 && sepalWidth <= 9.0) {
+                    if (sepalLength >= x && sepalLength <= y && sepalWidth >= x && sepalWidth <= y) {
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(sepalLength, sepalWidth);
                         series.getData().add(dataPoint);
 
                         dataPoint.getNode().setStyle(drawIris(variety));
                         irisStage.close();
                     } else {
-                        System.out.println("Veuillez entrer des valeurs entre " + x + " et " + y + ".");
+                        AlertEventInvalidRange.handle(new ActionEvent());
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Veuillez entrer des nombres valides.");
+                    AlertEventInvalidNumbers.handle(new ActionEvent());
                 }
             });
 

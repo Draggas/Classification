@@ -1,11 +1,3 @@
-Issues manquants :
-- L'ajout d'un point doit percuter dans le jeu de données
-- Graphique qui doit être adapté
-- Documentations (Bases) sur les parties importantes
-- Quelques Tests
-
-------------------
-
 # PROJET DE CLASSIFICATION DE DONNÉES
 
 **Réalisé par :**  
