@@ -20,11 +20,13 @@ Projet qui permet de développer un outil de chargement et d'affichage d'un ense
 
 **Voici les étapes pour lancer l'application :**
 
-**Pour Compiler :**  
-<à compléter>
+**Pour Exécuter sur Linux:**  
+`chmod u+x run.sh`  
+`./run.sh`  
+*Si maven est installé dans votre machine, la commande devrait s'éxécuter*
 
-**Pour Exécuter :**  
-<à compléter>
+**Pour Exécuter depuis VSCode :**
+- Lancer run, dans le programme Main.java
 
 **Une fois arrivé sur l'interface, vous pouvez réaliser ses différentes actions :**
 
