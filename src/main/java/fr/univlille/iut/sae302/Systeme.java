@@ -18,11 +18,22 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
+/**
+ * La classe Systeme représente une fenêtre de l'application qui affiche
+ * un graphique de dispersion pour visualiser les données des iris.
+ * Elle permet d'ajouter des iris à la visualisation et d'effectuer des projections 
+ * sur différentes caractéristiques.
+ */
 public class Systeme extends Stage implements Observer {
     private final ScatterChart<Number, Number> chart;
     private final XYChart.Series<Number, Number> series;
     private final Data<Iris> Data;
 
+    /**
+     * Constructeur de la classe Systeme.
+     *
+     * @param irisData La liste des données d'iris à visualiser.
+     */
     public Systeme(List<Iris> irisData) {
         this.Data = new Data<>(irisData);
         this.Data.attach(this);
@@ -71,11 +82,11 @@ public class Systeme extends Stage implements Observer {
         VBox nuage = new VBox(chart, legende);
 
         ComboBox<String> projectionComboBox = new ComboBox<>();
-        projectionComboBox.getItems().addAll(null, "Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
+        projectionComboBox.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
         projectionComboBox.setValue(null);
 
         ComboBox<String> projectionComboBox2 = new ComboBox<>();
-        projectionComboBox2.getItems().addAll(null, "Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
+        projectionComboBox2.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
         projectionComboBox2.setValue(null);
 
         Button buttonProjection = new Button("Projection");
@@ -135,8 +146,8 @@ public class Systeme extends Stage implements Observer {
             TextField sepalLengthField = new TextField();
             Label sepalWidthLabel = new Label(projectionComboBox2.getValue());
             TextField sepalWidthField = new TextField();
-            if(projectionComboBox.getValue() == null) sepalLengthLabel.setText("NULL");
-            if(projectionComboBox2.getValue() == null) sepalWidthLabel.setText("NULL");
+            if(projectionComboBox.getValue() == null) sepalLengthLabel.setText("INDEFINI :");
+            if(projectionComboBox2.getValue() == null) sepalWidthLabel.setText("INDEFINI :");
             Label varietyLabel = new Label("Variety :");
             ComboBox<String> varietyComboBox = new ComboBox<>();
             varietyComboBox.getItems().addAll("Default", "Setosa", "Versicolor", "Virginica");
@@ -149,17 +160,17 @@ public class Systeme extends Stage implements Observer {
                     double sepalWidth = Double.parseDouble(sepalWidthField.getText());
                     String variety = varietyComboBox.getValue();
 
-                    if (sepalLength >= 2.0 && sepalLength <= 9.0 && sepalWidth >= 2.0 && sepalWidth <= 9.0) {
+                    if (sepalLength >= x && sepalLength <= y && sepalWidth >= x && sepalWidth <= y) {
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(sepalLength, sepalWidth);
                         series.getData().add(dataPoint);
 
                         dataPoint.getNode().setStyle(drawIris(variety));
                         irisStage.close();
                     } else {
-                        System.out.println("Veuillez entrer des valeurs entre " + x + " et " + y + ".");
+                        AlertEventInvalidRange.handle(new ActionEvent());
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Veuillez entrer des nombres valides.");
+                    AlertEventInvalidNumbers.handle(new ActionEvent());
                 }
             });
 
@@ -216,6 +227,12 @@ public class Systeme extends Stage implements Observer {
         show();
     }
 
+    /**
+     * Définit la couleur et la taille d'un point de données Iris en fonction de sa variété.
+     *
+     * @param variety La variété de l'iris (Setosa, Versicolor, Virginica ou autre).
+     * @return Une chaîne de caractères représentant les styles CSS pour le point de données.
+     */
     private String drawIris(String variety) {
         String color = switch (variety) {
             case "Versicolor" -> "-fx-background-color: red;";
@@ -227,6 +244,13 @@ public class Systeme extends Stage implements Observer {
         return color + size;
     }
 
+    /**
+     * Projette les valeurs d'un iris en fonction d'une caractéristique sélectionnée.
+     *
+     * @param projection La caractéristique à projeter (largeur ou longueur des sépales ou pétales).
+     * @param iris L'objet Iris dont on souhaite obtenir la valeur pour la projection.
+     * @return La valeur de la caractéristique sélectionnée pour l'iris, ou null si la projection est invalide.
+     */
     private Number projectionIris(String projection, Iris iris) {
         return switch (projection){
             case "Sepal Width" -> iris.getSepalWidth();
@@ -237,11 +261,22 @@ public class Systeme extends Stage implements Observer {
         };
     }
 
+    /**
+     * Met à jour l'observateur lorsque l'observable notifie un changement.
+     *
+     * @param observable L'objet observable qui a changé.
+     */
     @Override
     public void update(Observable observable) {
 
     }
 
+    /**
+     * Met à jour l'observateur avec des données spécifiques fournies par l'observable.
+     *
+     * @param observable L'objet observable qui a changé.
+     * @param data Les données spécifiques associées à l'événement de mise à jour.
+     */
     @Override
     public void update(Observable observable, Object data) {
 
