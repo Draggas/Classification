@@ -8,8 +8,22 @@ import java.util.List;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
+/**
+ * Cette classe permet de charger un fichier de donnée.
+ * Elle permet aussi de simplifier la création de la classe {@code Iris}.
+ * Pour préparer le Jalon2, elle prends en compte aussi {@code Pokemon} et permet de normaliser les données.
+ * @param <T> Le type de donnée géré par cette classe.
+ */
 public class ChargementDonneesUtil<T> {
 
+    /**
+     * Charge un fichier CSV d'un certain type de donnée brut
+     * 
+     * @param fileName Chemin vers le fichier CSV.
+     * @param type Type des données du fichier CSV.
+     * @return Une Liste de Données Brut du type de ce fichier CSV
+     * @throws IOException Si le fichier n'est pas récupéré ou le parse ne marche pas.
+     */
     public static <T> List<T> charger(String fileName, Class<T> type) throws IOException {
         return new CsvToBeanBuilder<T>(Files.newBufferedReader(Paths.get(fileName)))
                 .withSeparator(',')
@@ -17,10 +31,22 @@ public class ChargementDonneesUtil<T> {
                 .build().parse();
     }
 
+    /**
+     * Crée un nouvel Objet {@code Iris} à partir des données brutes fournies.
+     * 
+     * @param d L'objet {@code FormatDonneeBrutIris} contenant les données brutes de l'Iris.
+     * @return Un nouvel objet {@code Iris} initialisé avec les attributs fournis par les données brutes.
+     */
     public static Iris createIris(FormatDonneeBrutIris d) {
         return new Iris(d.getSepal_length(), d.getSepal_width(), d.getPetal_length(), d.getPetal_width(), d.getVariety());
     }
 
+    /**
+     * Crée un nouvel Objet {@code Pokemon}  à partir des données brutes fournies.
+     * 
+     * @param d L'objet {@code FormatDonneeBrutPokemon} contenant les données brutes du Pokémon.
+     * @return Un nouvel objet {@code Pokemon} initialisé avec les attributs fournis par les données brutes.
+     */
     public static Pokemon createPokemon(FormatDonneeBrutPokemon d) {
         if (d.getType2() == null) {
             d.setType2(Type.none);
@@ -28,10 +54,27 @@ public class ChargementDonneesUtil<T> {
         return new Pokemon(d.getName(), d.getAttack(), d.getEggSteps(), d.getCaptureRate(), d.getDefense(), d.getExperience(), d.getHp(), d.getSpAttack(), d.getSpDefense(), d.getType1(), d.getType2(), d.getSpeed(), d.getLegendary());
     }
 
+    /**
+     * Normalise une valeur en fonction d'une plage donnée.
+     * La normalisation ramène la valeur dans une échelle allant de 0 à 1.
+     * 
+     * @param valeur La valeur à normaliser.
+     * @param min La valeur minimale de la plage.
+     * @param max La valeur maximale de la plage.
+     * @return La valeur normalisée entre 0 et 1.
+     */
     public static double normaliserValeur(double valeur, double min, double max){
         return ((valeur-min)/(max-min));
     }
 
+    /**
+     * Normalise les attributs des fleurs d'Iris à partir d'une liste de données brutes.
+     * La normalisation ramène les longueurs et largeurs des sépales et pétales dans une échelle allant de 0 à 1
+     * en fonction des valeurs minimales et maximales trouvées dans les données brutes.
+     * 
+     * @param donnees Une liste de données brutes contenant les attributs des fleurs d'Iris.
+     * @return Une liste d'objets {@code Iris} avec les attributs normalisés.
+     */ 
     public static List<Iris> normaliserIris(List<FormatDonneeBrutIris> donnees) {
         List<Iris> irisList = new ArrayList<>();
         
@@ -62,6 +105,14 @@ public class ChargementDonneesUtil<T> {
         return irisList;
     }
 
+    /**
+     * Normalise les attributs des pokémons à partir d'une liste de données brutes.
+     * La normalisation ramène les valeurs dans une échelle allant de 0 à 1
+     * en fonction des valeurs minimales et maximales trouvées dans les données brutes.
+     * 
+     * @param donnees Une liste de données brutes contenant les attributs des pokémons.
+     * @return Une liste d'objets {@code Pokemon} avec les attributs normalisés.
+     */ 
     public static List<Pokemon> normaliserPokemon(List<FormatDonneeBrutPokemon> donnees) {
         List<Pokemon> pokemonList = new ArrayList<>();
         
@@ -75,7 +126,6 @@ public class ChargementDonneesUtil<T> {
         double minSpDefense = Double.MAX_VALUE, maxSpDefense = Double.MIN_VALUE;
         double minSpeed = Double.MAX_VALUE, maxSpeed = Double.MIN_VALUE;
         
-        // Parcourir les données brutes et trouver les min/max pour chaque attribut
         for (FormatDonneeBrutPokemon f : donnees) {
             minAttack = Math.min(minAttack, f.getAttack());
             maxAttack = Math.max(maxAttack, f.getAttack());
@@ -96,11 +146,9 @@ public class ChargementDonneesUtil<T> {
             minSpeed = Math.min(minSpeed, f.getSpeed());
             maxSpeed = Math.max(maxSpeed, f.getSpeed());
             
-            // Ajouter le Pokémon à la liste
             pokemonList.add(createPokemon(f));
         }
-    
-        // Normaliser les valeurs des Pokémon
+
         for (Pokemon pokemon : pokemonList) {
             pokemon.setAttack(normaliserValeur(pokemon.getAttack().doubleValue(), minAttack, maxAttack));
             pokemon.setEggSteps(normaliserValeur(pokemon.getEggSteps().doubleValue(), minEggSteps, maxEggSteps));

@@ -39,3 +39,5 @@ Projet qui permet de développer un outil de chargement et d'affichage d'un ense
 ![Image ajouter un point de l'appli](res/ReadME/Ajouter.png)
 
 **C'est tout, pour le Jalon 1 de la SAE.**
+
+*Sinon, pour nous, aucune issue demandée n'est manquante, et les javadocs seront générés pour le Jalon2.*

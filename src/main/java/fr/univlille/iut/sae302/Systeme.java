@@ -18,11 +18,22 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
+/**
+ * La classe Systeme représente une fenêtre de l'application qui affiche
+ * un graphique de dispersion pour visualiser les données des iris.
+ * Elle permet d'ajouter des iris à la visualisation et d'effectuer des projections 
+ * sur différentes caractéristiques.
+ */
 public class Systeme extends Stage implements Observer {
     private final ScatterChart<Number, Number> chart;
     private final XYChart.Series<Number, Number> series;
     private final Data<Iris> Data;
 
+    /**
+     * Constructeur de la classe Systeme.
+     *
+     * @param irisData La liste des données d'iris à visualiser.
+     */
     public Systeme(List<Iris> irisData) {
         this.Data = new Data<>(irisData);
         this.Data.attach(this);
@@ -216,6 +227,12 @@ public class Systeme extends Stage implements Observer {
         show();
     }
 
+    /**
+     * Définit la couleur et la taille d'un point de données Iris en fonction de sa variété.
+     *
+     * @param variety La variété de l'iris (Setosa, Versicolor, Virginica ou autre).
+     * @return Une chaîne de caractères représentant les styles CSS pour le point de données.
+     */
     private String drawIris(String variety) {
         String color = switch (variety) {
             case "Versicolor" -> "-fx-background-color: red;";
@@ -227,6 +244,13 @@ public class Systeme extends Stage implements Observer {
         return color + size;
     }
 
+    /**
+     * Projette les valeurs d'un iris en fonction d'une caractéristique sélectionnée.
+     *
+     * @param projection La caractéristique à projeter (largeur ou longueur des sépales ou pétales).
+     * @param iris L'objet Iris dont on souhaite obtenir la valeur pour la projection.
+     * @return La valeur de la caractéristique sélectionnée pour l'iris, ou null si la projection est invalide.
+     */
     private Number projectionIris(String projection, Iris iris) {
         return switch (projection){
             case "Sepal Width" -> iris.getSepalWidth();
@@ -237,11 +261,22 @@ public class Systeme extends Stage implements Observer {
         };
     }
 
+    /**
+     * Met à jour l'observateur lorsque l'observable notifie un changement.
+     *
+     * @param observable L'objet observable qui a changé.
+     */
     @Override
     public void update(Observable observable) {
 
     }
 
+    /**
+     * Met à jour l'observateur avec des données spécifiques fournies par l'observable.
+     *
+     * @param observable L'objet observable qui a changé.
+     * @param data Les données spécifiques associées à l'événement de mise à jour.
+     */
     @Override
     public void update(Observable observable, Object data) {
 
