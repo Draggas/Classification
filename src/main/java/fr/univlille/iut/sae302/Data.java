@@ -5,7 +5,7 @@ import java.util.List;
 import fr.univlille.iut.sae302.utils.Observable;
 
 public class Data <E> extends Observable {
-    private final List<E> eData;
+    private List<E> eData;
 
     public Data(List<E> eData) {
         this.eData = eData;
@@ -13,5 +13,9 @@ public class Data <E> extends Observable {
 
     public List<E> getEData() {
         return eData;
+    }
+
+    public boolean isEmpty() {
+        return eData.isEmpty();
     }
 }
