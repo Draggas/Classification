@@ -5,7 +5,7 @@ package fr.univlille.iut.sae302;
  * (longueur et largeur des sépales et pétales) ainsi que la variété de l'Iris.
  */
 public class Iris {
-    private static final String NL = System.getProperty("line.separator");
+    private static final String NL = System.lineSeparator();
     private Number sepalLength;
     private Number sepalWidth;
     private Number petalLength;
