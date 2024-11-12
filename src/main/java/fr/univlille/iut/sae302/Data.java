@@ -11,7 +11,7 @@ import fr.univlille.iut.sae302.utils.Observable;
  * @param <E> Le type des éléments contenus dans la liste.
  */
 public class Data <E> extends Observable {
-    private final List<E> eData;
+    private List<E> eData;
 
     /**
      * Constructeur qui initialise un nouvel objet Data avec les données fournies.
@@ -29,5 +29,9 @@ public class Data <E> extends Observable {
      */
     public List<E> getEData() {
         return eData;
+    }
+
+    public boolean isEmpty() {
+        return eData.isEmpty();
     }
 }
