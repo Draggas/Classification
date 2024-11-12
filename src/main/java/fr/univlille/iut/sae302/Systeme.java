@@ -1,5 +1,4 @@
 package fr.univlille.iut.sae302;
-import fr.univlille.iut.sae302.utils.DistanceEuclidienneNormalisee;
 import fr.univlille.iut.sae302.utils.Observable;
 import fr.univlille.iut.sae302.utils.Observer;
 import javafx.scene.Scene;
@@ -8,8 +7,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,7 +21,8 @@ import javafx.stage.Stage;
 import java.util.List;
 
 public class Systeme extends Stage implements Observer {
-    private final XYChart.Series<Number, Number> series;
+    private ScatterChart<Number, Number> chart;
+    private XYChart.Series<Number, Number> series;
     private Data<Iris> Data;
 
 
@@ -28,21 +30,11 @@ public class Systeme extends Stage implements Observer {
         this.Data = new Data<>(irisData);
         this.Data.attach(this);
 
-        MethodeKnn knn = new MethodeKnn(Data);
-
-        Iris irisCible = irisData.getFirst();
-
-        DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
-
-        String classePredite = MethodeKnn.classifierIris(3, irisCible, euclidienneCalc);
-
-        Label la = new Label(MethodeKnn.calculerPourcentageReussite(3, euclidienneCalc) + "");
-
         NumberAxis xAxis = new NumberAxis(2.0, 9.0, 1.0);
         NumberAxis yAxis = new NumberAxis(2.0, 9.0, 1.0);
         xAxis.setLabel("sepal length");
         yAxis.setLabel("sepal width");
-        ScatterChart<Number, Number> chart = new ScatterChart<>(xAxis, yAxis);
+        chart = new ScatterChart<>(xAxis, yAxis);
         series = new XYChart.Series<>();
         chart.setLegendVisible(false);
         chart.getData().add(series);
@@ -128,28 +120,10 @@ public class Systeme extends Stage implements Observer {
             irisStage.setScene(scene);
             irisStage.showAndWait();
         });
-
-        Button meilleursDistance = new Button("Meilleurs Distance");
-        meilleursDistance.setOnAction(e -> {
-            Stage plusProcheStage = new Stage();
-            plusProcheStage.initModality(Modality.APPLICATION_MODAL);
-            plusProcheStage.setTitle("Plus proche voisin");
-
-            TextArea terminal = new TextArea();
-            terminal.setEditable(false);
-            
-            GridPane grid = new GridPane();
-            grid.add(terminal, 0, 0);
-
-            Scene scene = new Scene(grid);
-            plusProcheStage.setScene(scene);
-            plusProcheStage.showAndWait();
-        });
-
-        VBox vbox = new VBox(buttonProjection, projectionComboBox, projectionComboBox2, buttonIris, meilleursDistance);
+        VBox vbox = new VBox(buttonProjection, projectionComboBox, projectionComboBox2, buttonIris);
         vbox.setSpacing(20);
 
-        HBox separationNuagePoints = new HBox(vbox, chart, la);
+        HBox separationNuagePoints = new HBox(vbox, chart);
 
         VBox separationBarreNavigation = new VBox(separationNuagePoints);
 
