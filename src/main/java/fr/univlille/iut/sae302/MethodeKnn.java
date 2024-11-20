@@ -78,11 +78,17 @@ public class MethodeKnn {
 
     public static String classifierIris(int k, Iris cible, Distance distance) {
         Iris[] voisins = getKPlusProchesVoisins(k, cible, distance);
+
         Map<String, Integer> voteMap = new HashMap<>();
+        voteMap.put("Setosa", 0);
+        voteMap.put("Versicolor", 0);
+        voteMap.put("Virginica", 0);
+
         for (Iris voisin : voisins) {
             String variete = voisin.getVariety();
-            voteMap.put(variete, voteMap.getOrDefault(variete, 0) + 1);
+            voteMap.put(variete, voteMap.get(variete) + 1);
         }
+
         String classePredite = null;
         int maxVotes = -1;
         for (Map.Entry<String, Integer> entry : voteMap.entrySet()) {
@@ -91,7 +97,7 @@ public class MethodeKnn {
                 classePredite = entry.getKey();
             } else if (entry.getValue() == maxVotes) {
                 if (classePredite == null) {
-                    classePredite = entry.getKey();
+                    classePredite = "Defaut";
                 }
             }
         }

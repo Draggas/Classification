@@ -38,7 +38,7 @@ public class Systeme extends Stage implements Observer {
     public Systeme(List<Iris> irisData) {
         this.Data = new Data<>(irisData);
         this.Data.attach(this);
-        double x = 2.0, y = 9.0;
+        double x = 0.0, y = 9.0;
         NumberAxis xAxis = new NumberAxis(x, y, 1.0);
         NumberAxis yAxis = new NumberAxis(x, y, 1.0);
         xAxis.setLabel(" ");
@@ -50,7 +50,7 @@ public class Systeme extends Stage implements Observer {
 
         MethodeKnn knn = new MethodeKnn(Data);
 
-        Iris irisCible = this.Data.getEData().get(0);
+        Iris irisCible = this.Data.getEData().getFirst();
 
         DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
 
@@ -147,6 +147,7 @@ public class Systeme extends Stage implements Observer {
                 dataPoint.getNode().setStyle(drawIris(iris.getVariety()) + "-fx-background-radius: 5px;");
             }
         });
+
         Alert a = new Alert(Alert.AlertType.NONE);
         EventHandler<ActionEvent> AlertEventInvalidNumbers = e -> {
             a.setAlertType(Alert.AlertType.ERROR);
@@ -172,10 +173,11 @@ public class Systeme extends Stage implements Observer {
             if(projectionComboBox2.getValue() == null) yInputLabel.setText("INDEFINI :");
             Label varietyLabel = new Label("Variety :");
             ComboBox<String> varietyComboBox = new ComboBox<>();
-            varietyComboBox.getItems().addAll("Default", "Setosa", "Versicolor", "Virginica");
-            varietyComboBox.setValue("Default");
+            varietyComboBox.getItems().addAll("Defaut", "Setosa", "Versicolor", "Virginica");
+            varietyComboBox.setValue("Defaut");
 
             Button buttonAdd = new Button("Ajouter");
+
             buttonAdd.setOnAction(ev -> {
                 try {
                     double xNumber = Double.parseDouble(xInput.getText());
@@ -185,14 +187,35 @@ public class Systeme extends Stage implements Observer {
                     if (xNumber >= x && xNumber <= y && yNumber >= x && yNumber <= y) {
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(xNumber, yNumber);
                         Iris tmp = new Iris(0, 0, 0, 0, variety);
-                        setProjectionValue(tmp, projectionComboBox.getValue(), xNumber);
-                        setProjectionValue(tmp, projectionComboBox2.getValue(), yNumber);
+
+                        if(projectionComboBox.getValue().equals("Sepal Width")) tmp.setSepalWidth(xNumber);
+                        if(projectionComboBox2.getValue().equals("Sepal Width")) tmp.setSepalWidth(yNumber);
+
+                        if(projectionComboBox.getValue().equals("Sepal Length")) tmp.setSepalLength(xNumber);
+                        if(projectionComboBox2.getValue().equals("Sepal Length")) tmp.setSepalLength(yNumber);
+
+                        if(projectionComboBox.getValue().equals("Petal Width")) tmp.setPetalWidth(xNumber);
+                        if(projectionComboBox2.getValue().equals("Petal Width")) tmp.setPetalWidth(yNumber);
+
+                        if(projectionComboBox.getValue().equals("Petal Length")) tmp.setPetalLength(xNumber);
+                        if(projectionComboBox2.getValue().equals("Petal Length")) tmp.setPetalLength(yNumber);
+
+                        if(tmp.getVariety().equals("Defaut")){
+                            tmp.setVariety(MethodeKnn.classifierIris(5, tmp, euclidienneCalc));
+                        }
+
+                        //setProjectionValue(tmp, projectionComboBox.getValue(), xNumber);
+                        //setProjectionValue(tmp, projectionComboBox2.getValue(), yNumber);
                         irisData.add(tmp);
                         this.Data = new Data<>(irisData);
                         this.Data.attach(this);
                         series.getData().add(dataPoint);
-                        dataPoint.getNode().setStyle(drawIris(variety));
-                        irisStage.close();
+                        try {
+                            buttonProjection.fire();
+                            irisStage.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         AlertEventInvalidRange.handle(new ActionEvent());
                     }
