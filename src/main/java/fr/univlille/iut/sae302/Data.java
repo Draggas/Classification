@@ -35,4 +35,25 @@ public class Data <E> extends Observable {
     public boolean isEmpty() {
         return eData.isEmpty();
     }
+
+    public double getMaxData(String projection){
+        double max = 0;
+        for (E data: eData) {
+            if (data instanceof Iris iris && iris.getValue(projection).doubleValue() > max){
+                max = iris.getValue(projection).doubleValue();
+            }
+        }
+        return max;
+    }
+
+    public double getMinData(String projection){
+        double min = 100;
+        for (E data: eData) {
+            if (data instanceof Iris iris && iris.getValue(projection).doubleValue() < min){
+                min = iris.getValue(projection).doubleValue();
+            }
+        }
+        return min;
+    }
+
 }
