@@ -13,6 +13,7 @@ import fr.univlille.iut.sae302.utils.Observable;
 public class Data <E> extends Observable {
     private List<E> eData;
 
+    
     /**
      * Constructeur qui initialise un nouvel objet Data avec les données fournies.
      * 
