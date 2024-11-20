@@ -35,6 +35,8 @@ public class TestData {
         assertEquals(3.0, data.getMaxData("Sepal Width"));
         assertEquals(1.5, data.getMaxData("Petal Length"));
         assertEquals(1.0, data.getMaxData("Petal Width"));
+        assertEquals(0, data.getMaxData(""));
+
     }
 
     @Test
@@ -46,5 +48,6 @@ public class TestData {
         assertEquals(1.3, data.getMinData("Sepal Width"));
         assertEquals(1.4, data.getMinData("Petal Length"));
         assertEquals(1.0, data.getMinData("Petal Width"));
+        assertEquals(0, data.getMinData(""));
     }
 }
