@@ -13,7 +13,7 @@ public class MethodeKnn {
     public static double amplitudeSepalWidth;
 
 
-    MethodeKnn(Data<Iris> datas) {
+    public MethodeKnn(Data<Iris> datas) {
         MethodeKnn.datas = datas;
         calculerAmplitudes();
     }
