@@ -18,6 +18,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * La classe Systeme représente une fenêtre de l'application qui affiche
@@ -29,6 +30,13 @@ public class Systeme extends Stage implements Observer {
     private final ScatterChart<Number, Number> chart;
     private final XYChart.Series<Number, Number> series;
     private Data<Iris> Data;
+    private final ComboBox<String> projectionComboBox;
+    private final ComboBox<String> projectionComboBox2;
+
+    private final double x = 0.0;
+    private final double y = 9.0;
+
+    private boolean isProjectionInProgress = false;
 
     /**
      * Constructeur de la classe Systeme.
@@ -38,7 +46,6 @@ public class Systeme extends Stage implements Observer {
     public Systeme(List<Iris> irisData) {
         this.Data = new Data<>(irisData);
         this.Data.attach(this);
-        double x = 0.0, y = 9.0;
         NumberAxis xAxis = new NumberAxis(x, y, 1.0);
         NumberAxis yAxis = new NumberAxis(x, y, 1.0);
         xAxis.setLabel(" ");
@@ -47,6 +54,11 @@ public class Systeme extends Stage implements Observer {
         series = new XYChart.Series<>();
         chart.setLegendVisible(false);
         chart.getData().add(series);
+
+        TabPane tabPane = new TabPane();
+        Tab initialTab = new Tab("Accueil");
+        initialTab.setContent(chart);
+        tabPane.getTabs().add(initialTab);
 
         Label xAxisLabel = new Label("L'axe X :");
         TextField xAxisMinField = new TextField(String.valueOf(x));
@@ -123,13 +135,13 @@ public class Systeme extends Stage implements Observer {
         legende.setSpacing(20);
         legende.setAlignment(Pos.CENTER);
 
-        VBox nuage = new VBox(chart, legende);
+        VBox nuage = new VBox(tabPane, legende);
 
-        ComboBox<String> projectionComboBox = new ComboBox<>();
+        projectionComboBox = new ComboBox<>();
         projectionComboBox.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
         projectionComboBox.setValue(null);
 
-        ComboBox<String> projectionComboBox2 = new ComboBox<>();
+        projectionComboBox2 = new ComboBox<>();
         projectionComboBox2.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
         projectionComboBox2.setValue(null);
 
@@ -153,7 +165,7 @@ public class Systeme extends Stage implements Observer {
         });
 
         projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if(!(newValue == null || projectionComboBox2.getValue() == null) || newValue.equals(projectionComboBox2.getValue())) {
+            if(!(newValue == null || projectionComboBox2.getValue() == null) || Objects.equals(newValue, projectionComboBox2.getValue())) {
                 buttonProjection.setDisable(false);
                 buttonIris.setDisable(false);
                 buttonMeilleurDistance.setDisable(false);
@@ -161,7 +173,7 @@ public class Systeme extends Stage implements Observer {
         });
 
         projectionComboBox2.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if(!(newValue == null || projectionComboBox.getValue() == null) || newValue.equals(projectionComboBox.getValue())){
+            if(!(newValue == null || projectionComboBox.getValue() == null) || Objects.equals(newValue, projectionComboBox.getValue())){
                 buttonProjection.setDisable(false);
                 buttonIris.setDisable(false);
                 buttonMeilleurDistance.setDisable(false);
@@ -169,26 +181,30 @@ public class Systeme extends Stage implements Observer {
         });
 
         buttonProjection.setOnAction(e -> {
-            series.getData().clear();
-            String projection = projectionComboBox.getValue();
-            String projection2 = projectionComboBox2.getValue();
+            if (isProjectionInProgress) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Projection déjà effectuée");
+                alert.setHeaderText("Une projection est déjà en cours.");
+                alert.setContentText("Voulez-vous écraser la projection actuelle ou ouvrir un nouvel onglet ?");
 
-            for (Iris iris : this.Data.getEData()) {
-                xAxis.setLabel(projectionComboBox.getValue());
-                yAxis.setLabel(projectionComboBox2.getValue());
-                XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(
-                        projectionIris(projection, iris),
-                        projectionIris(projection2, iris)
-                );
-                series.getData().add(dataPoint);
-                dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
-                String tooltipText = String.format(
-                        "X: %.2f\t Y: %.2f\t Variety: %s",
-                        projectionIris(projection, iris),
-                        projectionIris(projection2, iris),
-                        iris.getVariety()
-                );
-                addTooltipToPoint(dataPoint, tooltipText);
+                ButtonType overwriteButton = new ButtonType("Écraser");
+                ButtonType newTabButton = new ButtonType("Nouvel onglet");
+                ButtonType cancelButton = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                alert.getButtonTypes().setAll(overwriteButton, newTabButton, cancelButton);
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == overwriteButton) {
+                        series.getData().clear();
+                        newPerformProjection(series,chart);
+                    } else if (response == newTabButton) {
+                        openNewProjectionTab(tabPane);
+                    }
+                });
+            } else {
+                series.getData().clear();
+                newPerformProjection(series,chart);
+                isProjectionInProgress = true;
             }
         });
 
@@ -256,12 +272,15 @@ public class Systeme extends Stage implements Observer {
                         this.Data = new Data<>(irisData);
                         this.Data.attach(this);
                         series.getData().add(dataPoint);
-                        try {
-                            buttonProjection.fire();
-                            irisStage.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        dataPoint.getNode().setStyle(drawIris(tmp.getVariety()));
+                        String tooltipText = String.format(
+                                "X: %.2f\t Y: %.2f\t Variety: %s",
+                                projectionIris(projectionComboBox.getValue(), tmp),
+                                projectionIris(projectionComboBox2.getValue(), tmp),
+                                tmp.getVariety()
+                        );
+                        addTooltipToPoint(dataPoint, tooltipText);
+                        irisStage.close();
                     } else {
                         AlertEventInvalidRange.handle(new ActionEvent());
                     }
@@ -414,6 +433,45 @@ public class Systeme extends Stage implements Observer {
                 dataPoint.getNode().getStyle() + " -fx-scale-x: 1.5; -fx-scale-y: 1.5;"));
         dataPoint.getNode().setOnMouseExited(event -> dataPoint.getNode().setStyle(
                 dataPoint.getNode().getStyle() + " -fx-scale-x: 1; -fx-scale-y: 1;"));
+    }
+
+    private void newPerformProjection(XYChart.Series<Number, Number> newSeries, ScatterChart<Number, Number> newChart) {
+        String projection = projectionComboBox.getValue();
+        String projection2 = projectionComboBox2.getValue();
+
+        for (Iris iris : this.Data.getEData()) {
+            newChart.getXAxis().setLabel(projectionComboBox.getValue());
+            newChart.getYAxis().setLabel(projectionComboBox2.getValue());
+
+            XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(
+                    projectionIris(projection, iris),
+                    projectionIris(projection2, iris)
+            );
+
+            newSeries.getData().add(dataPoint);
+            dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
+            String tooltipText = String.format(
+                    "X: %.2f\t Y: %.2f\t Variety: %s",
+                    (double) projectionIris(projection, iris),
+                    (double) projectionIris(projection2, iris),
+                    iris.getVariety()
+            );
+            addTooltipToPoint(dataPoint, tooltipText);
+        }
+    }
+
+    private void openNewProjectionTab(TabPane tabPane) {
+        NumberAxis xAxis = new NumberAxis(x, y, 1.0);
+        NumberAxis yAxis = new NumberAxis(x, y, 1.0);
+        Tab newTab = new Tab(projectionComboBox.getValue() + "/"+projectionComboBox2.getValue());
+        ScatterChart<Number, Number> newChart = new ScatterChart<>(xAxis, yAxis);
+        XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+        newChart.setLegendVisible(false);
+        newChart.getData().add(newSeries);
+        newPerformProjection(newSeries, newChart);
+        newTab.setContent(newChart);
+        tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
     }
 
     /**
