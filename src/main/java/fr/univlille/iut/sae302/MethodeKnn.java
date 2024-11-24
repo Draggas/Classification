@@ -157,4 +157,9 @@ public class MethodeKnn {
     public static Data<Iris> getDatas() {
         return datas;
     }
+
+    public static void setDatas(Data<Iris> datas) {
+        MethodeKnn.datas = datas;
+    }
+
 }

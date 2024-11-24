@@ -48,15 +48,9 @@ public class Systeme extends Stage implements Observer {
         chart.setLegendVisible(false);
         chart.getData().add(series);
 
-        MethodeKnn knn = new MethodeKnn(Data);
-
-        Iris irisCible = this.Data.getEData().getFirst();
+        MethodeKnn.setDatas(Data);
 
         DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
-
-        String classePredite = MethodeKnn.classifierIris(3, irisCible, euclidienneCalc);
-
-        Label la = new Label(MethodeKnn.calculerPourcentageReussite(3, euclidienneCalc) + "");
 
         Label labelDefault = new Label("Default");
         Circle cercleDefault = new Circle();
@@ -201,7 +195,7 @@ public class Systeme extends Stage implements Observer {
                         if(projectionComboBox2.getValue().equals("Petal Length")) tmp.setPetalLength(yNumber);
 
                         if(tmp.getVariety().equals("Defaut")){
-                            tmp.setVariety(MethodeKnn.classifierIris(5, tmp, euclidienneCalc));
+                            tmp.setVariety(MethodeKnn.classifierIris(MethodeKnn.trouverMeilleurK(euclidienneCalc), tmp, euclidienneCalc));
                         }
 
                         //setProjectionValue(tmp, projectionComboBox.getValue(), xNumber);
@@ -249,9 +243,15 @@ public class Systeme extends Stage implements Observer {
         buttonMeilleurDistance.setOnAction(e -> {
             Stage plusProcheStage = new Stage();
             plusProcheStage.initModality(Modality.APPLICATION_MODAL);
-            plusProcheStage.setTitle("Plus proche voisin");
+            plusProcheStage.setTitle("k meilleurs distance");
 
-            TextArea terminal = new TextArea();
+            Iris irisCible = irisData.getFirst();
+
+            String classePredite = MethodeKnn.classifierIris(MethodeKnn.trouverMeilleurK(euclidienneCalc), irisCible, euclidienneCalc);
+
+            Label la = new Label(MethodeKnn.calculerPourcentageReussite(MethodeKnn.trouverMeilleurK(euclidienneCalc), euclidienneCalc) + " " +classePredite);
+
+            TextArea terminal = new TextArea("k meilleurs distance :\n" + MethodeKnn.trouverMeilleurK(euclidienneCalc) + "\n" + la);
             terminal.setEditable(false);
 
             GridPane grid = new GridPane();
@@ -272,7 +272,7 @@ public class Systeme extends Stage implements Observer {
         HBox bottomPane = new HBox();
         bottomPane.setPadding(new Insets(20));
         bottomPane.setAlignment(Pos.CENTER);
-        bottomPane.getChildren().addAll(projectionComboBox, la);
+        bottomPane.getChildren().addAll(projectionComboBox);
 
         BorderPane root = new BorderPane();
         root.setLeft(leftPane);
