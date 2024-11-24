@@ -48,8 +48,6 @@ public class Systeme extends Stage implements Observer {
         chart.setLegendVisible(false);
         chart.getData().add(series);
 
-        MethodeKnn.setDatas(Data);
-
         DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
 
         Label labelDefault = new Label("Default");
@@ -133,12 +131,23 @@ public class Systeme extends Stage implements Observer {
             series.getData().clear();
             String projection = projectionComboBox.getValue();
             String projection2 = projectionComboBox2.getValue();
+
             for (Iris iris : this.Data.getEData()) {
                 xAxis.setLabel(projectionComboBox.getValue());
                 yAxis.setLabel(projectionComboBox2.getValue());
-                XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(projectionIris(projection,iris), projectionIris(projection2,iris));
+                XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(
+                        projectionIris(projection, iris),
+                        projectionIris(projection2, iris)
+                );
                 series.getData().add(dataPoint);
-                dataPoint.getNode().setStyle(drawIris(iris.getVariety()) + "-fx-background-radius: 5px;");
+                dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
+                String tooltipText = String.format(
+                        "X: %.2f\t Y: %.2f\t Variety: %s",
+                        projectionIris(projection, iris),
+                        projectionIris(projection2, iris),
+                        iris.getVariety()
+                );
+                addTooltipToPoint(dataPoint, tooltipText);
             }
         });
 
@@ -178,6 +187,8 @@ public class Systeme extends Stage implements Observer {
                     double yNumber = Double.parseDouble(yInput.getText());
                     String variety = varietyComboBox.getValue();
 
+                    MethodeKnn knn = new MethodeKnn(new Data<Iris>(this.Data.getEData()));
+
                     if (xNumber >= x && xNumber <= y && yNumber >= x && yNumber <= y) {
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(xNumber, yNumber);
                         Iris tmp = new Iris(0, 0, 0, 0, variety);
@@ -195,7 +206,7 @@ public class Systeme extends Stage implements Observer {
                         if(projectionComboBox2.getValue().equals("Petal Length")) tmp.setPetalLength(yNumber);
 
                         if(tmp.getVariety().equals("Defaut")){
-                            tmp.setVariety(MethodeKnn.classifierIris(MethodeKnn.trouverMeilleurK(euclidienneCalc), tmp, euclidienneCalc));
+                            tmp.setVariety(knn.classifierIris(knn.trouverMeilleurK(euclidienneCalc), tmp, euclidienneCalc));
                         }
 
                         //setProjectionValue(tmp, projectionComboBox.getValue(), xNumber);
@@ -243,15 +254,9 @@ public class Systeme extends Stage implements Observer {
         buttonMeilleurDistance.setOnAction(e -> {
             Stage plusProcheStage = new Stage();
             plusProcheStage.initModality(Modality.APPLICATION_MODAL);
-            plusProcheStage.setTitle("k meilleurs distance");
+            plusProcheStage.setTitle("Plus proche voisin");
 
-            Iris irisCible = irisData.getFirst();
-
-            String classePredite = MethodeKnn.classifierIris(MethodeKnn.trouverMeilleurK(euclidienneCalc), irisCible, euclidienneCalc);
-
-            Label la = new Label(MethodeKnn.calculerPourcentageReussite(MethodeKnn.trouverMeilleurK(euclidienneCalc), euclidienneCalc) + " " +classePredite);
-
-            TextArea terminal = new TextArea("k meilleurs distance :\n" + MethodeKnn.trouverMeilleurK(euclidienneCalc) + "\n" + la);
+            TextArea terminal = new TextArea();
             terminal.setEditable(false);
 
             GridPane grid = new GridPane();
@@ -351,6 +356,15 @@ public class Systeme extends Stage implements Observer {
             case "Petal Length" -> iris.getPetalLength();
             default -> null;
         };
+    }
+
+    private void addTooltipToPoint(XYChart.Data<Number, Number> dataPoint, String tooltipText) {
+        Tooltip tooltip = new Tooltip(tooltipText);
+        Tooltip.install(dataPoint.getNode(), tooltip);
+        dataPoint.getNode().setOnMouseEntered(event -> dataPoint.getNode().setStyle(
+                dataPoint.getNode().getStyle() + " -fx-scale-x: 1.5; -fx-scale-y: 1.5;"));
+        dataPoint.getNode().setOnMouseExited(event -> dataPoint.getNode().setStyle(
+                dataPoint.getNode().getStyle() + " -fx-scale-x: 1; -fx-scale-y: 1;"));
     }
 
     /**

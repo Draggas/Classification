@@ -5,7 +5,7 @@ import fr.univlille.iut.sae302.utils.Distance;
 import java.util.*;
 
 public class MethodeKnn {
-    private static Data<Iris> datas;
+    private Data<Iris> datas;
 
     public static double amplitudePetalLength;
     public static double amplitudePetalWidth;
@@ -14,11 +14,11 @@ public class MethodeKnn {
 
 
     MethodeKnn(Data<Iris> datas) {
-        MethodeKnn.datas = datas;
+        this.datas = datas;
         calculerAmplitudes();
     }
 
-    public static void calculerAmplitudes() {
+    public void calculerAmplitudes() {
         if (datas.isEmpty()) {
             amplitudePetalLength = 0;
             amplitudePetalWidth = 0;
@@ -53,9 +53,10 @@ public class MethodeKnn {
         amplitudeSepalWidth = sepalWidthMax - sepalWidthMin;
     }
 
-    public static Iris[] getKPlusProchesVoisins(int k, Iris cible, Distance distance) {
-        List<Iris> autresIris = new ArrayList<>(datas.getEData());
-        autresIris.remove(cible);
+    public Iris[] getKPlusProchesVoisins(int k, Iris cible, Distance distance) {
+        List<Iris> autresIris = new ArrayList<>(this.datas.getEData());
+        autresIris.removeIf(iris -> iris.equals(cible));
+
 
         k = Math.min(k, autresIris.size());
 
@@ -73,10 +74,14 @@ public class MethodeKnn {
             voisins[i] = distances.get(i).getKey();
         }
 
+        for (Map.Entry<Iris, Double> entry : distances) {
+            System.out.println("Voisin : " + entry.getKey().getVariety() + ", Distance : " + entry.getValue());
+        }
+
         return voisins;
     }
 
-    public static String classifierIris(int k, Iris cible, Distance distance) {
+    public String classifierIris(int k, Iris cible, Distance distance) {
         Iris[] voisins = getKPlusProchesVoisins(k, cible, distance);
 
         Map<String, Integer> voteMap = new HashMap<>();
@@ -104,16 +109,16 @@ public class MethodeKnn {
         return classePredite;
     }
 
-    public static double calculerPourcentageReussite(int k, Distance distance) {
-        int total = datas.getEData().size();
+    public double calculerPourcentageReussite(int k, Distance distance) {
+        int total = this.datas.getEData().size();
         int correctPredictions = 0;
-        for (Iris iris : datas.getEData()) {
-            List<Iris> autresIris = new ArrayList<>(datas.getEData());
+        for (Iris iris : this.datas.getEData()) {
+            List<Iris> autresIris = new ArrayList<>(this.datas.getEData());
             autresIris.remove(iris);
             Data<Iris> autreData = new Data<>(autresIris);
 
             MethodeKnn knnTemp = new MethodeKnn(autreData);
-            String predictedVariety = knnTemp.classifierIris(k, iris, distance);
+            String predictedVariety = classifierIris(k, iris, distance);
             if (predictedVariety != null && predictedVariety.equals(iris.getVariety())) {
                 correctPredictions++;
             }
@@ -122,7 +127,7 @@ public class MethodeKnn {
     }
 
 
-    public static int trouverMeilleurK(Distance distance) {
+    public int trouverMeilleurK(Distance distance) {
         int meilleurK = 1;
         double meilleurPourcentage = 0;
         for (int k = 1; k <= 11; k += 2) {
@@ -138,28 +143,28 @@ public class MethodeKnn {
         return meilleurK;
     }
 
-    public static double getPetalLengthMin() {
+    public double getPetalLengthMin() {
         return datas.getEData().stream().mapToDouble(iris -> iris.getPetalLength().doubleValue()).min().orElse(0);
     }
 
-    public static double getPetalWidthMin() {
+    public double getPetalWidthMin() {
         return datas.getEData().stream().mapToDouble(iris -> iris.getPetalWidth().doubleValue()).min().orElse(0);
     }
 
-    public static double getSepalLengthMin() {
+    public double getSepalLengthMin() {
         return datas.getEData().stream().mapToDouble(iris -> iris.getSepalLength().doubleValue()).min().orElse(0);
     }
 
-    public static double getSepalWidthMin() {
+    public double getSepalWidthMin() {
         return datas.getEData().stream().mapToDouble(iris -> iris.getSepalWidth().doubleValue()).min().orElse(0);
     }
 
-    public static Data<Iris> getDatas() {
+    public Data<Iris> getDatas() {
         return datas;
     }
 
-    public static void setDatas(Data<Iris> datas) {
-        MethodeKnn.datas = datas;
+    public void setDatas(Data<Iris> datas) {
+        this.datas = datas;
     }
 
 }
