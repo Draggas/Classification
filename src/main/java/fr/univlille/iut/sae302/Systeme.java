@@ -48,6 +48,47 @@ public class Systeme extends Stage implements Observer {
         chart.setLegendVisible(false);
         chart.getData().add(series);
 
+        Label xAxisLabel = new Label("L'axe X :");
+        TextField xAxisMinField = new TextField(String.valueOf(x));
+        TextField xAxisMaxField = new TextField(String.valueOf(y));
+        Button updateXAxisButton = new Button("Mettre à jour l'axe X");
+
+        Label yAxisLabel = new Label("L'axe Y :");
+        TextField yAxisMinField = new TextField(String.valueOf(x));
+        TextField yAxisMaxField = new TextField(String.valueOf(y));
+        Button updateYAxisButton = new Button("Mettre à jour l'axe Y");
+
+        updateXAxisButton.setOnAction(e -> {
+            try {
+                double newMin = Double.parseDouble(xAxisMinField.getText());
+                double newMax = Double.parseDouble(xAxisMaxField.getText());
+                if (newMin < newMax) {
+                    xAxis.setLowerBound(newMin);
+                    xAxis.setUpperBound(newMax);
+                } else {
+                    showAlert("Min supérieur à Max", "Minimum ne peut pas être supéreur à max pour l'axe X.");
+                }
+            } catch (NumberFormatException ex) {
+                showAlert("Entrée non valide", "Entrer un nombre valide pour l'axe X.");
+            }
+        });
+
+        updateYAxisButton.setOnAction(e -> {
+            try {
+                double newMin = Double.parseDouble(yAxisMinField.getText());
+                double newMax = Double.parseDouble(yAxisMaxField.getText());
+                if (newMin < newMax) {
+                    yAxis.setLowerBound(newMin);
+                    yAxis.setUpperBound(newMax);
+                } else {
+                    showAlert("Min supérieur à Max", "Minimum ne peut pas être supéreur à max pour l'axe Y.");
+                }
+            } catch (NumberFormatException ex) {
+                showAlert("Entrée non valide", "Entrer un nombre valide pour l'axe Y.");
+            }
+        });
+
+
         DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
 
         Label labelDefault = new Label("Default");
@@ -271,7 +312,8 @@ public class Systeme extends Stage implements Observer {
         leftPane.setPadding(new Insets(20));
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
-        leftPane.getChildren().addAll(projectionComboBox2, spacer, buttonProjection, buttonIris, buttonMeilleurDistance );
+        leftPane.getChildren().addAll(projectionComboBox2, spacer, buttonProjection, buttonIris, buttonMeilleurDistance,                xAxisLabel, xAxisMinField, xAxisMaxField, updateXAxisButton,
+                                        yAxisLabel, yAxisMinField, yAxisMaxField, updateYAxisButton);
         leftPane.setAlignment(Pos.TOP_LEFT);
 
         HBox bottomPane = new HBox();
@@ -356,6 +398,13 @@ public class Systeme extends Stage implements Observer {
             case "Petal Length" -> iris.getPetalLength();
             default -> null;
         };
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private void addTooltipToPoint(XYChart.Data<Number, Number> dataPoint, String tooltipText) {
