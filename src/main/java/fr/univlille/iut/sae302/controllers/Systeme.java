@@ -35,6 +35,7 @@ public class Systeme extends Stage implements Observer {
     private Data<Iris> Data;
     private final ComboBox<String> projectionComboBox;
     private final ComboBox<String> projectionComboBox2;
+    private TabPane tabPane;
 
     private final double x = 0.0;
     private final double y = 9.0;
@@ -58,7 +59,7 @@ public class Systeme extends Stage implements Observer {
         chart.setLegendVisible(false);
         chart.getData().add(series);
 
-        TabPane tabPane = new TabPane();
+        tabPane = new TabPane();
         Tab initialTab = new Tab("Accueil");
         initialTab.setContent(chart);
         tabPane.getTabs().add(initialTab);
@@ -468,6 +469,23 @@ public class Systeme extends Stage implements Observer {
                     iris.getVariety()
             );
             addTooltipToPoint(dataPoint, tooltipText);
+
+            dataPoint.getNode().setOnMouseClicked(event -> {
+                Tab newTab = new Tab("Iris Details");
+                VBox content = new VBox();
+                content.getChildren().addAll(
+                        new Label("X: " + dataPoint.getXValue()),
+                        new Label("Y: " + dataPoint.getYValue()),
+                        new Label("Variety: " + iris.getVariety()),
+                        new Label("Sepal Width: " + iris.getSepalWidth()),
+                        new Label("Sepal Length: " + iris.getSepalLength()),
+                        new Label("Petal Width: " + iris.getPetalWidth()),
+                        new Label("Petal Length: " + iris.getPetalLength())
+                );
+                newTab.setContent(content);
+                tabPane.getTabs().add(newTab);
+                tabPane.getSelectionModel().select(newTab);
+            });
         }
     }
 
@@ -483,6 +501,33 @@ public class Systeme extends Stage implements Observer {
         newTab.setContent(newChart);
         tabPane.getTabs().add(newTab);
         tabPane.getSelectionModel().select(newTab);
+    }
+
+    private void addIrisTab(Iris selectedIris, TabPane tabPane) {
+        if (selectedIris == null) {
+            showAlert("Sélection vide", "Aucun iris sélectionné !");
+            return;
+        }
+        Tab irisTab = new Tab("Iris: " + selectedIris.getVariety());
+        VBox content = new VBox();
+        content.setPadding(new Insets(10));
+        content.setSpacing(10);
+        Label sepalWidthLabel = new Label("Sepal Width: " + selectedIris.getSepalWidth());
+        Label sepalLengthLabel = new Label("Sepal Length: " + selectedIris.getSepalLength());
+        Label petalWidthLabel = new Label("Petal Width: " + selectedIris.getPetalWidth());
+        Label petalLengthLabel = new Label("Petal Length: " + selectedIris.getPetalLength());
+        Label varietyLabel = new Label("Variety: " + selectedIris.getVariety());
+        content.getChildren().addAll(
+                sepalWidthLabel,
+                sepalLengthLabel,
+                petalWidthLabel,
+                petalLengthLabel,
+                varietyLabel
+        );
+        irisTab.setContent(content);
+        irisTab.setClosable(true);
+        tabPane.getTabs().add(irisTab);
+        tabPane.getSelectionModel().select(irisTab);
     }
 
     /**

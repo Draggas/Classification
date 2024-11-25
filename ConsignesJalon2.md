@@ -4,9 +4,8 @@ suivante au plus tard le 29 novembre 2024, avant minuit.*
 ---
 
 ## ATTENTE PROJET :  
-- Ajout Pokémon 
+- Ajout Pokémon (Généricité)
 - Compléter MVC
-- Généricité
 - Attributs Enumérés données chargés
 - Des Couleurs par catégorie pour Pokémon
 - Elle peut être choisie par l'utilisateur comme l'un des attributs booléen ou de type énuméré
@@ -17,7 +16,6 @@ suivante au plus tard le 29 novembre 2024, avant minuit.*
 - Permettre l'utilisation de pondérations pour augmenter l'importance de certains attributs.
 - La robustesse de votre classification doit être calculée par rapport à vos données, et accessible dans votre interface, en précisant la méthode d'évaluation. 
 - Dans un deuxième temps, le logiciel permettra à l'utilisateur de trouver le meilleur k possible étant donnés une catégorie et une distance
-- Affiche une fiche de donnée lors du clic d'un point dans le graphe.
 ---
 
 ## ATTENTE DEVELOPPEMENT EFFICACE : 
