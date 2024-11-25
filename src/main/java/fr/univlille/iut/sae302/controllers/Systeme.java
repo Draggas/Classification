@@ -198,10 +198,8 @@ public class Systeme extends Stage implements Observer {
 
                 alert.showAndWait().ifPresent(response -> {
                     if (response == overwriteButton) {
+                        series.getData().clear();
                         newPerformProjection(series,chart);
-                        ScatterChart<Number, Number> n = (ScatterChart<Number, Number>) tabPane.getSelectionModel().getSelectedItem().getContent();
-                        n.getData().clear();
-                        n.getData().add(series);
                     } else if (response == newTabButton) {
                         openNewProjectionTab(tabPane);
                     }
