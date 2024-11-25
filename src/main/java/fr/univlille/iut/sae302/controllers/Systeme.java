@@ -253,37 +253,45 @@ public class Systeme extends Stage implements Observer {
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(xNumber, yNumber);
                         Iris tmp = new Iris(0, 0, 0, 0, variety);
 
-                        if(projectionComboBox.getValue().equals("Sepal Width")) tmp.setSepalWidth(xNumber);
-                        if(projectionComboBox2.getValue().equals("Sepal Width")) tmp.setSepalWidth(yNumber);
+                        if (projectionComboBox.getValue().equals("Sepal Width")) tmp.setSepalWidth(xNumber);
+                        if (projectionComboBox2.getValue().equals("Sepal Width")) tmp.setSepalWidth(yNumber);
 
-                        if(projectionComboBox.getValue().equals("Sepal Length")) tmp.setSepalLength(xNumber);
-                        if(projectionComboBox2.getValue().equals("Sepal Length")) tmp.setSepalLength(yNumber);
+                        if (projectionComboBox.getValue().equals("Sepal Length")) tmp.setSepalLength(xNumber);
+                        if (projectionComboBox2.getValue().equals("Sepal Length")) tmp.setSepalLength(yNumber);
 
-                        if(projectionComboBox.getValue().equals("Petal Width")) tmp.setPetalWidth(xNumber);
-                        if(projectionComboBox2.getValue().equals("Petal Width")) tmp.setPetalWidth(yNumber);
+                        if (projectionComboBox.getValue().equals("Petal Width")) tmp.setPetalWidth(xNumber);
+                        if (projectionComboBox2.getValue().equals("Petal Width")) tmp.setPetalWidth(yNumber);
 
-                        if(projectionComboBox.getValue().equals("Petal Length")) tmp.setPetalLength(xNumber);
-                        if(projectionComboBox2.getValue().equals("Petal Length")) tmp.setPetalLength(yNumber);
+                        if (projectionComboBox.getValue().equals("Petal Length")) tmp.setPetalLength(xNumber);
+                        if (projectionComboBox2.getValue().equals("Petal Length")) tmp.setPetalLength(yNumber);
 
-                        if(tmp.getVariety().equals("Defaut")){
+                        if (tmp.getVariety().equals("Defaut")) {
                             tmp.setVariety(knn.classifierIris(knn.trouverMeilleurK(euclidienneCalc), tmp, euclidienneCalc));
                         }
 
-                        //setProjectionValue(tmp, projectionComboBox.getValue(), xNumber);
-                        //setProjectionValue(tmp, projectionComboBox2.getValue(), yNumber);
                         irisData.add(tmp);
                         this.Data = new Data<>(irisData);
                         this.Data.attach(this);
-                        series.getData().add(dataPoint);
-                        dataPoint.getNode().setStyle(drawIris(tmp.getVariety()));
-                        String tooltipText = String.format(
-                                "X: %.2f\t Y: %.2f\t Variety: %s",
-                                ((Number) Objects.requireNonNull(projectionIris(projectionComboBox.getValue(), tmp))).doubleValue(),
-                                ((Number) Objects.requireNonNull(projectionIris(projectionComboBox2.getValue(), tmp))).doubleValue(),
-                                tmp.getVariety()
-                        );
-                        addTooltipToPoint(dataPoint, tooltipText);
-                        irisStage.close();
+
+                        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+                        if (selectedTab != null) {
+                            XYChart<Number, Number> selectedChart = (XYChart<Number, Number>) selectedTab.getContent();
+                            if (selectedChart != null) {
+                                XYChart.Series<Number, Number> chartSeries = new XYChart.Series<>();
+                                chartSeries.setName("Iris Data");
+                                chartSeries.getData().add(dataPoint);
+                                selectedChart.getData().add(chartSeries);
+                                dataPoint.getNode().setStyle(drawIris(tmp.getVariety()));
+                                String tooltipText = String.format(
+                                        "X: %.2f\t Y: %.2f\t Variety: %s",
+                                        ((Number) Objects.requireNonNull(projectionIris(projectionComboBox.getValue(), tmp))).doubleValue(),
+                                        ((Number) Objects.requireNonNull(projectionIris(projectionComboBox2.getValue(), tmp))).doubleValue(),
+                                        tmp.getVariety()
+                                );
+                                addTooltipToPoint(dataPoint, tooltipText);
+                                irisStage.close();
+                            }
+                        }
                     } else {
                         AlertEventInvalidRange.handle(new ActionEvent());
                     }
@@ -360,6 +368,32 @@ public class Systeme extends Stage implements Observer {
         setTitle("Application");
         this.centerOnScreen();
         show();
+    }
+
+    /**
+     * Définit la valeur de l'iris selon l'axe de la projection.
+     *
+     * @param iris Iris qui sera modifié
+     * @param projection Projection (Sepal Length, Sepal Width, Petal Length, Petal Width) sur laquelle mettre la valeur
+     * @param value La valeur à mettre dans l'Iris
+     */
+    private void setProjectionValue(Iris iris, String projection, double value) {
+        switch (projection) {
+            case "Sepal Width":
+                iris.setSepalWidth(value);
+                break;
+            case "Petal Width":
+                iris.setPetalWidth(value);
+                break;
+            case "Sepal Length":
+                iris.setSepalLength(value);
+                break;
+            case "Petal Length":
+                iris.setPetalLength(value);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid projection: " + projection);
+        }
     }
 
     /**
