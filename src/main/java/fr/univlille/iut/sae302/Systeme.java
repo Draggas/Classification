@@ -74,14 +74,22 @@ public class Systeme extends Stage implements Observer {
             try {
                 double newMin = Double.parseDouble(xAxisMinField.getText());
                 double newMax = Double.parseDouble(xAxisMaxField.getText());
+
                 if (newMin < newMax) {
-                    xAxis.setLowerBound(newMin);
-                    xAxis.setUpperBound(newMax);
+                    Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+                    if (selectedTab != null) {
+                        ScatterChart<Number, Number> selectedChart = (ScatterChart<Number, Number>) selectedTab.getContent();
+                        if (selectedChart != null) {
+                            NumberAxis selectedXAxis = (NumberAxis) selectedChart.getXAxis();
+                            selectedXAxis.setLowerBound(newMin);
+                            selectedXAxis.setUpperBound(newMax);
+                        }
+                    }
                 } else {
-                    showAlert("Min supérieur à Max", "Minimum ne peut pas être supéreur à max pour l'axe X.");
+                    showAlert("Min supérieur à Max", "Minimum ne peut pas être supérieur à max pour l'axe X.");
                 }
             } catch (NumberFormatException ex) {
-                showAlert("Entrée non valide", "Entrer un nombre valide pour l'axe X.");
+                showAlert("Entrée non valide", "Entrez un nombre valide pour l'axe X.");
             }
         });
 
@@ -89,17 +97,24 @@ public class Systeme extends Stage implements Observer {
             try {
                 double newMin = Double.parseDouble(yAxisMinField.getText());
                 double newMax = Double.parseDouble(yAxisMaxField.getText());
+
                 if (newMin < newMax) {
-                    yAxis.setLowerBound(newMin);
-                    yAxis.setUpperBound(newMax);
+                    Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+                    if (selectedTab != null) {
+                        ScatterChart<Number, Number> selectedChart = (ScatterChart<Number, Number>) selectedTab.getContent();
+                        if (selectedChart != null) {
+                            NumberAxis selectedYAxis = (NumberAxis) selectedChart.getYAxis();
+                            selectedYAxis.setLowerBound(newMin);
+                            selectedYAxis.setUpperBound(newMax);
+                        }
+                    }
                 } else {
-                    showAlert("Min supérieur à Max", "Minimum ne peut pas être supéreur à max pour l'axe Y.");
+                    showAlert("Min supérieur à Max", "Minimum ne peut pas être supérieur à max pour l'axe Y.");
                 }
             } catch (NumberFormatException ex) {
-                showAlert("Entrée non valide", "Entrer un nombre valide pour l'axe Y.");
+                showAlert("Entrée non valide", "Entrez un nombre valide pour l'axe Y.");
             }
         });
-
 
         DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
 
