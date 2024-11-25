@@ -18,6 +18,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * La classe Systeme représente une fenêtre de l'application qui affiche
@@ -29,6 +30,13 @@ public class Systeme extends Stage implements Observer {
     private final ScatterChart<Number, Number> chart;
     private final XYChart.Series<Number, Number> series;
     private Data<Iris> Data;
+    private final ComboBox<String> projectionComboBox;
+    private final ComboBox<String> projectionComboBox2;
+
+    private final double x = 0.0;
+    private final double y = 9.0;
+
+    private boolean isProjectionInProgress = false;
 
     /**
      * Constructeur de la classe Systeme.
@@ -38,7 +46,6 @@ public class Systeme extends Stage implements Observer {
     public Systeme(List<Iris> irisData) {
         this.Data = new Data<>(irisData);
         this.Data.attach(this);
-        double x = 2.0, y = 9.0;
         NumberAxis xAxis = new NumberAxis(x, y, 1.0);
         NumberAxis yAxis = new NumberAxis(x, y, 1.0);
         xAxis.setLabel(" ");
@@ -48,15 +55,68 @@ public class Systeme extends Stage implements Observer {
         chart.setLegendVisible(false);
         chart.getData().add(series);
 
-        MethodeKnn knn = new MethodeKnn(Data);
+        TabPane tabPane = new TabPane();
+        Tab initialTab = new Tab("Accueil");
+        initialTab.setContent(chart);
+        tabPane.getTabs().add(initialTab);
 
-        Iris irisCible = this.Data.getEData().get(0);
+        Label xAxisLabel = new Label("L'axe X :");
+        TextField xAxisMinField = new TextField(String.valueOf(x));
+        TextField xAxisMaxField = new TextField(String.valueOf(y));
+        Button updateXAxisButton = new Button("Mettre à jour l'axe X");
+
+        Label yAxisLabel = new Label("L'axe Y :");
+        TextField yAxisMinField = new TextField(String.valueOf(x));
+        TextField yAxisMaxField = new TextField(String.valueOf(y));
+        Button updateYAxisButton = new Button("Mettre à jour l'axe Y");
+
+        updateXAxisButton.setOnAction(e -> {
+            try {
+                double newMin = Double.parseDouble(xAxisMinField.getText());
+                double newMax = Double.parseDouble(xAxisMaxField.getText());
+
+                if (newMin < newMax) {
+                    Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+                    if (selectedTab != null) {
+                        ScatterChart<Number, Number> selectedChart = (ScatterChart<Number, Number>) selectedTab.getContent();
+                        if (selectedChart != null) {
+                            NumberAxis selectedXAxis = (NumberAxis) selectedChart.getXAxis();
+                            selectedXAxis.setLowerBound(newMin);
+                            selectedXAxis.setUpperBound(newMax);
+                        }
+                    }
+                } else {
+                    showAlert("Min supérieur à Max", "Minimum ne peut pas être supérieur à max pour l'axe X.");
+                }
+            } catch (NumberFormatException ex) {
+                showAlert("Entrée non valide", "Entrez un nombre valide pour l'axe X.");
+            }
+        });
+
+        updateYAxisButton.setOnAction(e -> {
+            try {
+                double newMin = Double.parseDouble(yAxisMinField.getText());
+                double newMax = Double.parseDouble(yAxisMaxField.getText());
+
+                if (newMin < newMax) {
+                    Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+                    if (selectedTab != null) {
+                        ScatterChart<Number, Number> selectedChart = (ScatterChart<Number, Number>) selectedTab.getContent();
+                        if (selectedChart != null) {
+                            NumberAxis selectedYAxis = (NumberAxis) selectedChart.getYAxis();
+                            selectedYAxis.setLowerBound(newMin);
+                            selectedYAxis.setUpperBound(newMax);
+                        }
+                    }
+                } else {
+                    showAlert("Min supérieur à Max", "Minimum ne peut pas être supérieur à max pour l'axe Y.");
+                }
+            } catch (NumberFormatException ex) {
+                showAlert("Entrée non valide", "Entrez un nombre valide pour l'axe Y.");
+            }
+        });
 
         DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
-
-        String classePredite = MethodeKnn.classifierIris(3, irisCible, euclidienneCalc);
-
-        Label la = new Label(MethodeKnn.calculerPourcentageReussite(3, euclidienneCalc) + "");
 
         Label labelDefault = new Label("Default");
         Circle cercleDefault = new Circle();
@@ -90,13 +150,13 @@ public class Systeme extends Stage implements Observer {
         legende.setSpacing(20);
         legende.setAlignment(Pos.CENTER);
 
-        VBox nuage = new VBox(chart, legende);
+        VBox nuage = new VBox(tabPane, legende);
 
-        ComboBox<String> projectionComboBox = new ComboBox<>();
+        projectionComboBox = new ComboBox<>();
         projectionComboBox.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
         projectionComboBox.setValue(null);
 
-        ComboBox<String> projectionComboBox2 = new ComboBox<>();
+        projectionComboBox2 = new ComboBox<>();
         projectionComboBox2.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
         projectionComboBox2.setValue(null);
 
@@ -120,7 +180,7 @@ public class Systeme extends Stage implements Observer {
         });
 
         projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if(!(newValue == null || projectionComboBox2.getValue() == null) || newValue.equals(projectionComboBox2.getValue())) {
+            if(!(newValue == null || projectionComboBox2.getValue() == null) || Objects.equals(newValue, projectionComboBox2.getValue())) {
                 buttonProjection.setDisable(false);
                 buttonIris.setDisable(false);
                 buttonMeilleurDistance.setDisable(false);
@@ -128,7 +188,7 @@ public class Systeme extends Stage implements Observer {
         });
 
         projectionComboBox2.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if(!(newValue == null || projectionComboBox.getValue() == null) || newValue.equals(projectionComboBox.getValue())){
+            if(!(newValue == null || projectionComboBox.getValue() == null) || Objects.equals(newValue, projectionComboBox.getValue())){
                 buttonProjection.setDisable(false);
                 buttonIris.setDisable(false);
                 buttonMeilleurDistance.setDisable(false);
@@ -136,17 +196,33 @@ public class Systeme extends Stage implements Observer {
         });
 
         buttonProjection.setOnAction(e -> {
-            series.getData().clear();
-            String projection = projectionComboBox.getValue();
-            String projection2 = projectionComboBox2.getValue();
-            for (Iris iris : this.Data.getEData()) {
-                xAxis.setLabel(projectionComboBox.getValue());
-                yAxis.setLabel(projectionComboBox2.getValue());
-                XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(projectionIris(projection,iris), projectionIris(projection2,iris));
-                series.getData().add(dataPoint);
-                dataPoint.getNode().setStyle(drawIris(iris.getVariety()) + "-fx-background-radius: 5px;");
+            if (isProjectionInProgress) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Projection déjà effectuée");
+                alert.setHeaderText("Une projection est déjà en cours.");
+                alert.setContentText("Voulez-vous écraser la projection actuelle ou ouvrir un nouvel onglet ?");
+
+                ButtonType overwriteButton = new ButtonType("Écraser");
+                ButtonType newTabButton = new ButtonType("Nouvel onglet");
+                ButtonType cancelButton = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                alert.getButtonTypes().setAll(overwriteButton, newTabButton, cancelButton);
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == overwriteButton) {
+                        series.getData().clear();
+                        newPerformProjection(series,chart);
+                    } else if (response == newTabButton) {
+                        openNewProjectionTab(tabPane);
+                    }
+                });
+            } else {
+                series.getData().clear();
+                newPerformProjection(series,chart);
+                isProjectionInProgress = true;
             }
         });
+
         Alert a = new Alert(Alert.AlertType.NONE);
         EventHandler<ActionEvent> AlertEventInvalidNumbers = e -> {
             a.setAlertType(Alert.AlertType.ERROR);
@@ -172,27 +248,62 @@ public class Systeme extends Stage implements Observer {
             if(projectionComboBox2.getValue() == null) yInputLabel.setText("INDEFINI :");
             Label varietyLabel = new Label("Variety :");
             ComboBox<String> varietyComboBox = new ComboBox<>();
-            varietyComboBox.getItems().addAll("Default", "Setosa", "Versicolor", "Virginica");
-            varietyComboBox.setValue("Default");
+            varietyComboBox.getItems().addAll("Defaut", "Setosa", "Versicolor", "Virginica");
+            varietyComboBox.setValue("Defaut");
 
             Button buttonAdd = new Button("Ajouter");
+
             buttonAdd.setOnAction(ev -> {
                 try {
                     double xNumber = Double.parseDouble(xInput.getText());
                     double yNumber = Double.parseDouble(yInput.getText());
                     String variety = varietyComboBox.getValue();
 
+                    MethodeKnn knn = new MethodeKnn(new Data<>(this.Data.getEData()));
+
                     if (xNumber >= x && xNumber <= y && yNumber >= x && yNumber <= y) {
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(xNumber, yNumber);
                         Iris tmp = new Iris(0, 0, 0, 0, variety);
-                        setProjectionValue(tmp, projectionComboBox.getValue(), xNumber);
-                        setProjectionValue(tmp, projectionComboBox2.getValue(), yNumber);
+
+                        if (projectionComboBox.getValue().equals("Sepal Width")) tmp.setSepalWidth(xNumber);
+                        if (projectionComboBox2.getValue().equals("Sepal Width")) tmp.setSepalWidth(yNumber);
+
+                        if (projectionComboBox.getValue().equals("Sepal Length")) tmp.setSepalLength(xNumber);
+                        if (projectionComboBox2.getValue().equals("Sepal Length")) tmp.setSepalLength(yNumber);
+
+                        if (projectionComboBox.getValue().equals("Petal Width")) tmp.setPetalWidth(xNumber);
+                        if (projectionComboBox2.getValue().equals("Petal Width")) tmp.setPetalWidth(yNumber);
+
+                        if (projectionComboBox.getValue().equals("Petal Length")) tmp.setPetalLength(xNumber);
+                        if (projectionComboBox2.getValue().equals("Petal Length")) tmp.setPetalLength(yNumber);
+
+                        if (tmp.getVariety().equals("Defaut")) {
+                            tmp.setVariety(knn.classifierIris(knn.trouverMeilleurK(euclidienneCalc), tmp, euclidienneCalc));
+                        }
+
                         irisData.add(tmp);
                         this.Data = new Data<>(irisData);
                         this.Data.attach(this);
-                        series.getData().add(dataPoint);
-                        dataPoint.getNode().setStyle(drawIris(variety));
-                        irisStage.close();
+
+                        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+                        if (selectedTab != null) {
+                            XYChart<Number, Number> selectedChart = (XYChart<Number, Number>) selectedTab.getContent();
+                            if (selectedChart != null) {
+                                XYChart.Series<Number, Number> chartSeries = new XYChart.Series<>();
+                                chartSeries.setName("Iris Data");
+                                chartSeries.getData().add(dataPoint);
+                                selectedChart.getData().add(chartSeries);
+                                dataPoint.getNode().setStyle(drawIris(tmp.getVariety()));
+                                String tooltipText = String.format(
+                                        "X: %.2f\t Y: %.2f\t Variety: %s",
+                                        ((Number) Objects.requireNonNull(projectionIris(projectionComboBox.getValue(), tmp))).doubleValue(),
+                                        ((Number) Objects.requireNonNull(projectionIris(projectionComboBox2.getValue(), tmp))).doubleValue(),
+                                        tmp.getVariety()
+                                );
+                                addTooltipToPoint(dataPoint, tooltipText);
+                                irisStage.close();
+                            }
+                        }
                     } else {
                         AlertEventInvalidRange.handle(new ActionEvent());
                     }
@@ -243,13 +354,14 @@ public class Systeme extends Stage implements Observer {
         leftPane.setPadding(new Insets(20));
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
-        leftPane.getChildren().addAll(projectionComboBox2, spacer, buttonProjection, buttonIris, buttonMeilleurDistance );
+        leftPane.getChildren().addAll(projectionComboBox2, spacer, buttonProjection, buttonIris, buttonMeilleurDistance,                xAxisLabel, xAxisMinField, xAxisMaxField, updateXAxisButton,
+                                        yAxisLabel, yAxisMinField, yAxisMaxField, updateYAxisButton);
         leftPane.setAlignment(Pos.TOP_LEFT);
 
         HBox bottomPane = new HBox();
         bottomPane.setPadding(new Insets(20));
         bottomPane.setAlignment(Pos.CENTER);
-        bottomPane.getChildren().addAll(projectionComboBox, la);
+        bottomPane.getChildren().addAll(projectionComboBox);
 
         BorderPane root = new BorderPane();
         root.setLeft(leftPane);
@@ -328,6 +440,61 @@ public class Systeme extends Stage implements Observer {
             case "Petal Length" -> iris.getPetalLength();
             default -> null;
         };
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void addTooltipToPoint(XYChart.Data<Number, Number> dataPoint, String tooltipText) {
+        Tooltip tooltip = new Tooltip(tooltipText);
+        Tooltip.install(dataPoint.getNode(), tooltip);
+        dataPoint.getNode().setOnMouseEntered(event -> dataPoint.getNode().setStyle(
+                dataPoint.getNode().getStyle() + " -fx-scale-x: 1.5; -fx-scale-y: 1.5;"));
+        dataPoint.getNode().setOnMouseExited(event -> dataPoint.getNode().setStyle(
+                dataPoint.getNode().getStyle() + " -fx-scale-x: 1; -fx-scale-y: 1;"));
+    }
+
+    private void newPerformProjection(XYChart.Series<Number, Number> newSeries, ScatterChart<Number, Number> newChart) {
+        String projection = projectionComboBox.getValue();
+        String projection2 = projectionComboBox2.getValue();
+
+        for (Iris iris : this.Data.getEData()) {
+            newChart.getXAxis().setLabel(projectionComboBox.getValue());
+            newChart.getYAxis().setLabel(projectionComboBox2.getValue());
+
+            XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(
+                    projectionIris(projection, iris),
+                    projectionIris(projection2, iris)
+            );
+
+            newSeries.getData().add(dataPoint);
+            dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
+            String tooltipText = String.format(
+                    "X: %.2f\t Y: %.2f\t Variety: %s",
+                    ((Number) Objects.requireNonNull(projectionIris(projection, iris))).doubleValue(),
+                    ((Number) Objects.requireNonNull(projectionIris(projection2, iris))).doubleValue(),
+                    iris.getVariety()
+            );
+            addTooltipToPoint(dataPoint, tooltipText);
+        }
+    }
+
+    private void openNewProjectionTab(TabPane tabPane) {
+        NumberAxis xAxis = new NumberAxis(x, y, 1.0);
+        NumberAxis yAxis = new NumberAxis(x, y, 1.0);
+        Tab newTab = new Tab(projectionComboBox.getValue() + "/"+projectionComboBox2.getValue());
+        ScatterChart<Number, Number> newChart = new ScatterChart<>(xAxis, yAxis);
+        XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+        newChart.setLegendVisible(false);
+        newChart.getData().add(newSeries);
+        newPerformProjection(newSeries, newChart);
+        newTab.setContent(newChart);
+        tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
     }
 
     /**
