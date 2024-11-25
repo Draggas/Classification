@@ -196,32 +196,45 @@ public class Systeme extends Stage implements Observer {
         });
 
         buttonProjection.setOnAction(e -> {
-            if (isProjectionInProgress) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Projection déjà effectuée");
-                alert.setHeaderText("Une projection est déjà en cours.");
-                alert.setContentText("Voulez-vous écraser la projection actuelle ou ouvrir un nouvel onglet ?");
+            Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+            if (selectedTab != null) {
+                ScatterChart<Number, Number> selectedChart = (ScatterChart<Number, Number>) selectedTab.getContent();
+                if (selectedChart != null) {
+                    if (isProjectionInProgress) {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Projection déjà effectuée");
+                        alert.setHeaderText("Une projection est déjà en cours.");
+                        alert.setContentText("Voulez-vous écraser la projection actuelle ou ouvrir un nouvel onglet ?");
 
-                ButtonType overwriteButton = new ButtonType("Écraser");
-                ButtonType newTabButton = new ButtonType("Nouvel onglet");
-                ButtonType cancelButton = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+                        ButtonType overwriteButton = new ButtonType("Écraser");
+                        ButtonType newTabButton = new ButtonType("Nouvel onglet");
+                        ButtonType cancelButton = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-                alert.getButtonTypes().setAll(overwriteButton, newTabButton, cancelButton);
+                        alert.getButtonTypes().setAll(overwriteButton, newTabButton, cancelButton);
 
-                alert.showAndWait().ifPresent(response -> {
-                    if (response == overwriteButton) {
-                        series.getData().clear();
-                        newPerformProjection(series,chart);
-                    } else if (response == newTabButton) {
-                        openNewProjectionTab(tabPane);
+                        alert.showAndWait().ifPresent(response -> {
+                            if (response == overwriteButton) {
+                                selectedChart.getData().clear();
+                                XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+                                newPerformProjection(newSeries, selectedChart);
+                            } else if (response == newTabButton) {
+                                openNewProjectionTab(tabPane);
+                            }
+                        });
+                    } else {
+                        selectedChart.getData().clear();
+                        XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+                        newPerformProjection(newSeries, selectedChart);
+                        isProjectionInProgress = true;
                     }
-                });
+                } else {
+                    showAlert("Erreur", "Aucun graphique valide trouvé dans l'onglet sélectionné.");
+                }
             } else {
-                series.getData().clear();
-                newPerformProjection(series,chart);
-                isProjectionInProgress = true;
+                showAlert("Erreur", "Veuillez sélectionner un onglet pour projeter les données.");
             }
         });
+
 
         Alert a = new Alert(Alert.AlertType.NONE);
         EventHandler<ActionEvent> AlertEventInvalidNumbers = e -> {
@@ -461,27 +474,33 @@ public class Systeme extends Stage implements Observer {
     private void newPerformProjection(XYChart.Series<Number, Number> newSeries, ScatterChart<Number, Number> newChart) {
         String projection = projectionComboBox.getValue();
         String projection2 = projectionComboBox2.getValue();
-
+        newChart.getXAxis().setLabel(projection);
+        newChart.getYAxis().setLabel(projection2);
+        newChart.getData().clear();
         for (Iris iris : this.Data.getEData()) {
-            newChart.getXAxis().setLabel(projectionComboBox.getValue());
-            newChart.getYAxis().setLabel(projectionComboBox2.getValue());
-
-            XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(
-                    projectionIris(projection, iris),
-                    projectionIris(projection2, iris)
-            );
-
+            Number xValue = projectionIris(projection, iris);
+            Number yValue = projectionIris(projection2, iris);
+            if (xValue == null || yValue == null) {
+                continue;
+            }
+            XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(xValue, yValue);
+            dataPoint.nodeProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    newValue.setStyle(drawIris(iris.getVariety()));
+                    String tooltipText = String.format(
+                            "X: %.2f\t Y: %.2f\t Variety: %s",
+                            xValue.doubleValue(),
+                            yValue.doubleValue(),
+                            iris.getVariety()
+                    );
+                    addTooltipToPoint(dataPoint, tooltipText);
+                }
+            });
             newSeries.getData().add(dataPoint);
-            dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
-            String tooltipText = String.format(
-                    "X: %.2f\t Y: %.2f\t Variety: %s",
-                    ((Number) Objects.requireNonNull(projectionIris(projection, iris))).doubleValue(),
-                    ((Number) Objects.requireNonNull(projectionIris(projection2, iris))).doubleValue(),
-                    iris.getVariety()
-            );
-            addTooltipToPoint(dataPoint, tooltipText);
         }
+        newChart.getData().add(newSeries);
     }
+
 
     private void openNewProjectionTab(TabPane tabPane) {
         NumberAxis xAxis = new NumberAxis(x, y, 1.0);
