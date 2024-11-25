@@ -452,8 +452,8 @@ public class Systeme extends Stage implements Observer {
             dataPoint.getNode().setStyle(drawIris(iris.getVariety()));
             String tooltipText = String.format(
                     "X: %.2f\t Y: %.2f\t Variety: %s",
-                    (double) projectionIris(projection, iris),
-                    (double) projectionIris(projection2, iris),
+                    ((Number) Objects.requireNonNull(projectionIris(projection, iris))).doubleValue(),
+                    ((Number) Objects.requireNonNull(projectionIris(projection2, iris))).doubleValue(),
                     iris.getVariety()
             );
             addTooltipToPoint(dataPoint, tooltipText);
