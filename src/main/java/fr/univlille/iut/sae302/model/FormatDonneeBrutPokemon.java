@@ -1,4 +1,4 @@
-package fr.univlille.iut.sae302;
+package fr.univlille.iut.sae302.model;
 
 import com.opencsv.bean.CsvBindByName;
 

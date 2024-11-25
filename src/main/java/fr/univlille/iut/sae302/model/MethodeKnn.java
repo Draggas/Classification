@@ -1,6 +1,7 @@
-package fr.univlille.iut.sae302;
+package fr.univlille.iut.sae302.model;
 
 import fr.univlille.iut.sae302.utils.Distance;
+import fr.univlille.iut.sae302.view.Data;
 
 import java.util.*;
 
@@ -13,7 +14,7 @@ public class MethodeKnn {
     public static double amplitudeSepalWidth;
 
 
-    MethodeKnn(Data<Iris> datas) {
+    public MethodeKnn(Data<Iris> datas) {
         this.datas = datas;
         calculerAmplitudes();
     }

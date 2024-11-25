@@ -1,7 +1,10 @@
-package fr.univlille.iut.sae302;
+package fr.univlille.iut.sae302.controllers;
+import fr.univlille.iut.sae302.model.Iris;
+import fr.univlille.iut.sae302.model.MethodeKnn;
 import fr.univlille.iut.sae302.utils.DistanceEuclidienneNormalisee;
 import fr.univlille.iut.sae302.utils.Observable;
 import fr.univlille.iut.sae302.utils.Observer;
+import fr.univlille.iut.sae302.view.Data;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -195,8 +198,10 @@ public class Systeme extends Stage implements Observer {
 
                 alert.showAndWait().ifPresent(response -> {
                     if (response == overwriteButton) {
-                        series.getData().clear();
                         newPerformProjection(series,chart);
+                        ScatterChart<Number, Number> n = (ScatterChart<Number, Number>) tabPane.getSelectionModel().getSelectedItem().getContent();
+                        n.getData().clear();
+                        n.getData().add(series);
                     } else if (response == newTabButton) {
                         openNewProjectionTab(tabPane);
                     }

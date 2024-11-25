@@ -1,6 +1,6 @@
 package fr.univlille.iut.sae302.utils;
 
-import fr.univlille.iut.sae302.Iris;
+import fr.univlille.iut.sae302.model.Iris;
 
 public interface Distance {
 

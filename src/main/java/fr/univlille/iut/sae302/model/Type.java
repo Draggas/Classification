@@ -1,4 +1,4 @@
-package fr.univlille.iut.sae302;
+package fr.univlille.iut.sae302.model;
 /**
  * Cette énumération représente les différents types de Pokémon.
  */

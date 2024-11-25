@@ -1,4 +1,4 @@
-package fr.univlille.iut.sae302;
+package fr.univlille.iut.sae302.model;
 
 import java.io.IOException;
 import java.nio.file.Files;
