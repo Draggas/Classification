@@ -10,7 +10,7 @@ public class Iris {
     private Number sepalWidth;
     private Number petalLength;
     private Number petalWidth;
-    private final String variety;
+    private String variety;
 
 
     /**
@@ -138,4 +138,7 @@ public class Iris {
         this.sepalWidth = sepalWidth;
     }
 
+    public void setVariety(String s) {
+        this.variety = s;
+    }
 }
