@@ -13,7 +13,7 @@ public class MethodeKnn {
     public static double amplitudeSepalWidth;
 
 
-    MethodeKnn(Data<Iris> datas) {
+    public MethodeKnn(Data<Iris> datas) {
         this.datas = datas;
         calculerAmplitudes();
     }
@@ -72,10 +72,6 @@ public class MethodeKnn {
         Iris[] voisins = new Iris[k];
         for (int i = 0; i < k; i++) {
             voisins[i] = distances.get(i).getKey();
-        }
-
-        for (Map.Entry<Iris, Double> entry : distances) {
-            System.out.println("Voisin : " + entry.getKey().getVariety() + ", Distance : " + entry.getValue());
         }
 
         return voisins;

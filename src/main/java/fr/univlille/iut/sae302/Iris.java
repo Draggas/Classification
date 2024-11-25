@@ -10,7 +10,7 @@ public class Iris {
     private Number sepalWidth;
     private Number petalLength;
     private Number petalWidth;
-    private String variety;
+    private final String variety;
 
 
     /**
@@ -90,6 +90,19 @@ public class Iris {
     }
 
     /**
+     * Récupere la valeur demandé par le parametre
+     *
+     * @param donnee Le nom du de la donnée demandé
+     */
+    public Number getValue(String donnee){
+        if(donnee.equals("Sepal Width")) return getSepalWidth();
+        if(donnee.equals("Sepal Length")) return getSepalLength();
+        if(donnee.equals("Petal Width")) return getPetalWidth();
+        if(donnee.equals("Petal Length")) return getPetalLength();
+        return 0;
+    }
+
+    /**
      * Définit la longueur du pétale.
      *
      * @param petalLength La nouvelle longueur du pétale.
@@ -125,7 +138,4 @@ public class Iris {
         this.sepalWidth = sepalWidth;
     }
 
-    public void setVariety(String variety) {
-        this.variety = variety;
-    }
 }
