@@ -360,6 +360,32 @@ public class Systeme extends Stage implements Observer {
     }
 
     /**
+     * Définit la valeur de l'iris selon l'axe de la projection.
+     *
+     * @param iris Iris qui sera modifié
+     * @param projection Projection (Sepal Length, Sepal Width, Petal Length, Petal Width) sur laquelle mettre la valeur
+     * @param value La valeur à mettre dans l'Iris
+     */
+    private void setProjectionValue(Iris iris, String projection, double value) {
+        switch (projection) {
+            case "Sepal Width":
+                iris.setSepalWidth(value);
+                break;
+            case "Petal Width":
+                iris.setPetalWidth(value);
+                break;
+            case "Sepal Length":
+                iris.setSepalLength(value);
+                break;
+            case "Petal Length":
+                iris.setPetalLength(value);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid projection: " + projection);
+        }
+    }
+
+    /**
      * Définit la couleur et la taille d'un point de données Iris en fonction de sa variété.
      *
      * @param variety La variété de l'iris (Setosa, Versicolor, Virginica ou autre).
