@@ -244,7 +244,7 @@ public class Systeme extends Stage implements Observer {
                     double yNumber = Double.parseDouble(yInput.getText());
                     String variety = varietyComboBox.getValue();
 
-                    MethodeKnn knn = new MethodeKnn(new Data<Iris>(this.Data.getEData()));
+                    MethodeKnn knn = new MethodeKnn(new Data<>(this.Data.getEData()));
 
                     if (xNumber >= x && xNumber <= y && yNumber >= x && yNumber <= y) {
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(xNumber, yNumber);
@@ -275,8 +275,8 @@ public class Systeme extends Stage implements Observer {
                         dataPoint.getNode().setStyle(drawIris(tmp.getVariety()));
                         String tooltipText = String.format(
                                 "X: %.2f\t Y: %.2f\t Variety: %s",
-                                projectionIris(projectionComboBox.getValue(), tmp),
-                                projectionIris(projectionComboBox2.getValue(), tmp),
+                                ((Number) Objects.requireNonNull(projectionIris(projectionComboBox.getValue(), tmp))).doubleValue(),
+                                ((Number) Objects.requireNonNull(projectionIris(projectionComboBox2.getValue(), tmp))).doubleValue(),
                                 tmp.getVariety()
                         );
                         addTooltipToPoint(dataPoint, tooltipText);
@@ -357,32 +357,6 @@ public class Systeme extends Stage implements Observer {
         setTitle("Application");
         this.centerOnScreen();
         show();
-    }
-
-    /**
-     * Définit la valeur de l'iris selon l'axe de la projection.
-     *
-     * @param iris Iris qui sera modifié
-     * @param projection Projection (Sepal Length, Sepal Width, Petal Length, Petal Width) sur laquelle mettre la valeur
-     * @param value La valeur à mettre dans l'Iris
-     */
-    private void setProjectionValue(Iris iris, String projection, double value) {
-        switch (projection) {
-            case "Sepal Width":
-                iris.setSepalWidth(value);
-                break;
-            case "Petal Width":
-                iris.setPetalWidth(value);
-                break;
-            case "Sepal Length":
-                iris.setSepalLength(value);
-                break;
-            case "Petal Length":
-                iris.setPetalLength(value);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid projection: " + projection);
-        }
     }
 
     /**
