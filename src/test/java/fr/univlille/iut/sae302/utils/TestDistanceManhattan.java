@@ -16,6 +16,7 @@ public class TestDistanceManhattan {
     private Iris iris3;
     private ArrayList<Iris> list;
     private DistanceManhattan dm;
+    MethodeKnn mKnn;
 
     @BeforeEach
     public void init(){
@@ -27,8 +28,8 @@ public class TestDistanceManhattan {
         list.add(iris1);
         list.add(iris2);
         list.add(iris3);
-        MethodeKnn mKnn = new MethodeKnn(new Data<>(list));
-        MethodeKnn.calculerAmplitudes();
+        mKnn = new MethodeKnn(new Data<>(list));
+        mKnn.calculerAmplitudes();
     }
 
     @Test

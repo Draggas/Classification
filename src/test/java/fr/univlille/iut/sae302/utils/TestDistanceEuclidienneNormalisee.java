@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestDistanceEuclidienneNormalisee {
     Iris iris1;
     Iris iris2;
+    MethodeKnn mKnn;
 
     DistanceEuclidienneNormalisee den = new DistanceEuclidienneNormalisee();
 
@@ -23,8 +24,8 @@ public class TestDistanceEuclidienneNormalisee {
         ArrayList<Iris> list = new ArrayList<>();
         list.add(iris1);
         list.add(iris2);
-        MethodeKnn mKnn = new MethodeKnn(new Data<>(list));
-        MethodeKnn.calculerAmplitudes();
+        mKnn = new MethodeKnn(new Data<>(list));
+        mKnn.calculerAmplitudes();
     }
 
     @Test
