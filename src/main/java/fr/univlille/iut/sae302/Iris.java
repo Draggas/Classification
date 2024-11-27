@@ -138,7 +138,7 @@ public class Iris {
         this.sepalWidth = sepalWidth;
     }
 
-    public void setVariety(String s) {
-        this.variety = s;
+    public void setVariety(String variety) {
+        this.variety = variety;
     }
 }

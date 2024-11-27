@@ -62,7 +62,7 @@ public class FormatDonneeBrutIris {
     }
 
     /**
-     * Obtient la largeur du pétale. 
+     * Obtient la largeur du pétale.
      * Si la largeur commence par un point dans son format, elle est préfixée par un zéro pour éviter les bugs avant d'être convertie en double.
      *
      * @return La largeur du pétale sous forme de double.
