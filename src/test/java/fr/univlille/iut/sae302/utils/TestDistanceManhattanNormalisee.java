@@ -16,6 +16,7 @@ public class TestDistanceManhattanNormalisee {
     private Iris iris3;
     private ArrayList<Iris> list;
     private DistanceManhattanNormalisee dmn;
+    MethodeKnn mKnn;
 
     @BeforeEach
     public void init(){
@@ -27,8 +28,8 @@ public class TestDistanceManhattanNormalisee {
         list.add(iris1);
         list.add(iris2);
         list.add(iris3);
-        MethodeKnn mKnn = new MethodeKnn(new Data<>(list));
-        MethodeKnn.calculerAmplitudes();
+        mKnn = new MethodeKnn(new Data<>(list));
+        mKnn.calculerAmplitudes();
     }
 
     @Test
