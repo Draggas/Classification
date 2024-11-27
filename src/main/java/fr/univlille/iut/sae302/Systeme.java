@@ -1,5 +1,7 @@
 package fr.univlille.iut.sae302;
-import fr.univlille.iut.sae302.utils.*;
+import fr.univlille.iut.sae302.utils.DistanceEuclidienneNormalisee;
+import fr.univlille.iut.sae302.utils.Observable;
+import fr.univlille.iut.sae302.utils.Observer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -21,7 +23,7 @@ import java.util.Objects;
 /**
  * La classe Systeme représente une fenêtre de l'application qui affiche
  * un graphique de dispersion pour visualiser les données des iris.
- * Elle permet d'ajouter des iris à la visualisation et d'effectuer des projections 
+ * Elle permet d'ajouter des iris à la visualisation et d'effectuer des projections
  * sur différentes caractéristiques.
  */
 public class Systeme extends Stage implements Observer {
@@ -113,6 +115,8 @@ public class Systeme extends Stage implements Observer {
                 showAlert("Entrée non valide", "Entrez un nombre valide pour l'axe Y.");
             }
         });
+
+        DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
 
         Label labelDefault = new Label("Default");
         Circle cercleDefault = new Circle();
@@ -260,23 +264,7 @@ public class Systeme extends Stage implements Observer {
             varietyComboBox.getItems().addAll("Defaut", "Setosa", "Versicolor", "Virginica");
             varietyComboBox.setValue("Defaut");
 
-            Label distanceLabel = new Label("Distance :");
-            ComboBox<String> distanceComboBox = new ComboBox<>();
-            distanceComboBox.getItems().addAll("Distance Euclidienne", "Distance Manhattan");
-            distanceComboBox.setValue("Distance Euclidienne");
-
-            MethodeKnn knn = new MethodeKnn(new Data<>(this.Data.getEData()));
-
             Button buttonAdd = new Button("Ajouter");
-            Label pourcentage = new Label("Pourcentage: 0%");
-
-            xInput.textProperty().addListener((observable, oldValue, newValue) -> {
-                updatePourcentageIfValid(xInput, yInput, pourcentage, distanceComboBox, knn);
-            });
-
-            yInput.textProperty().addListener((observable, oldValue, newValue) -> {
-                updatePourcentageIfValid(xInput, yInput, pourcentage, distanceComboBox, knn);
-            });
 
             buttonAdd.setOnAction(ev -> {
                 try {
@@ -284,10 +272,7 @@ public class Systeme extends Stage implements Observer {
                     double yNumber = Double.parseDouble(yInput.getText());
                     String variety = varietyComboBox.getValue();
 
-                    boolean useEuclidean = distanceComboBox.getValue().equals("Distance Euclidienne");
-                    DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
-                    DistanceManhattanNormalisee manhattanCalc = new DistanceManhattanNormalisee();
-                    Distance distanceCalcul = useEuclidean ? euclidienneCalc : manhattanCalc;
+                    MethodeKnn knn = new MethodeKnn(new Data<>(this.Data.getEData()));
 
                     if (xNumber >= x && xNumber <= y && yNumber >= x && yNumber <= y) {
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(xNumber, yNumber);
@@ -306,7 +291,7 @@ public class Systeme extends Stage implements Observer {
                         if (projectionComboBox2.getValue().equals("Petal Length")) tmp.setPetalLength(yNumber);
 
                         if (tmp.getVariety().equals("Defaut")) {
-                            tmp.setVariety(knn.classifierIris(knn.trouverMeilleurK(distanceCalcul), tmp, distanceCalcul));
+                            tmp.setVariety(knn.classifierIris(knn.trouverMeilleurK(euclidienneCalc), tmp, euclidienneCalc));
                         }
 
                         irisData.add(tmp);
@@ -348,8 +333,6 @@ public class Systeme extends Stage implements Observer {
             grid.add(varietyLabel, 0, 2);
             grid.add(varietyComboBox, 1, 2);
             grid.add(buttonAdd, 0, 3);
-            grid.add(distanceComboBox, 1, 3);
-            grid.add(pourcentage, 1, 4);
 
             GridPane.setMargin(xInputLabel, new Insets(20, 5, 5, 20));
             GridPane.setMargin(xInput, new Insets(20, 20, 5, 5));
@@ -385,7 +368,7 @@ public class Systeme extends Stage implements Observer {
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
         leftPane.getChildren().addAll(projectionComboBox2, spacer, buttonProjection, buttonIris, buttonMeilleurDistance,                xAxisLabel, xAxisMinField, xAxisMaxField, updateXAxisButton,
-                                        yAxisLabel, yAxisMinField, yAxisMaxField, updateYAxisButton);
+                yAxisLabel, yAxisMinField, yAxisMaxField, updateYAxisButton);
         leftPane.setAlignment(Pos.TOP_LEFT);
 
         HBox bottomPane = new HBox();
@@ -518,6 +501,7 @@ public class Systeme extends Stage implements Observer {
         newChart.getData().add(newSeries);
     }
 
+
     private void openNewProjectionTab(TabPane tabPane) {
         NumberAxis xAxis = new NumberAxis(x, y, 1.0);
         NumberAxis yAxis = new NumberAxis(x, y, 1.0);
@@ -530,23 +514,6 @@ public class Systeme extends Stage implements Observer {
         newTab.setContent(newChart);
         tabPane.getTabs().add(newTab);
         tabPane.getSelectionModel().select(newTab);
-    }
-
-    private void updatePourcentageIfValid(TextField xInput, TextField yInput, Label pourcentage, ComboBox<String> distanceComboBox, MethodeKnn knn) {
-        try {
-            double xNumber = Double.parseDouble(xInput.getText());
-            double yNumber = Double.parseDouble(yInput.getText());
-
-            boolean useEuclidean = distanceComboBox.getValue().equals("Distance Euclidienne");
-            DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
-            DistanceManhattanNormalisee manhattanCalc = new DistanceManhattanNormalisee();
-            Distance distanceCalcul = useEuclidean ? euclidienneCalc : manhattanCalc;
-
-            double percentage = knn.calculerPourcentageReussite(knn.trouverMeilleurK(distanceCalcul), distanceCalcul);
-            pourcentage.setText(String.format("Pourcentage: %.2f%%", percentage));
-        } catch (NumberFormatException e) {
-            pourcentage.setText("Pourcentage: 0%");
-        }
     }
 
     /**

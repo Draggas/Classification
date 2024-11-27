@@ -111,6 +111,9 @@ public class MethodeKnn {
         for (Iris iris : this.datas.getEData()) {
             List<Iris> autresIris = new ArrayList<>(this.datas.getEData());
             autresIris.remove(iris);
+            Data<Iris> autreData = new Data<>(autresIris);
+
+            MethodeKnn knnTemp = new MethodeKnn(autreData);
             String predictedVariety = classifierIris(k, iris, distance);
             if (predictedVariety != null && predictedVariety.equals(iris.getVariety())) {
                 correctPredictions++;
@@ -118,6 +121,7 @@ public class MethodeKnn {
         }
         return (correctPredictions / (double) total) * 100;
     }
+
 
     public int trouverMeilleurK(Distance distance) {
         int meilleurK = 1;
