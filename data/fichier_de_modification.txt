@@ -1,0 +1,10 @@
+# iris.csv variety
+-variety
+Virginica : red
+Setosa : blue
+Versicolor : green
+
+# pokemon.csv is_legendary
+-is_legendary
+True : blue
+False : gray
