@@ -12,6 +12,7 @@ suivante au plus tard le 29 novembre 2024, avant minuit.*
 - Une catégorie par défaut est choisie au chargement
 - Le nouveau point doit être ajouté au nuage de points ainsi que sa catégorie
 - L'utilisateur pourra choisir la distance (Euclidienne ou Manhattan au moins)
+- Revoir les méthodes distance KNN
 - Sélectionner les attributs à utiliser pour le calcul de la distance entre deux données
 - Permettre l'utilisation de pondérations pour augmenter l'importance de certains attributs.
 - La robustesse de votre classification doit être calculée par rapport à vos données, et accessible dans votre interface, en précisant la méthode d'évaluation. 
