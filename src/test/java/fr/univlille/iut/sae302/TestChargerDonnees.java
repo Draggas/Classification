@@ -7,12 +7,9 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import fr.univlille.iut.sae302.ChargementDonneesUtil;
-import fr.univlille.iut.sae302.FormatDonneeBrutIris;
-import fr.univlille.iut.sae302.FormatDonneeBrutPokemon;
-import fr.univlille.iut.sae302.Iris;
-import fr.univlille.iut.sae302.Pokemon;
-import fr.univlille.iut.sae302.Type;
+import fr.univlille.iut.sae302.indesirable.FormatDonneeBrutPokemon;
+import fr.univlille.iut.sae302.indesirable.Pokemon;
+import fr.univlille.iut.sae302.indesirable.Type;
 
 public class TestChargerDonnees {
 

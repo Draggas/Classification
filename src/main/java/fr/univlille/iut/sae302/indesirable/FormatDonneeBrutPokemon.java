@@ -1,4 +1,4 @@
-package fr.univlille.iut.sae302;
+package fr.univlille.iut.sae302.indesirable;
 
 import com.opencsv.bean.CsvBindByName;
 

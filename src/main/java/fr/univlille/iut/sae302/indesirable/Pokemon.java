@@ -1,4 +1,4 @@
-package fr.univlille.iut.sae302;
+package fr.univlille.iut.sae302.indesirable;
 
 /**
  * Cette classe représente un Pokémon avec ses caractéristiques telles que

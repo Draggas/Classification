@@ -1,7 +1,6 @@
 package fr.univlille.iut.sae302;
 
 import fr.univlille.iut.sae302.utils.Distance;
-import fr.univlille.iut.sae302.Data;
 
 import java.util.*;
 
@@ -112,9 +111,7 @@ public class MethodeKnn {
         for (Iris iris : this.datas.getEData()) {
             List<Iris> autresIris = new ArrayList<>(this.datas.getEData());
             autresIris.remove(iris);
-            Data<Iris> autreData = new Data<>(autresIris);
 
-            MethodeKnn knnTemp = new MethodeKnn(autreData);
             String predictedVariety = classifierIris(k, iris, distance);
             if (predictedVariety != null && predictedVariety.equals(iris.getVariety())) {
                 correctPredictions++;

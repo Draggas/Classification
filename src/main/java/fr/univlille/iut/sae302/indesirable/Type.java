@@ -1,4 +1,4 @@
-package fr.univlille.iut.sae302;
+package fr.univlille.iut.sae302.indesirable;
 /**
  * Cette énumération représente les différents types de Pokémon.
  */

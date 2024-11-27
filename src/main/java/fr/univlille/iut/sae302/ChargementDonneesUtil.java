@@ -8,6 +8,10 @@ import java.util.List;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
+import fr.univlille.iut.sae302.indesirable.FormatDonneeBrutPokemon;
+import fr.univlille.iut.sae302.indesirable.Pokemon;
+import fr.univlille.iut.sae302.indesirable.Type;
+
 /**
  * Cette classe permet de charger un fichier de donnée.
  * Elle permet aussi de simplifier la création de la classe {@code Iris}.
@@ -47,6 +51,8 @@ public class ChargementDonneesUtil<T> {
      * @param d L'objet {@code FormatDonneeBrutPokemon} contenant les données brutes du Pokémon.
      * @return Un nouvel objet {@code Pokemon} initialisé avec les attributs fournis par les données brutes.
      */
+
+    @SuppressWarnings("exports")
     public static Pokemon createPokemon(FormatDonneeBrutPokemon d) {
         if (d.getType2() == null) {
             d.setType2(Type.none);
@@ -113,6 +119,8 @@ public class ChargementDonneesUtil<T> {
      * @param donnees Une liste de données brutes contenant les attributs des pokémons.
      * @return Une liste d'objets {@code Pokemon} avec les attributs normalisés.
      */ 
+    
+     @SuppressWarnings("exports")
     public static List<Pokemon> normaliserPokemon(List<FormatDonneeBrutPokemon> donnees) {
         List<Pokemon> pokemonList = new ArrayList<>();
         

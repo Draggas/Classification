@@ -3,7 +3,6 @@ package fr.univlille.iut.sae302;
 import fr.univlille.iut.sae302.utils.Distance;
 import fr.univlille.iut.sae302.utils.DistanceEuclidienne;
 import fr.univlille.iut.sae302.utils.DistanceManhattan;
-import fr.univlille.iut.sae302.utils.DistanceManhattanNormalisee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

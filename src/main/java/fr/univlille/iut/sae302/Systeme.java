@@ -1,10 +1,7 @@
 package fr.univlille.iut.sae302;
-import fr.univlille.iut.sae302.Iris;
-import fr.univlille.iut.sae302.MethodeKnn;
 import fr.univlille.iut.sae302.utils.DistanceEuclidienneNormalisee;
 import fr.univlille.iut.sae302.utils.Observable;
 import fr.univlille.iut.sae302.utils.Observer;
-import fr.univlille.iut.sae302.Data;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -20,6 +17,8 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,7 +46,17 @@ public class Systeme extends Stage implements Observer {
      *
      * @param irisData La liste des données d'iris à visualiser.
      */
-    public Systeme(List<Iris> irisData) {
+    public Systeme() {
+        List<FormatDonneeBrutIris> irisBrut = new ArrayList<>();
+        try{
+            irisBrut = ChargementDonneesUtil.charger("data/iris.csv", FormatDonneeBrutIris.class);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        List<Iris> irisData = new ArrayList<>();
+        for (FormatDonneeBrutIris brut : irisBrut) {
+            irisData.add(ChargementDonneesUtil.createIris(brut));
+        }
         this.Data = new Data<>(irisData);
         this.Data.attach(this);
         NumberAxis xAxis = new NumberAxis(x, y, 1.0);
