@@ -75,10 +75,6 @@ public class MethodeKnn {
             voisins[i] = distances.get(i).getKey();
         }
 
-        for (Map.Entry<Iris, Double> entry : distances) {
-            System.out.println("Voisin : " + entry.getKey().getVariety() + ", Distance : " + entry.getValue());
-        }
-
         return voisins;
     }
 
