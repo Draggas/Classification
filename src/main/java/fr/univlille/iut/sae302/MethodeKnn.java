@@ -1,7 +1,7 @@
-package fr.univlille.iut.sae302.model;
+package fr.univlille.iut.sae302;
 
 import fr.univlille.iut.sae302.utils.Distance;
-import fr.univlille.iut.sae302.view.Data;
+import fr.univlille.iut.sae302.Data;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package fr.univlille.iut.sae302.model;
+package fr.univlille.iut.sae302;
 
 /**
  * Cette classe représente une fleur Iris avec ses attributs de caractéristiques

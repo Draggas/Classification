@@ -1,7 +1,7 @@
 package fr.univlille.iut.sae302.utils;
 
-import fr.univlille.iut.sae302.model.Iris;
-import fr.univlille.iut.sae302.model.MethodeKnn;
+import fr.univlille.iut.sae302.Iris;
+import fr.univlille.iut.sae302.MethodeKnn;
 
 public class DistanceManhattanNormalisee implements Distance {
 

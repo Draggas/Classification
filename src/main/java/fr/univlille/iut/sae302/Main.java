@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.univlille.iut.sae302.controllers.Systeme;
-import fr.univlille.iut.sae302.model.ChargementDonneesUtil;
-import fr.univlille.iut.sae302.model.FormatDonneeBrutIris;
-import fr.univlille.iut.sae302.model.Iris;
+import fr.univlille.iut.sae302.ChargementDonneesUtil;
+import fr.univlille.iut.sae302.FormatDonneeBrutIris;
+import fr.univlille.iut.sae302.Iris;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

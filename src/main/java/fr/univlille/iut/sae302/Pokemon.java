@@ -1,4 +1,4 @@
-package fr.univlille.iut.sae302.model;
+package fr.univlille.iut.sae302;
 
 /**
  * Cette classe représente un Pokémon avec ses caractéristiques telles que

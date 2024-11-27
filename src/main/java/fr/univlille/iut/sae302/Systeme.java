@@ -1,10 +1,10 @@
-package fr.univlille.iut.sae302.controllers;
-import fr.univlille.iut.sae302.model.Iris;
-import fr.univlille.iut.sae302.model.MethodeKnn;
+package fr.univlille.iut.sae302;
+import fr.univlille.iut.sae302.Iris;
+import fr.univlille.iut.sae302.MethodeKnn;
 import fr.univlille.iut.sae302.utils.DistanceEuclidienneNormalisee;
 import fr.univlille.iut.sae302.utils.Observable;
 import fr.univlille.iut.sae302.utils.Observer;
-import fr.univlille.iut.sae302.view.Data;
+import fr.univlille.iut.sae302.Data;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

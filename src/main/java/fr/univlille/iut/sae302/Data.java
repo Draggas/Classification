@@ -1,4 +1,4 @@
-package fr.univlille.iut.sae302.view;
+package fr.univlille.iut.sae302;
 
 import java.util.List;
 
