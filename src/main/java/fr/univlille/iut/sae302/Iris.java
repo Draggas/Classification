@@ -138,6 +138,11 @@ public class Iris {
         this.sepalWidth = sepalWidth;
     }
 
+    /**
+     * Définit la variété du sépale.
+     *
+     * @param variety La nouvelle variété du sépale.
+     */
     public void setVariety(String variety) {
         this.variety = variety;
     }

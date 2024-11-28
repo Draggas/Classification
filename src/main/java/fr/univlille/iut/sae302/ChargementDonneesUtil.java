@@ -1,7 +1,6 @@
 package fr.univlille.iut.sae302;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,18 +13,18 @@ import com.opencsv.bean.CsvToBeanBuilder;
 /**
  * Cette classe permet de charger un fichier de donnée.
  * Elle permet aussi de simplifier la création de la classe {@code Iris}.
- * Pour préparer le Jalon2, elle prends en compte aussi {@code Pokemon} et permet de normaliser les données.
+ * Pour préparer le Jalon2, elle prend en compte aussi {@code Pokemon} et permet de normaliser les données.
  * @param <T> Le type de donnée géré par cette classe.
  */
 public class ChargementDonneesUtil<T> {
 
     /**
-     * Charge un fichier CSV d'un certain type de donnée brut
+     * Charge un fichier CSV d'un certain type de donnée brut.
      * 
      * @param fileName Chemin vers le fichier CSV.
      * @param type Type des données du fichier CSV.
-     * @return Une Liste de Données Brut du type de ce fichier CSV
-     * @throws IOException Si le fichier n'est pas récupéré ou le parse ne marche pas.
+     * @return Une liste de données brutes du type de ce fichier CSV.
+     * @throws IOException Si le fichier n'est pas récupéré ou si le parsing ne fonctionne pas.
      */
     public static <T> List<T> charger(String fileName, Class<T> type) throws IOException {
         return new CsvToBeanBuilder<T>(Files.newBufferedReader(Paths.get(fileName)))
@@ -35,7 +34,7 @@ public class ChargementDonneesUtil<T> {
     }
 
     /**
-     * Crée un nouvel Objet {@code Iris} à partir des données brutes fournies.
+     * Crée un nouvel objet {@code Iris} à partir des données brutes fournies.
      * 
      * @param d L'objet {@code FormatDonneeBrutIris} contenant les données brutes de l'Iris.
      * @return Un nouvel objet {@code Iris} initialisé avec les attributs fournis par les données brutes.
@@ -45,13 +44,11 @@ public class ChargementDonneesUtil<T> {
     }
 
     /**
-     * Crée un nouvel Objet {@code Pokemon}  à partir des données brutes fournies.
+     * Crée un nouvel objet {@code Pokemon} à partir des données brutes fournies.
      *
      * @param d L'objet {@code FormatDonneeBrutPokemon} contenant les données brutes du Pokémon.
      * @return Un nouvel objet {@code Pokemon} initialisé avec les attributs fournis par les données brutes.
      */
-
-    @SuppressWarnings("exports")
     public static Pokemon createPokemon(FormatDonneeBrutPokemon d) {
         if (d.getType2() == null) {
             d.setType2(Type.none);
@@ -68,8 +65,8 @@ public class ChargementDonneesUtil<T> {
      * @param max La valeur maximale de la plage.
      * @return La valeur normalisée entre 0 et 1.
      */
-    public static double normaliserValeur(double valeur, double min, double max){
-        return ((valeur-min)/(max-min));
+    public static double normaliserValeur(double valeur, double min, double max) {
+        return ((valeur - min) / (max - min));
     }
 
     /**
@@ -79,7 +76,7 @@ public class ChargementDonneesUtil<T> {
      * 
      * @param donnees Une liste de données brutes contenant les attributs des fleurs d'Iris.
      * @return Une liste d'objets {@code Iris} avec les attributs normalisés.
-     */ 
+     */
     public static List<Iris> normaliserIris(List<FormatDonneeBrutIris> donnees) {
         List<Iris> irisList = new ArrayList<>();
         
@@ -117,9 +114,7 @@ public class ChargementDonneesUtil<T> {
      * 
      * @param donnees Une liste de données brutes contenant les attributs des pokémons.
      * @return Une liste d'objets {@code Pokemon} avec les attributs normalisés.
-     */ 
-    
-     @SuppressWarnings("exports")
+     */
     public static List<Pokemon> normaliserPokemon(List<FormatDonneeBrutPokemon> donnees) {
         List<Pokemon> pokemonList = new ArrayList<>();
         
@@ -145,7 +140,7 @@ public class ChargementDonneesUtil<T> {
             minExperience = Math.min(minExperience, f.getExperience());
             maxExperience = Math.max(maxExperience, f.getExperience());
             minHp = Math.min(minHp, f.getHp());
-            maxHp = Math.max(maxHp, f.getHp());
+            maxHp = Math.max(f.getHp(), maxHp);
             minSpAttack = Math.min(minSpAttack, f.getSpAttack());
             maxSpAttack = Math.max(maxSpAttack, f.getSpAttack());
             minSpDefense = Math.min(minSpDefense, f.getSpDefense());
@@ -170,7 +165,13 @@ public class ChargementDonneesUtil<T> {
     
         return pokemonList;
     }
-
+    /**
+     * Récupère les en-têtes d'un fichier CSV.
+     *  
+     * @param fileName Chemin vers le fichier CSV. 
+     * @return Une liste des colonnes (en-têtes) du fichier CSV. 
+     * @throws IOException Si le fichier CSV est vide ou n'a pas d'en-tête. 
+     */
     public static List<String> getCsvColumns(String fileName) throws IOException {
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(fileName))) {
             String headerLine = reader.readLine();

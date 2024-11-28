@@ -535,6 +535,12 @@ public class Systeme extends Stage implements Observer {
         return color + size;
     }
 
+    /**
+     * Définit la couleur et la taille d'un point de données Pokémon en fonction de son type.
+     *
+     * @param type1 Le type du Pokémon (Fire, Water, Grass, Electric ou autre).
+     * @return Une chaîne de caractères représentant les styles CSS pour le point de données.
+     */
     private String drawPokemon(Type type1) {
         String color = switch (type1.getName().toLowerCase()) {
             case "fire" -> "-fx-background-color: orange;";
@@ -564,6 +570,13 @@ public class Systeme extends Stage implements Observer {
         };
     }
 
+    /**
+     * Projette les valeurs d'un Pokémon en fonction d'une caractéristique sélectionnée.
+     *
+     * @param projection La caractéristique à projeter (HP, Attack, Defense, Speed, Sp. Attack ou Sp. Defense).
+     * @param pokemon L'objet Pokémon dont on souhaite obtenir la valeur pour la projection.
+     * @return La valeur de la caractéristique sélectionnée pour le Pokémon, ou null si la projection est invalide.
+     */
     private Number projectionPokemon(String projection, Pokemon pokemon) {
         return switch (projection) {
             case "HP" -> pokemon.getHp();
@@ -576,6 +589,12 @@ public class Systeme extends Stage implements Observer {
         };
     }
 
+    /**
+     * Affiche une alerte avec un titre et un message spécifiés.
+     *
+     * @param title Le titre de l'alerte.
+     * @param message Le message de l'alerte.
+     */
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -583,6 +602,13 @@ public class Systeme extends Stage implements Observer {
         alert.showAndWait();
     }
 
+
+    /**
+     * Ajoute une infobulle à un point de données dans un graphique.
+     *
+     * @param dataPoint Le point de données auquel ajouter l'infobulle.
+     * @param tooltipText Le texte de l'infobulle.
+     */
     private void addTooltipToPoint(XYChart.Data<Number, Number> dataPoint, String tooltipText) {
         Tooltip tooltip = new Tooltip(tooltipText);
         Tooltip.install(dataPoint.getNode(), tooltip);
@@ -592,6 +618,12 @@ public class Systeme extends Stage implements Observer {
                 dataPoint.getNode().getStyle() + " -fx-scale-x: 1; -fx-scale-y: 1;"));
     }
 
+    /**
+     * Réalise une nouvelle projection des données dans un graphique de dispersion.
+     *
+     * @param newSeries La nouvelle série de données à afficher.
+     * @param newChart Le nouveau graphique de dispersion.
+     */
     private void newPerformProjection(XYChart.Series<Number, Number> newSeries, ScatterChart<Number, Number> newChart) {
         String projection = projectionComboBox.getValue();
         String projection2 = projectionComboBox2.getValue();
@@ -655,7 +687,12 @@ public class Systeme extends Stage implements Observer {
         }
         newChart.getData().add(newSeries);
     }
-
+    
+    /**
+     * Ouvre un nouvel onglet de projection dans un TabPane.
+     *
+     * @param tabPane Le TabPane dans lequel ouvrir le nouvel onglet.
+     */
     private void openNewProjectionTab(TabPane tabPane) {
         NumberAxis xAxis = new NumberAxis(x, y, 1.0);
         NumberAxis yAxis = new NumberAxis(x, y, 1.0);
@@ -670,6 +707,12 @@ public class Systeme extends Stage implements Observer {
         tabPane.getSelectionModel().select(newTab);
     }
 
+    /**
+     * Vérifie si les colonnes d'un fichier CSV correspondent à celles d'un fichier Pokémon.
+     *
+     * @param columns La liste des colonnes du fichier CSV.
+     * @return true si les colonnes correspondent à celles d'un fichier Pokémon, sinon false.
+     */
     private boolean isPokemonCsv(List<String> columns) {
         List<String> pokemonColumns = Arrays.asList("name", "attack", "base_egg_steps", "capture_rate", "defense",
                 "experience_growth", "hp", "sp_attack", "sp_defense",
@@ -677,6 +720,12 @@ public class Systeme extends Stage implements Observer {
         return new HashSet<>(columns).containsAll(pokemonColumns);
     }
 
+    /**
+     * Vérifie si les colonnes d'un fichier CSV correspondent à celles d'un fichier Iris.
+     *
+     * @param columns La liste des colonnes du fichier CSV.
+     * @return true si les colonnes correspondent à celles d'un fichier Iris, sinon false.
+     */
     private boolean isIrisCsv(List<String> columns) {
         List<String> irisColumns = Arrays.asList("sepal.length", "sepal.width", "petal.length", "petal.width", "variety");
         List<String> normalizedColumns = columns.stream()
@@ -685,6 +734,11 @@ public class Systeme extends Stage implements Observer {
         return new HashSet<>(normalizedColumns).containsAll(irisColumns);
     }
 
+    /**
+     * Crée une légende pour les variétés d'Iris.
+     *
+     * @return Un HBox contenant les éléments de la légende.
+     */
     private HBox createIrisLegend() {
         Label labelDefault = new Label("Default");
         Circle cercleDefault = new Circle();
@@ -721,6 +775,11 @@ public class Systeme extends Stage implements Observer {
         return legendeIris;
     }
 
+    /**
+     * Crée une légende pour les types de Pokémon.
+     *
+     * @return Un HBox contenant les éléments de la légende.
+     */
     private HBox createPokemonLegend() {
         Label labelFire = new Label("Fire");
         Circle cercleFire = new Circle();
@@ -764,6 +823,15 @@ public class Systeme extends Stage implements Observer {
         return legendePokemon;
     }
 
+    /**
+     * Met à jour le pourcentage de réussite si les entrées sont valides.
+     *
+     * @param xInput Le champ de texte pour l'entrée x.
+     * @param yInput Le champ de texte pour l'entrée y.
+     * @param pourcentage Le label pour afficher le pourcentage.
+     * @param distanceComboBox La combobox pour sélectionner le type de distance.
+     * @param knn L'objet MethodeKnn pour calculer le pourcentage de réussite.
+     */
     private void updatePourcentageIfValid(TextField xInput, TextField yInput, Label pourcentage, ComboBox<String> distanceComboBox, MethodeKnn knn) {
         try {
             double xNumber = Double.parseDouble(xInput.getText());
@@ -782,7 +850,12 @@ public class Systeme extends Stage implements Observer {
     }
 
 
-
+    /**
+     * Met à jour la légende dans le conteneur en fonction du type de données (Pokémon ou Iris).
+     *
+     * @param container Le conteneur dans lequel ajouter la légende.
+     * @param isPokemon Indique si les données sont de type Pokémon (true) ou Iris (false).
+     */
     void updateLegend(HBox container, boolean isPokemon) {
         container.getChildren().clear();
         if (isPokemon) {

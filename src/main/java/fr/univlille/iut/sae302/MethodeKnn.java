@@ -5,7 +5,10 @@ import fr.univlille.iut.sae302.utils.DistanceManhattan;
 
 import java.util.*;
 
-
+/** 
+ * Constructeur générique de la classe. 
+ * @param datas Les données utilisées pour l'algorithme KNN. 
+ */
 public class MethodeKnn<T> {
     private Data<T> datas;
 
@@ -25,12 +28,19 @@ public class MethodeKnn<T> {
     public static  double amplitudeSpeed;
     public static  double amplitudeIsLegendary;
 
-    // Constructeur générique
+    /**
+     * Constructeur générique de la classe.
+     *
+     * @param datas Les données utilisées pour l'algorithme KNN.
+     */
     public MethodeKnn(Data<T> datas) {
         this.datas = datas;
         calculerAmplitudes();
     }
 
+    /**
+     * Calcule les amplitudes des différents attributs des données.
+     */
     public void calculerAmplitudes() {
         if (datas.isEmpty()) {
             amplitudePetalLength = 0;
@@ -126,7 +136,14 @@ public class MethodeKnn<T> {
         }
     }
 
-
+    /**
+     * Récupère les k plus proches voisins d'un objet cible.
+     * 
+     * @param k Le nombre de voisins à trouver.
+     * @param cible L'objet pour lequel trouver les voisins.
+     * @param distance La fonction de distance à utiliser.
+     * @return Un tableau des k plus proches voisins.
+     */
     public T[] getKPlusProchesVoisins(int k, T cible, Distance<T> distance) {
         List<T> autresObjets = new ArrayList<>(this.datas.getEData());
         autresObjets.removeIf(objet -> objet.equals(cible));
@@ -145,6 +162,14 @@ public class MethodeKnn<T> {
         return voisins;
     }
 
+    /**
+     * Classifie un objet en fonction de ses k plus proches voisins.
+     * 
+     * @param k Le nombre de voisins à utiliser pour la classification.
+     * @param cible L'objet cible à classifier.
+     * @param distance La fonction de distance à utiliser.
+     * @return La classe prédite pour l'objet cible.
+     */
     public String classifierObjet(int k, T cible, Distance<T> distance) {
         T[] voisins = getKPlusProchesVoisins(k, cible, distance);
         Map<String, Integer> voteMap = new HashMap<>();
@@ -195,6 +220,13 @@ public class MethodeKnn<T> {
         return classePredite != null ? classePredite : "Defaut";
     }
 
+    /**
+     * Calcule le pourcentage de réussite de la classification.
+     * 
+     * @param k Le nombre de voisins à utiliser pour la classification.
+     * @param distance La fonction de distance à utiliser.
+     * @return Le pourcentage de réussite de la classification.
+     */
     public double calculerPourcentageReussite(int k, Distance<T> distance) {
         int total = this.datas.getEData().size();
         int correctPredictions = 0;
@@ -212,7 +244,12 @@ public class MethodeKnn<T> {
         return (correctPredictions / (double) total) * 100;
     }
 
-
+    /**
+     * Trouve la meilleure valeur de k pour la classification.
+     * 
+     * @param distance La fonction de distance à utiliser.
+     * @return La meilleure valeur de k.
+     */
     public int trouverMeilleurK(Distance distance) {
         int meilleurK = 1;
         double meilleurPourcentage = 0;
@@ -242,14 +279,30 @@ public class MethodeKnn<T> {
         return datas.getEData().stream().mapToDouble(iris -> iris.getSepalWidth().doubleValue()).min().orElse(0);
     }*/
 
+    /**
+     * Obtient les données utilisées par l'algorithme KNN.
+     *
+     * @return Les données utilisées par l'algorithme KNN.
+     */
     public Data<T> getDatas() {
         return datas;
     }
 
+    /**
+     * Définit les données utilisées par l'algorithme KNN.
+     *
+     * @param datas Les données à utiliser par l'algorithme KNN.
+     */
     public void setDatas(Data<T> datas) {
         this.datas = datas;
     }
 
+    /**
+     * Obtient la classification d'un objet.
+     * 
+     * @param objet L'objet dont on souhaite connaître la classification.
+     * @return La classification de l'objet.
+     */
     private String getClassification(T objet) {
         if (objet instanceof Iris) {
             return ((Iris) objet).getVariety();
@@ -259,82 +312,183 @@ public class MethodeKnn<T> {
         return "Unknown";
     }
 
+    /**
+     * Obtient l'amplitude de l'attribut Attack.
+     *
+     * @return L'amplitude de l'attribut Attack.
+     */
     public double getAmplitudeAttack() {
         return amplitudeAttack;
     }
 
+    /**
+     * Définit l'amplitude de l'attribut Attack.
+     *
+     * @param amplitudeAttack L'amplitude de l'attribut Attack.
+     */
     public void setAmplitudeAttack(double amplitudeAttack) {
         this.amplitudeAttack = amplitudeAttack;
     }
 
+    /**
+     * Obtient l'amplitude de l'attribut BaseEggSteps.
+     *
+     * @return L'amplitude de l'attribut BaseEggSteps.
+     */
     public double getAmplitudeBaseEggSteps() {
         return amplitudeBaseEggSteps;
     }
 
+    /**
+     * Définit l'amplitude de l'attribut BaseEggSteps.
+     *
+     * @param amplitudeBaseEggSteps L'amplitude de l'attribut BaseEggSteps.
+     */
     public void setAmplitudeBaseEggSteps(double amplitudeBaseEggSteps) {
         this.amplitudeBaseEggSteps = amplitudeBaseEggSteps;
     }
 
+    /**
+     * Obtient l'amplitude de l'attribut CaptureRate.
+     *
+     * @return L'amplitude de l'attribut CaptureRate.
+     */
     public double getAmplitudeCaptureRate() {
         return amplitudeCaptureRate;
     }
 
+    /**
+     * Définit l'amplitude de l'attribut CaptureRate.
+     *
+     * @param amplitudeCaptureRate L'amplitude de l'attribut CaptureRate.
+     */
     public void setAmplitudeCaptureRate(double amplitudeCaptureRate) {
         this.amplitudeCaptureRate = amplitudeCaptureRate;
     }
 
+    /**
+     * Obtient l'amplitude de l'attribut Defense.
+     *
+     * @return L'amplitude de l'attribut Defense.
+     */
     public double getAmplitudeDefense() {
         return amplitudeDefense;
     }
 
+    /**
+     * Définit l'amplitude de l'attribut Defense.
+     *
+     * @param amplitudeDefense L'amplitude de l'attribut Defense.
+     */
     public void setAmplitudeDefense(double amplitudeDefense) {
         this.amplitudeDefense = amplitudeDefense;
     }
 
+    /**
+     * Obtient l'amplitude de l'attribut ExperienceGrowth.
+     *
+     * @return L'amplitude de l'attribut ExperienceGrowth.
+     */
     public double getAmplitudeExperienceGrowth() {
         return amplitudeExperienceGrowth;
     }
 
+    /**
+     * Définit l'amplitude de l'attribut ExperienceGrowth.
+     *
+     * @param amplitudeExperienceGrowth L'amplitude de l'attribut ExperienceGrowth.
+     */
     public void setAmplitudeExperienceGrowth(double amplitudeExperienceGrowth) {
         this.amplitudeExperienceGrowth = amplitudeExperienceGrowth;
     }
 
+    /**
+     * Obtient l'amplitude de l'attribut Hp.
+     *
+     * @return L'amplitude de l'attribut Hp.
+     */
     public double getAmplitudeHp() {
         return amplitudeHp;
     }
 
+
+    /**
+     * Définit l'amplitude de l'attribut Hp.
+     *
+     * @param amplitudeHp L'amplitude de l'attribut Hp.
+     */
     public void setAmplitudeHp(double amplitudeHp) {
         this.amplitudeHp = amplitudeHp;
     }
 
+    /**
+     * Obtient l'amplitude de l'attribut SpAttack.
+     *
+     * @return L'amplitude de l'attribut SpAttack.
+     */
     public double getAmplitudeSpAttack() {
         return amplitudeSpAttack;
     }
 
+    /**
+     * Définit l'amplitude de l'attribut SpAttack.
+     *
+     * @param amplitudeSpAttack L'amplitude de l'attribut SpAttack.
+     */
     public void setAmplitudeSpAttack(double amplitudeSpAttack) {
         this.amplitudeSpAttack = amplitudeSpAttack;
     }
 
+    /**
+     * Obtient l'amplitude de l'attribut SpDefense.
+     *
+     * @return L'amplitude de l'attribut SpDefense.
+     */
     public double getAmplitudeSpDefense() {
         return amplitudeSpDefense;
     }
 
+    /**
+     * Définit l'amplitude de l'attribut SpDefense.
+     *
+     * @param amplitudeSpDefense L'amplitude de l'attribut SpDefense.
+     */
     public void setAmplitudeSpDefense(double amplitudeSpDefense) {
         this.amplitudeSpDefense = amplitudeSpDefense;
     }
 
+    /**
+     * Obtient l'amplitude de l'attribut Speed.
+     *
+     * @return L'amplitude de l'attribut Speed.
+     */
     public double getAmplitudeSpeed() {
         return amplitudeSpeed;
     }
 
+    /**
+     * Définit l'amplitude de l'attribut Speed.
+     *
+     * @param amplitudeSpeed L'amplitude de l'attribut Speed.
+     */
     public void setAmplitudeSpeed(double amplitudeSpeed) {
         this.amplitudeSpeed = amplitudeSpeed;
     }
 
+    /**
+     * Obtient l'amplitude de l'attribut IsLegendary.
+     *
+     * @return L'amplitude de l'attribut IsLegendary.
+     */
     public double getAmplitudeIsLegendary() {
         return amplitudeIsLegendary;
     }
 
+    /**
+     * Définit l'amplitude de l'attribut IsLegendary.
+     *
+     * @param amplitudeIsLegendary L'amplitude de l'attribut IsLegendary.
+     */
     public void setAmplitudeIsLegendary(double amplitudeIsLegendary) {
         this.amplitudeIsLegendary = amplitudeIsLegendary;
     }

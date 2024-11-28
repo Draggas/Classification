@@ -250,23 +250,47 @@ public class Pokemon {
         this.speed = speed;
     }
 
+    /**
+     * Obtient le nom du Pokémon.
+     *
+     * @return Le nom du Pokémon.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Obtient le premier type du Pokémon.
+     *
+     * @return Le premier type du Pokémon, ou UNKNOWN si type1 est null.
+     */
     public Type getType1() {
         return type1 != null ? type1 : Type.UNKNOWN; // Renvoie UNKNOWN si type1 est null
     }
 
-
+    /**
+     * Obtient le deuxième type du Pokémon.
+     *
+     * @return Le deuxième type du Pokémon.
+     */
     public Type getType2() {
         return type2;
     }
 
+    /**
+     * Indique si le Pokémon est légendaire.
+     *
+     * @return 1 si le Pokémon est légendaire, sinon 0.
+     */
     public int getIsLegendary(){
         return isLegendary ? 1 : 0;
     }
 
+    /**
+     * Définit le premier type du Pokémon.
+     *
+     * @param type1 Le nouveau premier type du Pokémon.
+     */
     public void setType1(String type1) {
         System.out.println(type1);
         try {

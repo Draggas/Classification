@@ -33,6 +33,11 @@ public class Data <E> extends Observable {
         return eData;
     }
 
+    /**
+     * Renvoie l'état de Data.
+     *
+     * @return True si c'est vide, sinon False.
+     */
     public boolean isEmpty() {
         return eData.isEmpty();
     }

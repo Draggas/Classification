@@ -4,8 +4,19 @@ import fr.univlille.iut.sae302.Iris;
 import fr.univlille.iut.sae302.MethodeKnn;
 import fr.univlille.iut.sae302.Pokemon;
 
+/**
+ * Cette classe calcule la distance de Manhattan normalisée entre deux objets de type Iris ou Pokemon.
+ */
 public class DistanceManhattanNormalisee implements Distance {
 
+    /**
+     * Calcule la distance de Manhattan normalisée entre deux objets.
+     * 
+     * @param t1 Le premier objet, soit de type Iris soit de type Pokemon.
+     * @param t2 Le deuxième objet, soit de type Iris soit de type Pokemon.
+     * @return La distance de Manhattan normalisée entre les deux objets.
+     * @throws IllegalArgumentException Si les objets ou les amplitudes sont nulles ou égales à zéro.
+     */
     @Override
     public double distance(Object t1, Object t2) {
         if (t1 == null || t2 == null) {
@@ -47,4 +58,3 @@ public class DistanceManhattanNormalisee implements Distance {
         return distance;
     }
 }
-

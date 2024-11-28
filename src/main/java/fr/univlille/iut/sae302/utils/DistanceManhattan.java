@@ -3,8 +3,19 @@ package fr.univlille.iut.sae302.utils;
 import fr.univlille.iut.sae302.Iris;
 import fr.univlille.iut.sae302.Pokemon;
 
+/**
+ * Classe implémentant l'interface Distance pour calculer la distance de Manhattan entre deux objets.
+ */
 public class DistanceManhattan implements Distance {
 
+    /**
+     * Calcule la distance de Manhattan entre deux objets.
+     * 
+     * @param t1 Le premier objet, soit de type Iris soit de type Pokemon.
+     * @param t2 Le deuxième objet, soit de type Iris soit de type Pokemon.
+     * @return La distance de Manhattan entre les deux objets.
+     * @throws IllegalArgumentException Si les objets sont null.
+     */
     @Override
     public double distance(Object t1, Object t2) {
         if (t1 == null || t2 == null) {
@@ -35,4 +46,3 @@ public class DistanceManhattan implements Distance {
         return distance;
     }
 }
-
