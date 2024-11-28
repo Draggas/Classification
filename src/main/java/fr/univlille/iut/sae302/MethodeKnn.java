@@ -135,7 +135,7 @@ public class MethodeKnn<T> {
         for (T objet : autresObjets) {
             double dist = distance.distance(cible, objet);
             distances.add(new AbstractMap.SimpleEntry<>(objet, dist));
-            System.out.println("Distance entre " + cible + " et " + objet + " : " + dist);
+            //System.out.println("Distance entre " + cible + " et " + objet + " : " + dist);
         }
         distances.sort(Map.Entry.comparingByValue());
         T[] voisins = (T[]) new Object[k];
@@ -191,14 +191,14 @@ public class MethodeKnn<T> {
         double meilleurPourcentage = 0;
         for (int k = 1; k <= 11; k += 2) {
             double pourcentageReussite = calculerPourcentageReussite(k, distance);
-            System.out.println("Pourcentage de réussite pour k=" + k + " : " + pourcentageReussite + "%");
+            //System.out.println("Pourcentage de réussite pour k=" + k + " : " + pourcentageReussite + "%");
             if (pourcentageReussite > meilleurPourcentage) {
                 meilleurPourcentage = pourcentageReussite;
                 meilleurK = k;
             }
         }
-        System.out.println("Meilleur k pour la distance " + distance.getClass().getSimpleName() +
-                " est " + meilleurK + " avec un pourcentage de réussite de " + meilleurPourcentage + "%");
+        //System.out.println("Meilleur k pour la distance " + distance.getClass().getSimpleName() +
+        //        " est " + meilleurK + " avec un pourcentage de réussite de " + meilleurPourcentage + "%");
         return meilleurK;
     }
 

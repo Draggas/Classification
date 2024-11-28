@@ -1,5 +1,5 @@
 package fr.univlille.iut.sae302;
-import fr.univlille.iut.sae302.utils.DistanceEuclidienneNormalisee;
+import fr.univlille.iut.sae302.utils.*;
 import fr.univlille.iut.sae302.utils.Observable;
 import fr.univlille.iut.sae302.utils.Observer;
 import javafx.event.ActionEvent;
@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -77,7 +78,13 @@ public class Systeme extends Stage implements Observer {
         projectionComboBox.setDisable(true);
         projectionComboBox2.setDisable(true);
 
+        Button buttonProjection = new Button("Projection");
+        Button buttonAddValue = new Button("Ajouter");
+        buttonProjection.setDisable(true);
+        buttonAddValue.setDisable(true);
+
         HBox legende = new HBox();
+        legende.setAlignment(Pos.CENTER);
 
         openFileButton.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
@@ -94,6 +101,8 @@ public class Systeme extends Stage implements Observer {
                     projectionComboBox2.getItems().clear();
                     projectionComboBox.setDisable(true);
                     projectionComboBox2.setDisable(true);
+                    buttonProjection.setDisable(true);
+                    buttonAddValue.setDisable(true);
                     irisData.clear();
                     pokemonData.clear();
 
@@ -105,9 +114,6 @@ public class Systeme extends Stage implements Observer {
                         projectionComboBox.getItems().setAll("HP", "Attack", "Defense", "Speed", "Sp Attack", "Sp Defense");
                         projectionComboBox2.getItems().setAll("HP", "Attack", "Defense", "Speed", "Sp Attack", "Sp Defense");
                         this.Data = new Data<>(pokemonData);
-                        this.Data.attach(this);
-                        projectionComboBox.setDisable(false);
-                        projectionComboBox2.setDisable(false);
                         updateLegend(legende, true);
                     }else if(isIrisCsv(columns)){
                         List<FormatDonneeBrutIris> listBrutIris = ChargementDonneesUtil.charger(selectedFile.getAbsolutePath(), FormatDonneeBrutIris.class);
@@ -117,11 +123,15 @@ public class Systeme extends Stage implements Observer {
                         projectionComboBox.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
                         projectionComboBox2.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
                         this.Data = new Data<>(irisData);
-                        this.Data.attach(this);
-                        projectionComboBox.setDisable(false);
-                        projectionComboBox2.setDisable(false);
                         updateLegend(legende, false);
                     }
+                    projectionComboBox.setDisable(false);
+                    projectionComboBox2.setDisable(false);
+                    xAxis.setLowerBound((int)(this.Data.getMinData() < 1 ? this.Data.getMinData() : this.Data.getMinData() -1));
+                    xAxis.setUpperBound((int)this.Data.getMaxData()+1);
+                    yAxis.setLowerBound((int)(this.Data.getMinData() < 1 ? this.Data.getMinData() : this.Data.getMinData() -1));
+                    yAxis.setUpperBound((int)this.Data.getMaxData()+1);
+                    this.Data.attach(this);
                 } catch (IOException e) {
                     showAlert("Erreur de chargement", "Impossible de lire le fichier sélectionné.");
                 }
@@ -129,7 +139,6 @@ public class Systeme extends Stage implements Observer {
                 System.out.println("Aucun fichier sélectionné");
             }
         });
-
 
         updateXAxisButton.setOnAction(e -> {
             try {
@@ -186,39 +195,23 @@ public class Systeme extends Stage implements Observer {
 
         VBox nuage = new VBox(tabPane, legende);
 
-        Button buttonProjection = new Button("Projection");
-        Button buttonIris = new Button("Ajouter");
-        Button buttonMeilleurDistance = new Button("Meilleurs Distance");
-        buttonProjection.setDisable(true);
-        buttonIris.setDisable(true);
-        buttonMeilleurDistance.setDisable(true);
-
-
         projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue.equals(projectionComboBox2.getValue())) {
+            if (newValue != null && newValue.equals(projectionComboBox2.getValue())) {
                 projectionComboBox2.setValue(oldValue);
             }
-        });
-
-        projectionComboBox2.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue.equals(projectionComboBox.getValue())) {
-                projectionComboBox.setValue(oldValue);
-            }
-        });
-
-        projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
             if(!(newValue == null || projectionComboBox2.getValue() == null) || Objects.equals(newValue, projectionComboBox2.getValue())) {
                 buttonProjection.setDisable(false);
-                buttonIris.setDisable(false);
-                buttonMeilleurDistance.setDisable(false);
+                buttonAddValue.setDisable(false);
             }
         });
 
         projectionComboBox2.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null && newValue.equals(projectionComboBox.getValue())) {
+                projectionComboBox.setValue(oldValue);
+            }
             if(!(newValue == null || projectionComboBox.getValue() == null) || Objects.equals(newValue, projectionComboBox.getValue())){
                 buttonProjection.setDisable(false);
-                buttonIris.setDisable(false);
-                buttonMeilleurDistance.setDisable(false);
+                buttonAddValue.setDisable(false);
             }
         });
 
@@ -262,30 +255,22 @@ public class Systeme extends Stage implements Observer {
             }
         });
 
-
         Alert a = new Alert(Alert.AlertType.NONE);
         EventHandler<ActionEvent> AlertEventInvalidNumbers = e -> {
             a.setAlertType(Alert.AlertType.ERROR);
             a.setContentText("Veuillez entrer des nombres valides.");
             a.show();
         };
-        EventHandler<ActionEvent> AlertEventInvalidRange = e -> {
-            a.setAlertType(Alert.AlertType.ERROR);
-            a.setContentText("Veuillez entrer des valeurs entre " + x + " et " + y + ".");
-            a.show();
-        };
 
-        buttonIris.setOnAction(event -> {
+        buttonAddValue.setOnAction(event -> {
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
 
             Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
 
             boolean isPokemon = false;
-            if (!this.Data.getEData().isEmpty()) {
-                Object firstElement = this.Data.getEData().get(0);
-                isPokemon = firstElement instanceof Pokemon;
-            }
+            Object firstElement = this.Data.getEData().get(0);
+            isPokemon = firstElement instanceof Pokemon;
             stage.setTitle(isPokemon ? "Ajouter un Pokemon" : "Ajouter un Iris");
 
             Label xInputLabel = new Label(projectionComboBox.getValue());
@@ -308,7 +293,26 @@ public class Systeme extends Stage implements Observer {
                 varietyComboBox.getItems().addAll("Defaut", "Setosa", "Versicolor", "Virginica");
             }
             varietyComboBox.setValue("Defaut");
+
+            Label distanceLabel = new Label("Distance :");
+            ComboBox<String> distanceComboBox = new ComboBox<>();
+            distanceComboBox.getItems().addAll("Distance Euclidienne", "Distance Manhattan");
+            distanceComboBox.setValue("Distance Euclidienne");
+
+            MethodeKnn knn = new MethodeKnn(new Data<>(this.Data.getEData()));
+
+
             Button buttonAdd = new Button("Ajouter");
+            Label pourcentage = new Label("Pourcentage: 0%");
+
+            xInput.textProperty().addListener((observable, oldValue, newValue) -> {
+                updatePourcentageIfValid(xInput, yInput, pourcentage, distanceComboBox, knn);
+            });
+
+            yInput.textProperty().addListener((observable, oldValue, newValue) -> {
+                updatePourcentageIfValid(xInput, yInput, pourcentage, distanceComboBox, knn);
+            });
+
 
             buttonAdd.setOnAction(ev -> {
                 try {
@@ -316,7 +320,7 @@ public class Systeme extends Stage implements Observer {
                         double xNumber = Double.parseDouble(xInput.getText());
                         double yNumber = Double.parseDouble(yInput.getText());
                         String variety = varietyComboBox.getValue();
-                        MethodeKnn<Iris> knn = new MethodeKnn<>((Data<Iris>) this.Data);
+                        MethodeKnn<Iris> knnIris = new MethodeKnn<>((Data<Iris>) this.Data);
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(xNumber, yNumber);
                         Iris tmp = new Iris(0, 0, 0, 0, variety);
 
@@ -333,7 +337,7 @@ public class Systeme extends Stage implements Observer {
                         if (projectionComboBox2.getValue().equals("Petal Length")) tmp.setPetalLength(yNumber);
 
                         if (tmp.getVariety().equals("Defaut")) {
-                            tmp.setVariety(knn.classifierObjet(knn.trouverMeilleurK(euclidienneCalc), tmp, euclidienneCalc));
+                            tmp.setVariety(knnIris.classifierObjet(knnIris.trouverMeilleurK(euclidienneCalc), tmp, euclidienneCalc));
                         }
 
                         irisData.add(tmp);
@@ -372,7 +376,7 @@ public class Systeme extends Stage implements Observer {
                         double xNumber = Double.parseDouble(xInput.getText());
                         double yNumber = Double.parseDouble(yInput.getText());
                         String name = varietyComboBox.getValue();
-                        MethodeKnn<Pokemon> knn = new MethodeKnn<>((Data<Pokemon>) this.Data);
+                        MethodeKnn<Pokemon> knnPokemon = new MethodeKnn<>((Data<Pokemon>) this.Data);
                         XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(xNumber, yNumber);
                         Pokemon tmp = new Pokemon(nameInput.getText(), 0, 0, 0, 0, 0, 0, 0, 0, null, null, 0, false);
 
@@ -395,7 +399,7 @@ public class Systeme extends Stage implements Observer {
                         if (projectionComboBox2.getValue().equals("Sp Defense")) tmp.setSpDefense(yNumber);
 
                         if (tmp.getName().equals("Default")) {
-                            tmp.setType1(knn.classifierObjet(knn.trouverMeilleurK(euclidienneCalc), tmp, euclidienneCalc));
+                            tmp.setType1(knnPokemon.classifierObjet(knnPokemon.trouverMeilleurK(euclidienneCalc), tmp, euclidienneCalc));
                         }
 
                         pokemonData.add(tmp);
@@ -443,6 +447,7 @@ public class Systeme extends Stage implements Observer {
             grid.add(varietyComboBox, 1, 3);
 
             grid.add(buttonAdd, 0, 4, 2, 1);
+            grid.add(pourcentage, 1, 4);
 
             GridPane.setMargin(nameLabel, new Insets(20, 5, 5, 20));
             GridPane.setMargin(nameInput, new Insets(5, 20, 10, 5));
@@ -460,80 +465,56 @@ public class Systeme extends Stage implements Observer {
             stage.showAndWait();
         });
 
+        VBox xChange = new VBox();
+        xChange.setSpacing(10);
+        xChange.setAlignment(Pos.CENTER);
+        VBox yChange = new VBox();
+        yChange.setSpacing(10);
+        yChange.setAlignment(Pos.CENTER);
+        xChange.getChildren().addAll(xAxisLabel, xAxisMinField, xAxisMaxField, updateXAxisButton);
+        yChange.getChildren().addAll(yAxisLabel, yAxisMinField, yAxisMaxField, updateYAxisButton);
 
-
-        buttonMeilleurDistance.setOnAction(e -> {
-            Stage plusProcheStage = new Stage();
-            plusProcheStage.initModality(Modality.APPLICATION_MODAL);
-            plusProcheStage.setTitle("Plus proche voisin");
-
-            TextArea terminal = new TextArea();
-            terminal.setEditable(false);
-
-            GridPane grid = new GridPane();
-            grid.add(terminal, 0, 0);
-
-            Scene scene = new Scene(grid);
-            plusProcheStage.setScene(scene);
-            plusProcheStage.showAndWait();
-        });
+        VBox regroup = new VBox();
+        regroup.getChildren().addAll(buttonProjection, buttonAddValue);
+        regroup.setSpacing(10);
 
         VBox leftPane = new VBox(10);
         leftPane.setPadding(new Insets(20));
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
-        leftPane.getChildren().addAll(openFileButton, projectionComboBox2, spacer, buttonProjection, buttonIris, buttonMeilleurDistance, xAxisLabel, xAxisMinField, xAxisMaxField, updateXAxisButton,
-                yAxisLabel, yAxisMinField, yAxisMaxField, updateYAxisButton);
+        leftPane.setSpacing(50);
+        leftPane.getChildren().addAll(openFileButton, projectionComboBox2, yChange, spacer, regroup);
         leftPane.setAlignment(Pos.TOP_LEFT);
 
         HBox bottomPane = new HBox();
         bottomPane.setPadding(new Insets(20));
-        bottomPane.setAlignment(Pos.CENTER);
-        bottomPane.getChildren().addAll(projectionComboBox);
+        bottomPane.setAlignment(Pos.CENTER_RIGHT);
+        bottomPane.setSpacing(50);
+        bottomPane.getChildren().addAll(projectionComboBox, xChange);
 
         BorderPane root = new BorderPane();
         root.setLeft(leftPane);
         root.setCenter(nuage);
         root.setBottom(bottomPane);
 
-        leftPane.setPrefWidth(150);
+        leftPane.setPrefWidth(175);
         buttonProjection.setMaxWidth(leftPane.getPrefWidth());
-        buttonIris.setMaxWidth(leftPane.getPrefWidth());
+        buttonAddValue.setMaxWidth(leftPane.getPrefWidth());
         projectionComboBox.setMaxWidth(leftPane.getPrefWidth());
+        projectionComboBox.setPrefWidth(leftPane.getPrefWidth());
         projectionComboBox2.setMaxWidth(leftPane.getPrefWidth());
-        HBox.setMargin(projectionComboBox2, new Insets(0, 0, 200, 0));
+        updateXAxisButton.setMaxWidth(leftPane.getPrefWidth());
+        updateYAxisButton.setMaxWidth(leftPane.getPrefWidth());
+        yChange.setMaxWidth(leftPane.getPrefWidth());
+        xChange.setMaxWidth(leftPane.getPrefWidth());
 
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, Screen.getPrimary().getBounds().getWidth()/1.5, Screen.getPrimary().getBounds().getHeight()/1.5 );
         setScene(scene);
         setTitle("Application");
+        this.setMinWidth(root.getWidth());
+        this.setMinHeight(root.getHeight()+100);
         this.centerOnScreen();
         show();
-    }
-
-    /**
-     * Définit la valeur de l'iris selon l'axe de la projection.
-     *
-     * @param iris Iris qui sera modifié
-     * @param projection Projection (Sepal Length, Sepal Width, Petal Length, Petal Width) sur laquelle mettre la valeur
-     * @param value La valeur à mettre dans l'Iris
-     */
-    private void setProjectionValue(Iris iris, String projection, double value) {
-        switch (projection) {
-            case "Sepal Width":
-                iris.setSepalWidth(value);
-                break;
-            case "Petal Width":
-                iris.setPetalWidth(value);
-                break;
-            case "Sepal Length":
-                iris.setSepalLength(value);
-                break;
-            case "Petal Length":
-                iris.setPetalLength(value);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid projection: " + projection);
-        }
     }
 
     /**
@@ -771,6 +752,25 @@ public class Systeme extends Stage implements Observer {
 
         return legendePokemon;
     }
+
+    private void updatePourcentageIfValid(TextField xInput, TextField yInput, Label pourcentage, ComboBox<String> distanceComboBox, MethodeKnn knn) {
+        try {
+            double xNumber = Double.parseDouble(xInput.getText());
+            double yNumber = Double.parseDouble(yInput.getText());
+
+            boolean useEuclidean = distanceComboBox.getValue().equals("Distance Euclidienne");
+            DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();
+            DistanceManhattanNormalisee manhattanCalc = new DistanceManhattanNormalisee();
+            Distance distanceCalcul = useEuclidean ? euclidienneCalc : manhattanCalc;
+
+            double percentage = knn.calculerPourcentageReussite(knn.trouverMeilleurK(distanceCalcul), distanceCalcul);
+            pourcentage.setText(String.format("Pourcentage: %.2f%%", percentage));
+        } catch (NumberFormatException e) {
+            pourcentage.setText("Pourcentage: 0%");
+        }
+    }
+
+
 
     void updateLegend(HBox container, boolean isPokemon) {
         container.getChildren().clear();

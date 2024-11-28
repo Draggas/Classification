@@ -1,5 +1,6 @@
 package fr.univlille.iut.sae302;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import fr.univlille.iut.sae302.utils.Observable;
@@ -46,6 +47,16 @@ public class Data <E> extends Observable {
         return max;
     }
 
+    /**
+     * Trouve la valeur maximale parmi tous les attributs numériques d'une classe donnée.
+     *
+     * @return La valeur maximale, ou Double.NaN si aucune valeur n'est trouvée.
+     */
+    public double getMaxData() {
+        double max = findExtremum(Double::max, Double.NEGATIVE_INFINITY);
+        return max > 300 ? 300 : max;
+    }
+
     public double getMinData(String projection){
         double min = 100;
         for (E data: eData) {
@@ -56,4 +67,45 @@ public class Data <E> extends Observable {
         return min;
     }
 
+    /**
+     * Trouve la valeur minimale parmi tous les attributs numériques d'une classe donnée.
+     *
+     * @return La valeur minimale, ou Double.NaN si aucune valeur n'est trouvée.
+     */
+    public double getMinData() {
+        double min = findExtremum(Double::min, Double.POSITIVE_INFINITY);
+        return min < 0 ? 0 : min;
+    }
+
+    /**
+     * Méthode générique pour trouver un extrême (minimum ou maximum) selon une opération.
+     *
+     * @param operator      L'opération (min ou max) à appliquer.
+     * @param initialValue  La valeur initiale à comparer.
+     * @return La valeur extrême trouvée, ou Double.NaN si aucune valeur n'est trouvée.
+     */
+    private double findExtremum(java.util.function.BinaryOperator<Double> operator, double initialValue) {
+        double result = initialValue;
+        boolean foundValue = false;
+
+        for (E item : eData) {
+            if (item != null) {
+                for (Field field : item.getClass().getDeclaredFields()) {
+                    field.setAccessible(true);
+                    if (Number.class.isAssignableFrom(field.getType())) {
+                        try {
+                            Number value = (Number) field.get(item);
+                            if (value != null) {
+                                result = operator.apply(result, value.doubleValue());
+                                foundValue = true;
+                            }
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+        return foundValue ? result : Double.NaN; // Retourne NaN si aucune valeur trouvée
+    }
 }
