@@ -6,7 +6,7 @@ package fr.univlille.iut.sae302;
  */
 public class Pokemon {
     private static final String NL = System.getProperty("line.separator");
-    private final String name;
+    private String name;
 
     private Number attack;
     
@@ -24,9 +24,9 @@ public class Pokemon {
 
     private Number spDefense;
 
-    private final Type type1;
+    private Type type1;
 
-    private final Type type2;
+    private Type type2;
 
     private Number speed;
 
@@ -248,5 +248,31 @@ public class Pokemon {
      */
     public void setSpeed(Number speed) {
         this.speed = speed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Type getType1() {
+        return type1 != null ? type1 : Type.UNKNOWN; // Renvoie UNKNOWN si type1 est null
+    }
+
+
+    public Type getType2() {
+        return type2;
+    }
+
+    public int getIsLegendary(){
+        return isLegendary ? 1 : 0;
+    }
+
+    public void setType1(String type1) {
+        System.out.println(type1);
+        try {
+            this.type1 = Type.valueOf(type1.toLowerCase());
+        } catch (IllegalArgumentException | NullPointerException e) {
+            this.type1 = Type.UNKNOWN;
+        }
     }
 }

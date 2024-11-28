@@ -115,7 +115,7 @@ public class TestMethodeKnn{
     }
 
     public void testGetKPlusProchesVoisins(Iris[] resultatAttendu, int k, Iris cible, Distance distance) {
-        Iris[] resultat = mKnn.getKPlusProchesVoisins(k, cible, distance);
+        Iris[] resultat = (Iris[]) mKnn.getKPlusProchesVoisins(k, cible, distance);
         testMemeContenueListe(resultatAttendu, resultat);
     }
 
