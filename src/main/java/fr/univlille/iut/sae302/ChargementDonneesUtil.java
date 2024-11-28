@@ -8,10 +8,6 @@ import java.util.List;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
-import fr.univlille.iut.sae302.indesirable.FormatDonneeBrutPokemon;
-import fr.univlille.iut.sae302.indesirable.Pokemon;
-import fr.univlille.iut.sae302.indesirable.Type;
-
 /**
  * Cette classe permet de charger un fichier de donnée.
  * Elle permet aussi de simplifier la création de la classe {@code Iris}.
