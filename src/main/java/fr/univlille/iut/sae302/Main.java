@@ -19,11 +19,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        List<FormatDonneeBrutIris> listBrutIris = ChargementDonneesUtil.charger("data/iris.csv", FormatDonneeBrutIris.class);
-        List<Iris> listIris = new ArrayList<>();
-        for (FormatDonneeBrutIris brut : listBrutIris) {
-            listIris.add(ChargementDonneesUtil.createIris(brut));
-        }
-        Systeme systeme = new Systeme(listIris);
+        Systeme systeme = new Systeme();
     }
 }

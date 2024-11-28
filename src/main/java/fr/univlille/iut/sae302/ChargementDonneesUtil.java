@@ -1,9 +1,12 @@
 package fr.univlille.iut.sae302;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -43,7 +46,7 @@ public class ChargementDonneesUtil<T> {
 
     /**
      * Crée un nouvel Objet {@code Pokemon}  à partir des données brutes fournies.
-     * 
+     *
      * @param d L'objet {@code FormatDonneeBrutPokemon} contenant les données brutes du Pokémon.
      * @return Un nouvel objet {@code Pokemon} initialisé avec les attributs fournis par les données brutes.
      */
@@ -162,5 +165,15 @@ public class ChargementDonneesUtil<T> {
         }
     
         return pokemonList;
+    }
+
+    public static List<String> getCsvColumns(String fileName) throws IOException {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(fileName))) {
+            String headerLine = reader.readLine();
+            if (headerLine == null || headerLine.isEmpty()) {
+                throw new IOException("Le fichier CSV est vide ou n'a pas d'en-tête.");
+            }
+            return Arrays.asList(headerLine.split(","));
+        }
     }
 }
