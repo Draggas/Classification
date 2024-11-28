@@ -135,7 +135,6 @@ public class MethodeKnn<T> {
         for (T objet : autresObjets) {
             double dist = distance.distance(cible, objet);
             distances.add(new AbstractMap.SimpleEntry<>(objet, dist));
-            //System.out.println("Distance entre " + cible + " et " + objet + " : " + dist);
         }
         distances.sort(Map.Entry.comparingByValue());
         T[] voisins = (T[]) new Object[k];
@@ -149,23 +148,51 @@ public class MethodeKnn<T> {
     public String classifierObjet(int k, T cible, Distance<T> distance) {
         T[] voisins = getKPlusProchesVoisins(k, cible, distance);
         Map<String, Integer> voteMap = new HashMap<>();
-        for (T voisin : voisins) {
-            String classification = getClassification(voisin);
-            voteMap.put(classification, voteMap.getOrDefault(classification, 0) + 1);
-        }
-        String classificationPredite = null;
-        int maxVotes = -1;
-        for (Map.Entry<String, Integer> entry : voteMap.entrySet()) {
-            if (entry.getValue() > maxVotes) {
-                maxVotes = entry.getValue();
-                classificationPredite = entry.getKey();
-            } else if (entry.getValue() == maxVotes) {
-                if (classificationPredite == null) {
-                    classificationPredite = "Defaut";
+
+        if (cible instanceof Iris) {
+            voteMap.put("Setosa", 0);
+            voteMap.put("Versicolor", 0);
+            voteMap.put("Virginica", 0);
+
+            for (T voisin : voisins) {
+                if (voisin instanceof Iris) {
+                    String variete = ((Iris) voisin).getVariety();
+                    voteMap.put(variete, voteMap.getOrDefault(variete, 0) + 1);
+                }
+            }
+        } else if (cible instanceof Pokemon) {
+            voteMap.put("Fire", 0);
+            voteMap.put("Water", 0);
+            voteMap.put("Grass", 0);
+            voteMap.put("Electric", 0);
+            voteMap.put("Normal", 0);
+            voteMap.put("Fighting", 0);
+
+            for (T voisin : voisins) {
+                if (voisin instanceof Pokemon) {
+                    String type = String.valueOf(((Pokemon) voisin).getType1());
+                    voteMap.put(type, voteMap.getOrDefault(type, 0) + 1);
                 }
             }
         }
-        return classificationPredite;
+
+        String classePredite = null;
+        int maxVotes = -1;
+
+        for (Map.Entry<String, Integer> entry : voteMap.entrySet()) {
+            if (entry.getValue() > maxVotes) {
+                maxVotes = entry.getValue();
+                classePredite = entry.getKey();
+            } else if (entry.getValue() == maxVotes) {
+                if (classePredite == null) {
+                    classePredite = entry.getKey();
+                } else {
+                    classePredite = "Defaut";
+                }
+            }
+        }
+
+        return classePredite != null ? classePredite : "Defaut";
     }
 
     public double calculerPourcentageReussite(int k, Distance<T> distance) {
@@ -191,14 +218,11 @@ public class MethodeKnn<T> {
         double meilleurPourcentage = 0;
         for (int k = 1; k <= 11; k += 2) {
             double pourcentageReussite = calculerPourcentageReussite(k, distance);
-            //System.out.println("Pourcentage de réussite pour k=" + k + " : " + pourcentageReussite + "%");
             if (pourcentageReussite > meilleurPourcentage) {
                 meilleurPourcentage = pourcentageReussite;
                 meilleurK = k;
             }
         }
-        //System.out.println("Meilleur k pour la distance " + distance.getClass().getSimpleName() +
-        //        " est " + meilleurK + " avec un pourcentage de réussite de " + meilleurPourcentage + "%");
         return meilleurK;
     }
 
