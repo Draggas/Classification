@@ -12,7 +12,57 @@ RANDOUX Martin
 
 ## Description : 
 
-Projet qui permet de développer un outil de chargement et d'affichage d'un ensemble de données. Il permet également de classer une donnée par rapport aux données déjà chargées.
+Ce projet propose un outil permettant de charger et d'afficher visuellement un ensemble de données variées. Il offre également des fonctionnalités de classification, permettant de comparer et de catégoriser de nouvelles données en fonction des ensembles de données précédemment chargés. Grâce à cet outil, les utilisateurs peuvent analyser efficacement les informations qu'ils veulent.
+
+---
+
+## Comment utiliser l'application :
+
+**Pour Exécuter sur Linux:**  
+> Aller dans un terminal :  
+`chmod u+x run.sh`  
+`./run.sh`  
+*Si maven est installé dans votre machine, la commande devrait s'éxécuter*
+
+### Guide d'Utilisation de l'Application
+
+#### Page d'accueil
+![Page d'accueil](res/ReadME/pageaccueil.png)
+
+- **Sur la page d'accueil**, vous devrez charger un fichier `.csv`, mais ne vous inquiétez pas, vous pourrez toujours changer de fichier une fois sur la page principale.
+
+![Chargement de fichier](res/ReadME/explorateur.png)
+
+#### Modification des Axes
+- **Sur la page principale**, vous pouvez ajuster les tailles des axes X et Y.
+
+![Modification des axes](res/ReadME/modifdaxe.png)
+
+#### Projections
+- **Projection des données** : Vous pouvez choisir de projeter des données d'Iris.
+![Projection Iris](res/ReadME/projectioniris.png)
+
+- **Projection des données** : Ou choisir de projeter des données de Pokémon.
+![Projection Pokémon](res/ReadME/projectionpokemon.png)
+
+#### Gestion des Projections
+- **Changement de projection** : Vous pouvez soit "écraser" votre projection actuelle, soit créer un nouvel onglet pour avoir une projection totalement différente.
+![Onglets de projections](res/ReadME/onglets.png)
+
+#### Ajout de Point
+- **Ajout de point** : Vous pouvez ajouter un point manuellement.
+![Choisir ou Default](res/ReadME/choisiroudefault.png)
+
+- **Algorithme KNN** : Ou mettre en `Default`, lorsque cette option est sélectionnée, l'algorithme KNN (algorithme de classification) déterminera la valeur la plus appropriée pour votre point. Il peut gérer la distance de Manhattan.
+![Choisir Manhattan](res/ReadME/choisirmanhattan.png)
+
+- **Algorithme KNN** : Il peut également gérer la distance Euclidienne.
+![Ajout d'un point](res/ReadME/ajoutdunpoint.png)
+
+- **Robustesse** : La robustesse est indiquée en bas à droite de l'écran. Une fois ajouté, vous verrez votre point classifié.
+![Ajout du point réussi](res/ReadME/ajoutdupointreussi.png)
+
+Merci d'avoir lu ce guide ! ;)
 
 ---
 
@@ -39,19 +89,10 @@ Martin :
 
 **Jalon 2 :**  
 
-## ATTENTE PROJET :
-- Une fois les données 
-- Le programme doit permettre de construire un modèle de classification des données pour la catégorie sélectionnée à l'aide de l'algorithme kNN pour une valeur de k et une distance, que l'utilisateur peut choisir. Cette classification doit permettre de choisir la catégorie la plus probable pour un nouveau point (saisi par l'utilisateur), dont la catégorie est inconnue. Le nouveau point doit être ajouté au nuage de points, de façon à ce qu'il apparaisse clairement, ainsi que sa catégorie
-- Dans un deuxième temps, l'utilisateur pourra choisir en plus de la distance (euclidienne et de Manhattan au moins) les attributs à utiliser pour le calcul de la distance entre deux données, et permettre l'utilisation de pondérations pour augmenter l'importance de certains attributs.
-- La robustesse de votre classification doit être calculée par rapport à vos données, et accessible dans votre interface, en précisant la méthode d'évaluation. Dans un deuxième temps, le logiciel permettra à l'utilisateur de trouver le meilleur k possible étant donnés une catégorie et une distance
-- Sélectionner dans le nuage un point pour afficher la donnée qu’il représente (toutes les valeurs de ses attributs et sa catégorie). Optionnellement, le passage de la souris sur un point du nuage affichera en infobulle la donnée qu'il représente
-
-
 Lucas :
 - README.md, run.sh, Documentation
 - Travail sur le K-NN
 - Modification de l'IHM
-- Ajout du nuage de point Pokémon
 
 Axel :
 - Rendu de Dev Efficace
@@ -70,33 +111,3 @@ Martin :
 - Projet en Modèle MVC
 - Travail sur le K-NN
 - Modification de l'IHM
-
----
-
-## Comment lancer l'application :
-
-**Voici les étapes pour lancer l'application :**
-
-**Pour Exécuter sur Linux:**  
-`chmod u+x run.sh`  
-`./run.sh`  
-*Si maven est installé dans votre machine, la commande devrait s'éxécuter*
-
-**Pour Exécuter depuis VSCode :**
-- Lancer run, dans le programme Main.java
-
-**Une fois arrivé sur l'interface, vous pouvez réaliser ses différentes actions :**
-
-![Image d'accueil de l'appli](res/ReadME/Accueil.png)
-
-**Vous pouvez soit fournir les 2 colonnes que vous voulez vérifier, puis cliquer sur "Projection" pour afficher le résultat :**
-
-![Image d'une projection de l'appli](res/ReadME/Projection.png)
-
-**Soit cliquez sur "Ajouter un iris", il faudra définir les différents paramètres et la variété (vous pouvez le laisser en Default) du nouveau Iris qui sera affiché après que vous aurez valider :**
-
-![Image ajouter un point de l'appli](res/ReadME/Ajouter.png)
-
-**C'est tout, pour le Jalon 1 de la SAE.**
-
-*Sinon, pour nous, aucune issue demandée n'est manquante, et les javadocs seront générés pour le Jalon2.*

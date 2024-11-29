@@ -7,6 +7,7 @@ import fr.univlille.iut.sae302.Pokemon;
 /**
  * Classe implémentant l'interface Distance pour calculer la distance euclidienne normalisée entre deux objets.
  */
+@SuppressWarnings("rawtypes")
 public class DistanceEuclidienneNormalisee implements Distance {
 
     /**

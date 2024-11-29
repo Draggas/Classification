@@ -7,6 +7,7 @@ import fr.univlille.iut.sae302.Pokemon;
 /**
  * Cette classe calcule la distance de Manhattan normalisée entre deux objets de type Iris ou Pokemon.
  */
+@SuppressWarnings("rawtypes")
 public class DistanceManhattanNormalisee implements Distance {
 
     /**

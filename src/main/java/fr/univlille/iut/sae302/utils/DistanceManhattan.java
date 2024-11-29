@@ -6,6 +6,7 @@ import fr.univlille.iut.sae302.Pokemon;
 /**
  * Classe implémentant l'interface Distance pour calculer la distance de Manhattan entre deux objets.
  */
+@SuppressWarnings("rawtypes")
 public class DistanceManhattan implements Distance {
 
     /**
