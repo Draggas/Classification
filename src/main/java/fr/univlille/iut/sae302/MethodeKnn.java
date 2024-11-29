@@ -106,8 +106,8 @@ public class MethodeKnn<T> {
                 if (pokemon.getEggSteps().doubleValue() > maxBaseEggSteps) maxBaseEggSteps = pokemon.getEggSteps().doubleValue();
                 if (pokemon.getCaptureRate().doubleValue() < minCaptureRate) minCaptureRate = pokemon.getCaptureRate().doubleValue();
                 if (pokemon.getCaptureRate().doubleValue() > maxCaptureRate) maxCaptureRate = pokemon.getCaptureRate().doubleValue();
-                if (pokemon.getCaptureRate().doubleValue() < minDefense) minDefense = pokemon.getCaptureRate().doubleValue();
-                if (pokemon.getCaptureRate().doubleValue() > maxDefense) maxDefense = pokemon.getCaptureRate().doubleValue();
+                if (pokemon.getDefense().doubleValue() < minDefense) minDefense = pokemon.getDefense().doubleValue();
+                if (pokemon.getDefense().doubleValue() > maxDefense) maxDefense = pokemon.getDefense().doubleValue();
                 if (pokemon.getExperience().doubleValue() < minExperienceGrowth) minExperienceGrowth = pokemon.getExperience().doubleValue();
                 if (pokemon.getExperience().doubleValue() > maxExperienceGrowth) maxExperienceGrowth = pokemon.getExperience().doubleValue();
                 if (pokemon.getHp().doubleValue() < minHp) minHp = pokemon.getHp().doubleValue();
