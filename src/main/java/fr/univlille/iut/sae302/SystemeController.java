@@ -40,6 +40,9 @@ public class SystemeController extends Stage implements Observer {
         configureButtonActions();
     }
 
+    /**
+     * Affiche la page d'accueil et configure les actions des boutons.
+     */
     public void showHomePage() {
         Stage homeStage = new Stage();
         view.showHomePage(homeStage);
@@ -52,6 +55,9 @@ public class SystemeController extends Stage implements Observer {
         });
     }
 
+    /**
+     * Configure l'action du bouton d'ouverture de fichier.
+     */
     private void configureOpenFileButton() {
         view.getOpenFileButton().setOnAction(event -> {
             File selectedFile = openFile();
@@ -63,6 +69,11 @@ public class SystemeController extends Stage implements Observer {
         });
     }
 
+    /**
+     * Ouvre une boîte de dialogue pour sélectionner un fichier CSV.
+     *
+     * @return Le fichier sélectionné ou null si aucun fichier n'a été sélectionné.
+     */
     private File openFile() {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("Fichiers CSV (*.csv)", "*.csv");
@@ -70,6 +81,11 @@ public class SystemeController extends Stage implements Observer {
         return fileChooser.showOpenDialog(primaryStage);
     }
 
+    /**
+     * Charge les données à partir d'un fichier CSV et met à jour l'interface utilisateur.
+     *
+     * @param selectedFile Le fichier CSV sélectionné.
+     */
     private void loadDataFromFile(File selectedFile) {
         try {
             List<String> columns = ChargementDonneesUtil.getCsvColumns(selectedFile.getAbsolutePath());
@@ -100,6 +116,9 @@ public class SystemeController extends Stage implements Observer {
         tabPane.getSelectionModel().select(newTab);
     }
 
+    /**
+     * Configure les projections et la légende après le chargement des données.
+     */
     private void configureProjectionsAndLegend() {
         view.getProjectionComboBox().setDisable(false);
         view.getProjectionComboBox2().setDisable(false);
@@ -113,6 +132,12 @@ public class SystemeController extends Stage implements Observer {
         data.attach(this);
     }
 
+    /**
+     * Charge les données de Pokémon à partir d'un fichier CSV.
+     *
+     * @param selectedFile Le fichier CSV contenant les données de Pokémon.
+     * @throws IOException Si une erreur survient lors de la lecture du fichier.
+     */
     private void loadPokemonData(File selectedFile) throws IOException {
         List<FormatDonneeBrutPokemon> listBrutPokemon = ChargementDonneesUtil.charger(selectedFile.getAbsolutePath(), FormatDonneeBrutPokemon.class);
         List<Pokemon> pokemonData = new ArrayList<>();
@@ -130,6 +155,12 @@ public class SystemeController extends Stage implements Observer {
         data.attach(this);
     }
 
+    /**
+     * Charge les données d'Iris à partir d'un fichier CSV.
+     *
+     * @param selectedFile Le fichier CSV contenant les données d'Iris.
+     * @throws IOException Si une erreur survient lors de la lecture du fichier.
+     */
     private void loadIrisData(File selectedFile) throws IOException {
         List<FormatDonneeBrutIris> listBrutIris = ChargementDonneesUtil.charger(selectedFile.getAbsolutePath(), FormatDonneeBrutIris.class);
         List<Iris> irisData = new ArrayList<>();
@@ -146,6 +177,9 @@ public class SystemeController extends Stage implements Observer {
         updateAxes();
     }
 
+    /**
+     * Calcule les limites des axes en fonction des données chargées.
+     */
     private void calculateAxisLimits() {
         xmin = Double.MAX_VALUE;
         xmax = Double.MIN_VALUE;
@@ -173,6 +207,9 @@ public class SystemeController extends Stage implements Observer {
         }
     }
 
+    /**
+     * Met à jour les axes du graphique en fonction des limites calculées.
+     */
     private void updateAxes() {
         view.setxAxisLowerBound(xmin - 1);
         view.setxAxisUpperBound(xmax + 1);
@@ -180,6 +217,9 @@ public class SystemeController extends Stage implements Observer {
         view.setyAxisUpperBound(ymax + 1);
     }
 
+    /**
+     * Configure les actions des boutons de mise à jour des axes.
+     */
     private void configureUpdateAxisButtons() {
         view.getUpdateXAxisButton().setOnAction(e -> {
             updateAxis(view.getxAxisMinField(), view.getxAxisMaxField(), true);
@@ -216,6 +256,9 @@ public class SystemeController extends Stage implements Observer {
         }
     }
 
+    /**
+     * Configure les actions des combobox de projection.
+     */
     private void configureProjectionComboBox() {
         view.getProjectionComboBox().valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null && newValue.equals(view.getProjectionComboBox2().getValue())) {
@@ -238,6 +281,9 @@ public class SystemeController extends Stage implements Observer {
         });
     }
 
+/**
+ * Configure les actions des boutons, y compris le bouton d'ajout de valeur.
+ */
 @SuppressWarnings("unchecked")
 private void configureButtonActions() {
     view.getButtonProjection().setOnAction(e -> {
@@ -542,6 +588,13 @@ private void configureButtonActions() {
         primaryStage.show();
     }
 
+    /**
+     * Retourne la valeur de projection pour un Iris en fonction de l'attribut spécifié.
+     *
+     * @param projection L'attribut de projection (e.g., "Sepal Width", "Petal Length").
+     * @param iris L'objet Iris.
+     * @return La valeur de projection ou null si l'attribut n'est pas reconnu.
+     */
     private Double projectionIris(String projection, Iris iris) {
         Number value = switch (projection) {
             case "Sepal Width" -> iris.getSepalWidth();
@@ -553,6 +606,13 @@ private void configureButtonActions() {
         return value != null ? value.doubleValue() : null;
     }
 
+    /**
+     * Retourne la valeur de projection pour un Pokémon en fonction de l'attribut spécifié.
+     *
+     * @param projection L'attribut de projection (e.g., "HP", "Attack").
+     * @param pokemon L'objet Pokémon.
+     * @return La valeur de projection ou null si l'attribut n'est pas reconnu.
+     */
     private Double projectionPokemon(String projection, Pokemon pokemon) {
         Number value = switch (projection) {
             case "HP" -> pokemon.getHp();
@@ -566,6 +626,12 @@ private void configureButtonActions() {
         return value != null ? value.doubleValue() : null;
     }
 
+    /**
+     * Effectue une nouvelle projection et ajoute les données au graphique.
+     *
+     * @param newSeries La nouvelle série de données pour la projection.
+     * @param newChart Le nouveau graphique de projection.
+     */
     private void newPerformProjection(XYChart.Series<Number, Number> newSeries, ScatterChart<Number, Number> newChart) {
         String projection = view.getProjectionComboBox().getValue();
         String projection2 = view.getProjectionComboBox2().getValue();
@@ -633,7 +699,12 @@ private void configureButtonActions() {
         updateAxes();
     }
     
-
+    /**
+     * Vérifie si les colonnes du fichier CSV correspondent aux attributs d'un Pokémon.
+     *
+     * @param columns La liste des colonnes du fichier CSV.
+     * @return true si les colonnes correspondent aux attributs d'un Pokémon, sinon false.
+     */
     private boolean isPokemonCsv(List<String> columns) {
         List<String> pokemonColumns = Arrays.asList("name", "attack", "base_egg_steps", "capture_rate", "defense",
                 "experience_growth", "hp", "sp_attack", "sp_defense",
@@ -641,6 +712,12 @@ private void configureButtonActions() {
         return new HashSet<>(columns).containsAll(pokemonColumns);
     }
 
+    /**
+     * Vérifie si les colonnes du fichier CSV correspondent aux attributs d'un Iris.
+     *
+     * @param columns La liste des colonnes du fichier CSV.
+     * @return true si les colonnes correspondent aux attributs d'un Iris, sinon false.
+     */
     private boolean isIrisCsv(List<String> columns) {
         List<String> irisColumns = Arrays.asList("sepal.length", "sepal.width", "petal.length", "petal.width", "variety");
         List<String> normalizedColumns = columns.stream()
@@ -649,6 +726,15 @@ private void configureButtonActions() {
         return new HashSet<>(normalizedColumns).containsAll(irisColumns);
     }
 
+    /**
+     * Met à jour le pourcentage de réussite si les valeurs saisies sont valides.
+     *
+     * @param xInput Le champ de saisie pour la valeur X.
+     * @param yInput Le champ de saisie pour la valeur Y.
+     * @param pourcentage Le label pour afficher le pourcentage de réussite.
+     * @param distanceComboBox La combobox pour sélectionner le type de distance.
+     * @param knn L'instance de MethodeKnn pour calculer le pourcentage de réussite.
+     */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void updatePourcentageIfValid(TextField xInput, TextField yInput, Label pourcentage, ComboBox<String> distanceComboBox, MethodeKnn knn) {
         try {
@@ -667,11 +753,11 @@ private void configureButtonActions() {
 
     @Override
     public void update(Observable observable) {
-        // Implémentation
+        // Non utilisé
     }
 
     @Override
     public void update(Observable observable, Object data) {
-        // Implémentation
+        // Non utilisé
     }
 }    

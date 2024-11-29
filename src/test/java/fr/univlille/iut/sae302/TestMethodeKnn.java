@@ -23,8 +23,10 @@ public class TestMethodeKnn{
     private ArrayList<Iris> listIris;
     private ArrayList<Pokemon> listPokemon;
     private Data<Iris> data;
+    @SuppressWarnings("rawtypes")
     private MethodeKnn mKnn;
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @BeforeEach
     public void init(){
         iris1 = new Iris(5.1, 3.5, 1.4, 0.2, "Setosa");
@@ -58,6 +60,7 @@ public class TestMethodeKnn{
         assertEquals(listIris, mKnn.getDatas().getEData());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testSetDatas(){
         Data<Iris> dataTemp = new Data<>(new ArrayList<Iris>());
@@ -68,6 +71,7 @@ public class TestMethodeKnn{
         assertEquals(data, mKnn.getDatas());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testCalculerAmplitudesDataVide(){
         mKnn.setDatas(new Data<>(new ArrayList<>()));
@@ -107,27 +111,32 @@ public class TestMethodeKnn{
         testGetKPlusProchesVoisins(List.of(new Iris[]{iris4, iris6, iris5}), 3, iris3, new DistanceEuclidienne());
     }
 
-    public void testGetKPlusProchesVoisins(List<Iris> resultatAttendu, int k, Iris cible, Distance distance) {
+    public void testGetKPlusProchesVoisins(List<Iris> resultatAttendu, int k, Iris cible, @SuppressWarnings("rawtypes") Distance distance) {
+        @SuppressWarnings("unchecked")
         List<Iris> resultat = (List<Iris>) mKnn.getKPlusProchesVoisins(k, cible, distance);
         assertEquals(resultatAttendu.size(), resultat.size());
         assertTrue(resultatAttendu.containsAll(resultat) && resultat.containsAll(resultatAttendu));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testClassifierIrisUnVoisinDistanceManhattan(){
         assertEquals("Versicolor", mKnn.classifierObjet(1, iris3, new DistanceManhattan()));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testClassifierIrisTroisVoisinDistanceManhattan(){
         assertEquals("Virginica", mKnn.classifierObjet(3, iris3, new DistanceManhattan()));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testClassifierIrisUnVoisinDistanceEuclidienne(){
         assertEquals("Versicolor", mKnn.classifierObjet(1, iris3, new DistanceEuclidienne()));
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Test
     public void testClassifierIrisTroisVoisinDistanceEuclidienne(){
         mKnn = new MethodeKnn(new Data(listPokemon));

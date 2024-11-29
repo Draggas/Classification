@@ -62,92 +62,42 @@ public class FormatDonneeBrutPokemon {
         return "" + name + ',' + attack + ',' + egg_steps + ',' + capture_rate + ',' + defense + ',' + experience + ',' + hp + ',' + sp_attack + ',' + sp_defense + ',' + type1.getName() + ',' + t2 + ',' + speed + ',' + legendary;
     }
 
-    /**
-     * Obtient le nom du Pokémon.
-     *
-     * @return Le nom du Pokémon.
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Obtient le niveau d'attaque du Pokémon.
-     *
-     * @return Le niveau d'attaque.
-     */
     public int getAttack() {
         return attack;
     }
 
-    /**
-     * Obtient le nombre d'étapes nécessaires pour obtenir un œuf.
-     *
-     * @return Le nombre d'étapes pour l'œuf.
-     */
     public int getEggSteps() {
         return egg_steps;
     }
 
-    /**
-     * Obtient le taux de capture du Pokémon.
-     *
-     * @return Le taux de capture.
-     */
     public double getCaptureRate() {
         return capture_rate;
     }
 
-    /**
-     * Obtient le niveau de défense du Pokémon.
-     *
-     * @return Le niveau de défense.
-     */
     public int getDefense() {
         return defense;
     }
 
-    /**
-     * Obtient le niveau d'expérience du Pokémon.
-     *
-     * @return Le niveau d'expérience.
-     */
     public int getExperience() {
         return experience;
     }
 
-    /**
-     * Obtient le nombre de points de vie du Pokémon.
-     *
-     * @return Le nombre de points de vie.
-     */
     public int getHp() {
         return hp;
     }
 
-    /**
-     * Obtient le niveau d'attaque spéciale du Pokémon.
-     *
-     * @return Le niveau d'attaque spéciale.
-     */
     public int getSpAttack() {
         return sp_attack;
     }
 
-    /**
-     * Obtient le niveau de défense spéciale du Pokémon.
-     *
-     * @return Le niveau de défense spéciale.
-     */
     public int getSpDefense() {
         return sp_defense;
     }
 
-    /**
-     * Obtient le premier type du Pokémon.
-     *
-     * @return Le premier type.
-     */
     public Type getType1() {
         return type1;
     }
@@ -161,20 +111,10 @@ public class FormatDonneeBrutPokemon {
         return type2;
     }
 
-    /**
-     * Obtient la vitesse du Pokémon.
-     *
-     * @return La vitesse.
-     */
     public double getSpeed() {
         return speed;
     }
 
-    /**
-     * Vérifie si le Pokémon est légendaire.
-     *
-     * @return True si le Pokémon est légendaire, sinon false.
-     */
     public boolean getLegendary() {
         return legendary;
     }

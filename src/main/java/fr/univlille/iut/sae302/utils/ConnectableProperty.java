@@ -36,7 +36,7 @@ public class ConnectableProperty extends ObservableProperty implements Observer 
 
 	@Override
 	public void update(Observable observable) {
-		// never called so does not do anything
+		// jamais appelé
 	}
 
 	@Override

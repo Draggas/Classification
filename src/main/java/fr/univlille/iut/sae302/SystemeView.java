@@ -44,6 +44,11 @@ public class SystemeView extends Stage {
         initializeUIComponents();
     }
 
+    /**
+     * Affiche la page d'accueil avec un message de bienvenue et un bouton pour charger un fichier.
+     *
+     * @param homeStage Le stage pour la page d'accueil.
+     */
     public void showHomePage(Stage homeStage) {
         Label welcomeLabel = new Label("BIENVENUE DANS CLASSIFICATION");
         welcomeLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
@@ -62,6 +67,9 @@ public class SystemeView extends Stage {
         homeStage.show();
     }
     
+    /**
+     * Affiche une fenêtre d'aide indiquant qu'aucune aide n'est disponible.
+     */
     public void showHelpUnavailable() {
         Stage helpStage = new Stage();
         helpStage.initModality(Modality.APPLICATION_MODAL);
@@ -78,7 +86,9 @@ public class SystemeView extends Stage {
         helpStage.setScene(helpScene);
         helpStage.showAndWait();
     }
-
+    /**
+     * Initialise le graphique de dispersion avec les axes X et Y.
+     */
     private void initializeChart() {
         xAxis = new NumberAxis(x, y, 1.0);
         yAxis = new NumberAxis(x, y, 1.0);
@@ -96,6 +106,9 @@ public class SystemeView extends Stage {
         tabPane.getTabs().add(initialTab);
     }
 
+    /**
+     * Initialise les composants de l'interface utilisateur.
+     */
     public void initializeUIComponents() {
         xAxisLabel = new Label("L'axe X :");
         xAxisMinField = new TextField(String.valueOf(0));
@@ -129,6 +142,9 @@ public class SystemeView extends Stage {
         nuage = new VBox(tabPane, legende);
     }
 
+    /**
+     * Réinitialise l'interface utilisateur, en désactivant les champs et boutons liés aux projections.
+     */
     public void resetUI() {
         projectionComboBox.getItems().clear();
         projectionComboBox2.getItems().clear();
@@ -138,6 +154,12 @@ public class SystemeView extends Stage {
         buttonAddValue.setDisable(true);
     }
 
+    /**
+     * Définit les limites des axes du graphique.
+     *
+     * @param lowerBound La limite inférieure des axes.
+     * @param upperBound La limite supérieure des axes.
+     */
     public void setChartBounds(double lowerBound, double upperBound) {
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
@@ -148,7 +170,12 @@ public class SystemeView extends Stage {
         yAxis.setUpperBound(upperBound);
     }
 
-
+    /**
+     * Retourne le style CSS à appliquer pour un point de données Iris, basé sur sa variété.
+     *
+     * @param variety La variété de l'Iris.
+     * @return Le style CSS pour la variété.
+     */
     public String drawIris(String variety) {
         String baseStyle = "-fx-shape: 'M -7,0 A 7,7 0 1,1 7,0 A 7,7 0 1,1 -7,0';"; // Forme de cercle
         String color = switch (variety) {
@@ -160,7 +187,13 @@ public class SystemeView extends Stage {
         String size = "-fx-background-radius: 7px; -fx-padding: 3.75px;";
         return baseStyle + color + size;
     }
-    
+
+    /**
+     * Retourne le style CSS à appliquer pour un point de données Pokémon, basé sur son type.
+     *
+     * @param type1 Le type du Pokémon.
+     * @return Le style CSS pour le type.
+     */
     public String drawPokemon(Type type1) {
         String baseStyle = "-fx-shape: 'M -7,0 A 7,7 0 1,1 7,0 A 7,7 0 1,1 -7,0';"; // Forme de cercle
         String color = switch (type1.getName().toLowerCase()) {
@@ -175,7 +208,12 @@ public class SystemeView extends Stage {
     }
     
     
-
+    /**
+     * Affiche une alerte avec un titre et un message.
+     *
+     * @param title Le titre de l'alerte.
+     * @param message Le message de l'alerte.
+     */
     public void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -183,6 +221,12 @@ public class SystemeView extends Stage {
         alert.showAndWait();
     }
 
+    /**
+     * Ajoute une infobulle à un point de données du graphique.
+     *
+     * @param dataPoint Le point de données.
+     * @param tooltipText Le texte de l'infobulle.
+     */
     public void addTooltipToPoint(XYChart.Data<Number, Number> dataPoint, String tooltipText) {
         Tooltip tooltip = new Tooltip(tooltipText);
         Tooltip.install(dataPoint.getNode(), tooltip);
@@ -200,6 +244,11 @@ public class SystemeView extends Stage {
         });
     }
 
+    /**
+     * Crée la légende pour les variétés d'Iris.
+     *
+     * @return Un HBox contenant la légende des variétés d'Iris.
+     */
     public HBox createIrisLegend() {
         Label labelDefault = new Label("Default");
         Circle cercleDefault = new Circle();
@@ -236,6 +285,11 @@ public class SystemeView extends Stage {
         return legendeIris;
     }
 
+    /**
+     * Crée la légende pour les types de Pokémon.
+     *
+     * @return Un HBox contenant la légende des types de Pokémon.
+     */
     public HBox createPokemonLegend() {
         Label labelFire = new Label("Fire");
         Circle cercleFire = new Circle();
@@ -279,6 +333,12 @@ public class SystemeView extends Stage {
         return legendePokemon;
     }
 
+    /**
+     * Met à jour la légende affichée en fonction du type de données (Iris ou Pokémon).
+     *
+     * @param container Le conteneur de la légende.
+     * @param isPokemon Un booléen indiquant s'il s'agit de Pokémon.
+     */
     public void updateLegend(HBox container, boolean isPokemon) {
         container.getChildren().clear();
         if (isPokemon) {
@@ -303,7 +363,7 @@ public class SystemeView extends Stage {
     public ComboBox<String> getProjectionComboBox2() {
         return projectionComboBox2;
     }
-
+    
     public TabPane getTabPane() {
         return tabPane;
     }

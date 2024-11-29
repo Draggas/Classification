@@ -24,11 +24,6 @@ public class Data <E> extends Observable {
         this.eData = eData;
     }
 
-    /**
-     * Renvoie la liste des données stockées.
-     *
-     * @return Une liste d'éléments de type {@code E}.
-     */
     public List<E> getEData() {
         return eData;
     }
@@ -42,6 +37,12 @@ public class Data <E> extends Observable {
         return eData.isEmpty();
     }
 
+    /**
+     * Trouve la valeur maximale parmi tous les attributs numériques d'une classe donnée.
+     *
+     * @param projection Le nom de la valeur cherché
+     * @return La valeur maximale
+     */
     public double getMaxData(String projection){
         double max = 0;
         for (E data: eData) {
@@ -55,13 +56,19 @@ public class Data <E> extends Observable {
     /**
      * Trouve la valeur maximale parmi tous les attributs numériques d'une classe donnée.
      *
-     * @return La valeur maximale, ou Double.NaN si aucune valeur n'est trouvée.
+     * @return La valeur maximale
      */
     public double getMaxData() {
         double max = findExtremum(Double::max, Double.NEGATIVE_INFINITY);
         return max > 300 ? 300 : max;
     }
 
+    /**
+     * Trouve la valeur minimale parmi tous les attributs numériques d'une classe donnée.
+     *
+     * @param projection Le nom de la valeur cherché
+     * @return La valeur minimale
+     */
     public double getMinData(String projection){
         double min = 100;
         for (E data: eData) {
@@ -75,7 +82,7 @@ public class Data <E> extends Observable {
     /**
      * Trouve la valeur minimale parmi tous les attributs numériques d'une classe donnée.
      *
-     * @return La valeur minimale, ou Double.NaN si aucune valeur n'est trouvée.
+     * @return La valeur minimale
      */
     public double getMinData() {
         double min = findExtremum(Double::min, Double.POSITIVE_INFINITY);

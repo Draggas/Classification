@@ -80,7 +80,6 @@ public class MethodeKnn<T> {
         double minSpeed = Double.MAX_VALUE, maxSpeed = Double.MIN_VALUE;
         double minIsLegendary = Double.MAX_VALUE, maxIsLegendary = Double.MIN_VALUE;
 
-        // Parcours des données pour calculer les min et max
         for (Object data : datas.getEData()) {
             if (data instanceof Iris) {
                 Iris iris = (Iris) data;
@@ -295,183 +294,82 @@ public class MethodeKnn<T> {
         return "Unknown";
     }
 
-    /**
-     * Obtient l'amplitude de l'attribut Attack.
-     *
-     * @return L'amplitude de l'attribut Attack.
-     */
     public double getAmplitudeAttack() {
         return amplitudeAttack;
     }
 
-    /**
-     * Définit l'amplitude de l'attribut Attack.
-     *
-     * @param amplitudeAttack L'amplitude de l'attribut Attack.
-     */
     public void setAmplitudeAttack(double amplitudeAttack) {
         MethodeKnn.amplitudeAttack = amplitudeAttack;
     }
 
-    /**
-     * Obtient l'amplitude de l'attribut BaseEggSteps.
-     *
-     * @return L'amplitude de l'attribut BaseEggSteps.
-     */
     public double getAmplitudeBaseEggSteps() {
         return amplitudeBaseEggSteps;
     }
 
-    /**
-     * Définit l'amplitude de l'attribut BaseEggSteps.
-     *
-     * @param amplitudeBaseEggSteps L'amplitude de l'attribut BaseEggSteps.
-     */
     public void setAmplitudeBaseEggSteps(double amplitudeBaseEggSteps) {
         MethodeKnn.amplitudeBaseEggSteps = amplitudeBaseEggSteps;
     }
 
-    /**
-     * Obtient l'amplitude de l'attribut CaptureRate.
-     *
-     * @return L'amplitude de l'attribut CaptureRate.
-     */
     public double getAmplitudeCaptureRate() {
         return amplitudeCaptureRate;
     }
 
-    /**
-     * Définit l'amplitude de l'attribut CaptureRate.
-     *
-     * @param amplitudeCaptureRate L'amplitude de l'attribut CaptureRate.
-     */
     public void setAmplitudeCaptureRate(double amplitudeCaptureRate) {
         MethodeKnn.amplitudeCaptureRate = amplitudeCaptureRate;
     }
 
-    /**
-     * Obtient l'amplitude de l'attribut Defense.
-     *
-     * @return L'amplitude de l'attribut Defense.
-     */
     public double getAmplitudeDefense() {
         return amplitudeDefense;
     }
 
-    /**
-     * Définit l'amplitude de l'attribut Defense.
-     *
-     * @param amplitudeDefense L'amplitude de l'attribut Defense.
-     */
     public void setAmplitudeDefense(double amplitudeDefense) {
         MethodeKnn.amplitudeDefense = amplitudeDefense;
     }
 
-    /**
-     * Obtient l'amplitude de l'attribut ExperienceGrowth.
-     *
-     * @return L'amplitude de l'attribut ExperienceGrowth.
-     */
     public double getAmplitudeExperienceGrowth() {
         return amplitudeExperienceGrowth;
     }
 
-    /**
-     * Définit l'amplitude de l'attribut ExperienceGrowth.
-     *
-     * @param amplitudeExperienceGrowth L'amplitude de l'attribut ExperienceGrowth.
-     */
     public void setAmplitudeExperienceGrowth(double amplitudeExperienceGrowth) {
         MethodeKnn.amplitudeExperienceGrowth = amplitudeExperienceGrowth;
     }
 
-    /**
-     * Obtient l'amplitude de l'attribut Hp.
-     *
-     * @return L'amplitude de l'attribut Hp.
-     */
     public double getAmplitudeHp() {
         return amplitudeHp;
     }
 
-
-    /**
-     * Définit l'amplitude de l'attribut Hp.
-     *
-     * @param amplitudeHp L'amplitude de l'attribut Hp.
-     */
     public void setAmplitudeHp(double amplitudeHp) {
         MethodeKnn.amplitudeHp = amplitudeHp;
     }
 
-    /**
-     * Obtient l'amplitude de l'attribut SpAttack.
-     *
-     * @return L'amplitude de l'attribut SpAttack.
-     */
     public double getAmplitudeSpAttack() {
         return amplitudeSpAttack;
     }
 
-    /**
-     * Définit l'amplitude de l'attribut SpAttack.
-     *
-     * @param amplitudeSpAttack L'amplitude de l'attribut SpAttack.
-     */
     public void setAmplitudeSpAttack(double amplitudeSpAttack) {
         MethodeKnn.amplitudeSpAttack = amplitudeSpAttack;
     }
 
-    /**
-     * Obtient l'amplitude de l'attribut SpDefense.
-     *
-     * @return L'amplitude de l'attribut SpDefense.
-     */
     public double getAmplitudeSpDefense() {
         return amplitudeSpDefense;
     }
 
-    /**
-     * Définit l'amplitude de l'attribut SpDefense.
-     *
-     * @param amplitudeSpDefense L'amplitude de l'attribut SpDefense.
-     */
     public void setAmplitudeSpDefense(double amplitudeSpDefense) {
         MethodeKnn.amplitudeSpDefense = amplitudeSpDefense;
     }
 
-    /**
-     * Obtient l'amplitude de l'attribut Speed.
-     *
-     * @return L'amplitude de l'attribut Speed.
-     */
     public double getAmplitudeSpeed() {
         return amplitudeSpeed;
     }
 
-    /**
-     * Définit l'amplitude de l'attribut Speed.
-     *
-     * @param amplitudeSpeed L'amplitude de l'attribut Speed.
-     */
     public void setAmplitudeSpeed(double amplitudeSpeed) {
         MethodeKnn.amplitudeSpeed = amplitudeSpeed;
     }
 
-    /**
-     * Obtient l'amplitude de l'attribut IsLegendary.
-     *
-     * @return L'amplitude de l'attribut IsLegendary.
-     */
     public double getAmplitudeIsLegendary() {
         return amplitudeIsLegendary;
     }
 
-    /**
-     * Définit l'amplitude de l'attribut IsLegendary.
-     *
-     * @param amplitudeIsLegendary L'amplitude de l'attribut IsLegendary.
-     */
     public void setAmplitudeIsLegendary(double amplitudeIsLegendary) {
         MethodeKnn.amplitudeIsLegendary = amplitudeIsLegendary;
     }

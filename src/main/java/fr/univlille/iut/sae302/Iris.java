@@ -44,47 +44,22 @@ public class Iris {
                 "Variety : " + variety;
     }
 
-    /**
-     * Obtient la longueur du pétale.
-     *
-     * @return La longueur du pétale.
-     */
     public Number getPetalLength() {
         return petalLength;
     }
 
-    /**
-     * Obtient la largeur du pétale.
-     *
-     * @return La largeur du pétale.
-     */
     public Number getPetalWidth() {
         return petalWidth;
     }
 
-    /**
-     * Obtient la longueur du sépale.
-     *
-     * @return La longueur du sépale.
-     */
     public Number getSepalLength() {
         return sepalLength;
     }
 
-    /**
-     * Obtient la largeur du sépale.
-     *
-     * @return La largeur du sépale.
-     */
     public Number getSepalWidth() {
         return sepalWidth;
     }
 
-    /**
-     * Obtient la variété de l'Iris.
-     *
-     * @return La variété de l'Iris.
-     */
     public String getVariety() {
         return variety;
     }
@@ -102,47 +77,22 @@ public class Iris {
         return 0;
     }
 
-    /**
-     * Définit la longueur du pétale.
-     *
-     * @param petalLength La nouvelle longueur du pétale.
-     */
     public void setPetalLength(Number petalLength) {
         this.petalLength = petalLength;
     }
 
-    /**
-     * Définit la largeur du pétale.
-     *
-     * @param petalWidth La nouvelle largeur du pétale.
-     */
     public void setPetalWidth(Number petalWidth) {
         this.petalWidth = petalWidth;
     }
 
-    /**
-     * Définit la longueur du sépale.
-     *
-     * @param sepalLength La nouvelle longueur du sépale.
-     */
     public void setSepalLength(Number sepalLength) {
         this.sepalLength = sepalLength;
     }
 
-    /**
-     * Définit la largeur du sépale.
-     *
-     * @param sepalWidth La nouvelle largeur du sépale.
-     */
     public void setSepalWidth(Number sepalWidth) {
         this.sepalWidth = sepalWidth;
     }
 
-    /**
-     * Définit la variété du sépale.
-     *
-     * @param variety La nouvelle variété du sépale.
-     */
     public void setVariety(String variety) {
         this.variety = variety;
     }

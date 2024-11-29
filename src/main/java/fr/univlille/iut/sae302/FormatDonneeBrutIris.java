@@ -34,29 +34,14 @@ public class FormatDonneeBrutIris {
         return "" + sepal_length + ',' + sepal_width + ',' + petal_length + ',' + petal_width + ',' + variety;
     }
 
-    /**
-     * Obtient la longueur du sépale.
-     *
-     * @return La longueur du sépale.
-     */
     public double getSepal_length() {
         return sepal_length;
     }
 
-    /**
-     * Obtient la largeur du sépale.
-     *
-     * @return La largeur du sépale.
-     */
     public double getSepal_width() {
         return sepal_width;
     }
 
-    /**
-     * Obtient la longueur du pétale.
-     *
-     * @return La longueur du pétale.
-     */
     public double getPetal_length() {
         return petal_length;
     }
@@ -72,11 +57,6 @@ public class FormatDonneeBrutIris {
         return Double.parseDouble(petal_width);
     }
 
-    /**
-     * Obtient la variété de l'Iris.
-     *
-     * @return La variété de l'Iris.
-     */
     public String getVariety() {
         return variety;
     }
