@@ -7,8 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMethodeKnn{
     private Iris iris1;
@@ -46,26 +47,6 @@ public class TestMethodeKnn{
     }
 
     @Test
-    public void testGetSepalWidthMin(){
-        assertEquals(2.7, mKnn.getSepalWidthMin());
-    }
-
-    @Test
-    public void testGetSepalLengthMin(){
-        assertEquals(4.9, mKnn.getSepalLengthMin());
-    }
-
-    @Test
-    public void testGetPetalWidthMin(){
-        assertEquals(0.2, mKnn.getPetalWidthMin());
-    }
-
-    @Test
-    public void testGetPetalLengthMin(){
-        assertEquals(1.4, mKnn.getPetalLengthMin());
-    }
-
-    @Test
     public void testSetDatas(){
         Data<Iris> dataTemp = new Data<>(new ArrayList<Iris>());
         mKnn.setDatas(dataTemp);
@@ -96,27 +77,28 @@ public class TestMethodeKnn{
 
     @Test
     public void testPPVUnVoisinDistanceManhattan(){
-        testGetKPlusProchesVoisins(new Iris[]{iris4}, 1, iris3, new DistanceManhattan());
+        testGetKPlusProchesVoisins(List.of(new Iris[]{iris4}), 1, iris3, new DistanceManhattan());
     }
 
     @Test
     public void testPPVTroisVoisinDistanceManhattan(){
-        testGetKPlusProchesVoisins(new Iris[]{iris4, iris6, iris5}, 3, iris3, new DistanceManhattan());
+        testGetKPlusProchesVoisins(List.of(new Iris[]{iris4, iris6, iris5}), 3, iris3, new DistanceManhattan());
     }
 
     @Test
     public void testPPVUnVoisinDistanceEuclidienne(){
-        testGetKPlusProchesVoisins(new Iris[]{iris4}, 1, iris3, new DistanceEuclidienne());
+        testGetKPlusProchesVoisins(List.of(new Iris[]{iris4}), 1, iris3, new DistanceEuclidienne());
     }
 
     @Test
     public void testPPVTroisVoisinDistanceEuclidienne(){
-        testGetKPlusProchesVoisins(new Iris[]{iris4, iris6, iris5}, 3, iris3, new DistanceEuclidienne());
+        testGetKPlusProchesVoisins(List.of(new Iris[]{iris4, iris6, iris5}), 3, iris3, new DistanceEuclidienne());
     }
 
-    public void testGetKPlusProchesVoisins(Iris[] resultatAttendu, int k, Iris cible, Distance distance) {
-        Iris[] resultat = (Iris[]) mKnn.getKPlusProchesVoisins(k, cible, distance);
-        testMemeContenueListe(resultatAttendu, resultat);
+    public void testGetKPlusProchesVoisins(List<Iris> resultatAttendu, int k, Iris cible, Distance distance) {
+        List<Iris> resultat = (List<Iris>) mKnn.getKPlusProchesVoisins(k, cible, distance);
+        assertEquals(resultatAttendu.size(), resultat.size());
+        assertTrue(resultatAttendu.containsAll(resultat) && resultat.containsAll(resultatAttendu));
     }
 
     public void testMemeContenueListe(Iris[] resultatAttendu, Iris[] resultat){
@@ -128,21 +110,21 @@ public class TestMethodeKnn{
 
     @Test
     public void testClassifierIrisUnVoisinDistanceManhattan(){
-        assertEquals("Versicolor", mKnn.classifierIris(1, iris3, new DistanceManhattan()));
+        assertEquals("Versicolor", mKnn.classifierObjet(1, iris3, new DistanceManhattan()));
     }
 
     @Test
     public void testClassifierIrisTroisVoisinDistanceManhattan(){
-        assertEquals("Virginica", mKnn.classifierIris(3, iris3, new DistanceManhattan()));
+        assertEquals("Virginica", mKnn.classifierObjet(3, iris3, new DistanceManhattan()));
     }
 
     @Test
     public void testClassifierIrisUnVoisinDistanceEuclidienne(){
-        assertEquals("Versicolor", mKnn.classifierIris(1, iris3, new DistanceEuclidienne()));
+        assertEquals("Versicolor", mKnn.classifierObjet(1, iris3, new DistanceEuclidienne()));
     }
 
     @Test
     public void testClassifierIrisTroisVoisinDistanceEuclidienne(){
-        assertEquals("Virginica", mKnn.classifierIris(3, iris3, new DistanceEuclidienne()));
+        assertEquals("Virginica", mKnn.classifierObjet(3, iris3, new DistanceEuclidienne()));
     }
 }

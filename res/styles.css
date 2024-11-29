@@ -1,0 +1,6 @@
+.chart-symbol {
+    -fx-shape: "M0,-5 L5,0 L0,5 L-5,0 Z";
+    -fx-background-radius: 7px;
+    -fx-padding: 3.75px;
+    -fx-background-color: purple;
+}

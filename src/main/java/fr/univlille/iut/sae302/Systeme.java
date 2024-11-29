@@ -174,10 +174,7 @@ public class Systeme extends Stage implements Observer {
         updateAxes();
         data.attach(this);
     }
-    
-    
-    
-    
+
     private void loadIrisData(File selectedFile) throws IOException {
         List<FormatDonneeBrutIris> listBrutIris = ChargementDonneesUtil.charger(selectedFile.getAbsolutePath(), FormatDonneeBrutIris.class);
         List<Iris> irisData = new ArrayList<>();
@@ -194,8 +191,7 @@ public class Systeme extends Stage implements Observer {
         calculateAxisLimits();
         updateAxes();
     }
-    
-    
+
     private void calculateAxisLimits() {
         xmin = Double.MAX_VALUE;
         xmax = Double.MIN_VALUE;
@@ -250,8 +246,7 @@ public class Systeme extends Stage implements Observer {
         updateXAxisButton.setOnAction(e -> updateAxis(xAxisMinField, xAxisMaxField, true));
         updateYAxisButton.setOnAction(e -> updateAxis(yAxisMinField, yAxisMaxField, false));
     }
-    
-    
+
     private void updateAxis(TextField minField, TextField maxField, boolean isXAxis) {
         try {
             double newMin = Double.parseDouble(minField.getText());
@@ -277,9 +272,7 @@ public class Systeme extends Stage implements Observer {
             showAlert("Entrée non valide", "Entrez un nombre valide pour l'axe " + (isXAxis ? "X" : "Y") + ".");
         }
     }
-    
-    
-    
+
     private void configureProjectionComboBox() {
         projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null && newValue.equals(projectionComboBox2.getValue())) {
@@ -618,8 +611,8 @@ public class Systeme extends Stage implements Observer {
             case "Setosa" -> "-fx-background-color: green;";
             default -> "-fx-background-color: gray;";
         };
-        String size = "-fx-background-radius: 7px; -fx-padding: 3.75px;"; // Size
-        return color + size;
+        String shape = " -fx-shape: \"M50,10 A40,40 0 1,1 49.99,10 Z\"; -fx-background-radius: 7px; -fx-padding: 3.75px;"; // Size
+        return  color + shape;
     }
 
     /**
@@ -713,7 +706,6 @@ public class Systeme extends Stage implements Observer {
             showAlert("Details", details);
         });
     }
-    
 
     /**
      * Réalise une nouvelle projection des données dans un graphique de dispersion.
@@ -785,8 +777,6 @@ public class Systeme extends Stage implements Observer {
         calculateAxisLimits();
         updateAxes();
     }
-    
-    
 
     /**
      * Ouvre un nouvel onglet de projection dans un TabPane.
