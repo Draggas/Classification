@@ -27,32 +27,24 @@ public class DistanceManhattanNormalisee implements Distance {
         if (t1 instanceof Iris && t2 instanceof Iris) {
             Iris iris1 = (Iris) t1;
             Iris iris2 = (Iris) t2;
-            if (MethodeKnn.amplitudePetalLength == 0 || MethodeKnn.amplitudePetalWidth == 0 ||
-                    MethodeKnn.amplitudeSepalLength == 0 || MethodeKnn.amplitudeSepalWidth == 0) {
-                throw new IllegalArgumentException("Les amplitudes ne doivent pas être égales à zéro");
-            }
-            double petalLengthDiff = Math.abs(iris1.getPetalLength().doubleValue() - iris2.getPetalLength().doubleValue()) / MethodeKnn.amplitudePetalLength;
-            double petalWidthDiff = Math.abs(iris1.getPetalWidth().doubleValue() - iris2.getPetalWidth().doubleValue()) / MethodeKnn.amplitudePetalWidth;
-            double sepalLengthDiff = Math.abs(iris1.getSepalLength().doubleValue() - iris2.getSepalLength().doubleValue()) / MethodeKnn.amplitudeSepalLength;
-            double sepalWidthDiff = Math.abs(iris1.getSepalWidth().doubleValue() - iris2.getSepalWidth().doubleValue()) / MethodeKnn.amplitudeSepalWidth;
+
+            double petalLengthDiff = (MethodeKnn.amplitudePetalLength != 0) ? Math.abs(iris1.getPetalLength().doubleValue() - iris2.getPetalLength().doubleValue()) / MethodeKnn.amplitudePetalLength : 0;
+            double petalWidthDiff = (MethodeKnn.amplitudePetalWidth != 0) ? Math.abs(iris1.getPetalWidth().doubleValue() - iris2.getPetalWidth().doubleValue()) / MethodeKnn.amplitudePetalWidth : 0;
+            double sepalLengthDiff = (MethodeKnn.amplitudeSepalLength != 0) ? Math.abs(iris1.getSepalLength().doubleValue() - iris2.getSepalLength().doubleValue()) / MethodeKnn.amplitudeSepalLength : 0;
+            double sepalWidthDiff = (MethodeKnn.amplitudeSepalWidth != 0) ? Math.abs(iris1.getSepalWidth().doubleValue() - iris2.getSepalWidth().doubleValue()) / MethodeKnn.amplitudeSepalWidth : 0;
             distance = petalLengthDiff + petalWidthDiff + sepalLengthDiff + sepalWidthDiff;
         }
         else if (t1 instanceof Pokemon && t2 instanceof Pokemon) {
             Pokemon pokemon1 = (Pokemon) t1;
             Pokemon pokemon2 = (Pokemon) t2;
-            if (MethodeKnn.amplitudeAttack == 0 || MethodeKnn.amplitudeDefense == 0 ||
-                    MethodeKnn.amplitudeHp == 0 || MethodeKnn.amplitudeSpeed == 0 ||
-                    MethodeKnn.amplitudeSpAttack == 0 || MethodeKnn.amplitudeSpDefense == 0 ||
-                    MethodeKnn.amplitudeIsLegendary == 0) {
-                throw new IllegalArgumentException("Les amplitudes ne doivent pas être égales à zéro");
-            }
-            double attackDiff = Math.abs(pokemon1.getAttack().doubleValue() - pokemon2.getAttack().doubleValue()) / MethodeKnn.amplitudeAttack;
-            double defenseDiff = Math.abs(pokemon1.getDefense().doubleValue() - pokemon2.getDefense().doubleValue()) / MethodeKnn.amplitudeDefense;
-            double hpDiff = Math.abs(pokemon1.getHp().doubleValue() - pokemon2.getHp().doubleValue()) / MethodeKnn.amplitudeHp;
-            double speedDiff = Math.abs(pokemon1.getSpeed().doubleValue() - pokemon2.getSpeed().doubleValue()) / MethodeKnn.amplitudeSpeed;
-            double spAttackDiff = Math.abs(pokemon1.getSpAttack().doubleValue() - pokemon2.getSpAttack().doubleValue()) / MethodeKnn.amplitudeSpAttack;
-            double spDefenseDiff = Math.abs(pokemon1.getSpDefense().doubleValue() - pokemon2.getSpDefense().doubleValue()) / MethodeKnn.amplitudeSpDefense;
-            double isLegendaryDiff = Math.abs(pokemon1.getIsLegendary() - pokemon2.getIsLegendary()) / MethodeKnn.amplitudeIsLegendary;
+
+            double attackDiff = (MethodeKnn.amplitudeAttack != 0) ? Math.abs(pokemon1.getAttack().doubleValue() - pokemon2.getAttack().doubleValue()) / MethodeKnn.amplitudeAttack : 0;
+            double defenseDiff = (MethodeKnn.amplitudeDefense != 0) ? Math.abs(pokemon1.getDefense().doubleValue() - pokemon2.getDefense().doubleValue()) / MethodeKnn.amplitudeDefense : 0;
+            double hpDiff = (MethodeKnn.amplitudeHp != 0) ? Math.abs(pokemon1.getHp().doubleValue() - pokemon2.getHp().doubleValue()) / MethodeKnn.amplitudeHp : 0;
+            double speedDiff = (MethodeKnn.amplitudeSpeed != 0) ? Math.abs(pokemon1.getSpeed().doubleValue() - pokemon2.getSpeed().doubleValue()) / MethodeKnn.amplitudeSpeed : 0;
+            double spAttackDiff = (MethodeKnn.amplitudeSpAttack != 0) ? Math.abs(pokemon1.getSpAttack().doubleValue() - pokemon2.getSpAttack().doubleValue()) / MethodeKnn.amplitudeSpAttack : 0;
+            double spDefenseDiff = (MethodeKnn.amplitudeSpDefense != 0) ? Math.abs(pokemon1.getSpDefense().doubleValue() - pokemon2.getSpDefense().doubleValue()) / MethodeKnn.amplitudeSpDefense : 0;
+            double isLegendaryDiff = (MethodeKnn.amplitudeIsLegendary != 0) ? Math.abs(pokemon1.getIsLegendary() - pokemon2.getIsLegendary()) / MethodeKnn.amplitudeIsLegendary : 0;
             distance = attackDiff + defenseDiff + hpDiff + speedDiff + spAttackDiff + spDefenseDiff + isLegendaryDiff;
         }
 
