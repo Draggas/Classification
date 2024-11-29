@@ -5,14 +5,15 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    // Lancement de l'apps
+    // Lancement de l'application
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
-        //Systeme systeme = new Systeme();
-        //systeme.showHomePage();
+        SystemeView view = new SystemeView();
+        SystemeController controller = new SystemeController(view, primaryStage);
+        controller.showHomePage();
     }
 }

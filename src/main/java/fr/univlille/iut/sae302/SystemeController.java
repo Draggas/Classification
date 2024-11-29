@@ -14,8 +14,6 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.paint.Color; 
-import javafx.scene.shape.Circle; 
 import javafx.stage.Screen; 
 import java.io.File;
 import java.io.IOException;
@@ -40,12 +38,39 @@ public class SystemeController extends Stage implements Observer {
         configureButtonActions();
     }
 
+    private void openNewProjectionTab(TabPane tabPane) {
+        NumberAxis xAxis = new NumberAxis(0,9, 1.0);
+        NumberAxis yAxis = new NumberAxis(view.x, view.y, 1.0);
+        Tab newTab = new Tab(view.getProjectionComboBox().getValue() + "/" + view.getProjectionComboBox2().getValue());
+        ScatterChart<Number, Number> newChart = new ScatterChart<>(xAxis, yAxis);
+        XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+        newChart.setLegendVisible(false);
+        newPerformProjection(newSeries, newChart);
+        newTab.setContent(newChart);
+        tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
+    }
+
     public void showHomePage() {
         Stage homeStage = new Stage();
         view.showHomePage(homeStage);
+
+        view.getLoadFileButton().setOnAction(e -> {
+            File selectedFile = openFile();
+            if (selectedFile != null) {
+                loadDataFromFile(selectedFile);
+                homeStage.close();
+            }
+        });
+
+        view.getHelpButton().setOnAction(e -> view.showHelpUnavailable());
+
+        view.getCloseButton().setOnAction(e -> System.exit(0));
+
         homeStage.setOnCloseRequest(event -> System.exit(0));
         homeStage.showAndWait();
     }
+
 
     private void configureOpenFileButton() {
         view.getOpenFileButton().setOnAction(event -> {
@@ -76,10 +101,23 @@ public class SystemeController extends Stage implements Observer {
                 loadIrisData(selectedFile);
             }
 
-            view.configureProjectionsAndLegend();
+            configureProjectionsAndLegend();
         } catch (IOException e) {
             view.showAlert("Erreur de chargement", "Impossible de lire le fichier sélectionné.");
         }
+    }
+
+    private void configureProjectionsAndLegend() {
+        view.getProjectionComboBox().setDisable(false);
+        view.getProjectionComboBox2().setDisable(false);
+
+        double minData = data.getMinData();
+        double maxData = data.getMaxData();
+        double lowerBound = (int) (minData < 1 ? minData : minData - 1);
+        double upperBound = (int) maxData + 1;
+
+        view.setChartBounds(lowerBound, upperBound);
+        data.attach(this);
     }
 
     private void loadPokemonData(File selectedFile) throws IOException {
@@ -143,10 +181,10 @@ public class SystemeController extends Stage implements Observer {
     }
 
     private void updateAxes() {
-        view.getChart().getXAxis().setLowerBound(xmin - 1);
-        view.getChart().getXAxis().setUpperBound(xmax + 1);
-        view.getChart().getYAxis().setLowerBound(ymin - 1);
-        view.getChart().getYAxis().setUpperBound(ymax + 1);
+        view.setxAxisLowerBound(xmin - 1);
+        view.setxAxisUpperBound(xmax + 1);
+        view.setyAxisLowerBound(ymin - 1);
+        view.setyAxisUpperBound(ymax + 1);
     }
 
     private void configureUpdateAxisButtons() {

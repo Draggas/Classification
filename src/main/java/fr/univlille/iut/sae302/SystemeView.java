@@ -29,8 +29,8 @@ public class SystemeView extends Stage {
     private ComboBox<String> projectionComboBox;
     private ComboBox<String> projectionComboBox2;
     private TabPane tabPane;
-    private double x = 0.0;
-    private double y = 9.0;
+    protected double x = 0.0;
+    protected double y = 9.0;
     NumberAxis xAxis;
     NumberAxis yAxis;
     Label xAxisLabel;
@@ -45,10 +45,36 @@ public class SystemeView extends Stage {
     Button buttonAddValue;
     Button openFileButton;
     VBox nuage;
+    Button loadFileButton;
+    Button helpButton;
+    Button closeButton;
 
     public SystemeView() {
         initializeChart();
         initializeUIComponents();
+    }
+
+    public void showHomePage(Stage homeStage) {
+        Label welcomeLabel = new Label("BIENVENUE DANS CLASSIFICATION");
+        welcomeLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+
+        Button loadFileButton = new Button("Charger un fichier .csv");
+        Button helpButton = new Button("Aide");
+        Button closeButton = new Button("Fermer");
+
+        HBox buttonBox = new HBox(10, helpButton, closeButton);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(20, welcomeLabel, loadFileButton, buttonBox);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20));
+
+        Scene homeScene = new Scene(layout, 600, 400);
+
+        homeStage.initModality(Modality.APPLICATION_MODAL);
+        homeStage.setScene(homeScene);
+        homeStage.setOnCloseRequest(event -> System.exit(0));
+        homeStage.showAndWait();
     }
 
     public void showHelpUnavailable() {
@@ -85,37 +111,37 @@ public class SystemeView extends Stage {
         tabPane.getTabs().add(initialTab);
     }
 
-    private void initializeUIComponents() {
+    public void initializeUIComponents() {
         xAxisLabel = new Label("L'axe X :");
-        xAxisMinField = new TextField(String.valueOf(x));
-        xAxisMaxField = new TextField(String.valueOf(y));
+        xAxisMinField = new TextField(String.valueOf(0));
+        xAxisMaxField = new TextField(String.valueOf(9));
         updateXAxisButton = new Button("Mettre à jour l'axe X");
-
+    
         yAxisLabel = new Label("L'axe Y :");
-        yAxisMinField = new TextField(String.valueOf(x));
-        yAxisMaxField = new TextField(String.valueOf(y));
+        yAxisMinField = new TextField(String.valueOf(0));
+        yAxisMaxField = new TextField(String.valueOf(9));
         updateYAxisButton = new Button("Mettre à jour l'axe Y");
-
+    
         projectionComboBox = new ComboBox<>();
         projectionComboBox.setValue(null);
-
+    
         projectionComboBox2 = new ComboBox<>();
         projectionComboBox2.setValue(null);
-
+    
         projectionComboBox.setDisable(true);
         projectionComboBox2.setDisable(true);
-
+    
         buttonProjection = new Button("Projection");
         buttonAddValue = new Button("Ajouter");
         buttonProjection.setDisable(true);
         buttonAddValue.setDisable(true);
-
+        
+        openFileButton = new Button("Ouvrir fichier");
+    
         HBox legende = new HBox();
         legende.setAlignment(Pos.CENTER);
-
+    
         nuage = new VBox(tabPane, legende);
-
-        configureUpdateAxisButtons();
     }
 
     public void resetUI() {
@@ -127,17 +153,16 @@ public class SystemeView extends Stage {
         buttonAddValue.setDisable(true);
     }
 
-    public void configureProjectionsAndLegend() {
-        projectionComboBox.setDisable(false);
-        projectionComboBox2.setDisable(false);
+    public void setChartBounds(double lowerBound, double upperBound) {
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         NumberAxis yAxis = (NumberAxis) chart.getYAxis();
-        xAxis.setLowerBound((int) (data.getMinData() < 1 ? data.getMinData() : data.getMinData() - 1));
-        xAxis.setUpperBound((int) data.getMaxData() + 1);
-        yAxis.setLowerBound((int) (data.getMinData() < 1 ? data.getMinData() : data.getMinData() - 1));
-        yAxis.setUpperBound((int) data.getMaxData() + 1);
-        data.attach(this);
+
+        xAxis.setLowerBound(lowerBound);
+        xAxis.setUpperBound(upperBound);
+        yAxis.setLowerBound(lowerBound);
+        yAxis.setUpperBound(upperBound);
     }
+
 
     public String drawIris(String variety) {
         String color = switch (variety) {
@@ -348,6 +373,34 @@ public class SystemeView extends Stage {
 
     public VBox getNuage() {
         return nuage;
+    }
+
+    public Button getLoadFileButton() {
+        return loadFileButton;
+    }
+
+    public Button getHelpButton() {
+        return helpButton;
+    }
+
+    public Button getCloseButton() {
+        return closeButton;
+    }
+    
+    public void setxAxisLowerBound(double lowerBound) {
+        xAxis.setLowerBound(lowerBound);
+    }
+
+    public void setxAxisUpperBound(double upperBound) {
+        xAxis.setUpperBound(upperBound);
+    }
+
+    public void setyAxisLowerBound(double lowerBound) {
+        yAxis.setLowerBound(lowerBound);
+    }
+
+    public void setyAxisUpperBound(double upperBound) {
+        yAxis.setUpperBound(upperBound);
     }
 
 }
