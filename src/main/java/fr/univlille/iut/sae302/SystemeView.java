@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import javafx.scene.paint.Color; 
 import javafx.scene.shape.Circle; 
 
-
 public class SystemeView extends Stage {
     private ScatterChart<Number, Number> chart;
     private XYChart.Series<Number, Number> series;
@@ -49,7 +48,9 @@ public class SystemeView extends Stage {
         Label welcomeLabel = new Label("BIENVENUE DANS CLASSIFICATION");
         welcomeLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
     
-        VBox layout = new VBox(20, welcomeLabel);
+        loadFileButton = new Button("Charger un fichier .csv");
+    
+        VBox layout = new VBox(20, welcomeLabel, loadFileButton);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(20));
     
@@ -59,7 +60,7 @@ public class SystemeView extends Stage {
         homeStage.setScene(homeScene);
         homeStage.show();
     }
-
+    
     public void showHelpUnavailable() {
         Stage helpStage = new Stage();
         helpStage.initModality(Modality.APPLICATION_MODAL);

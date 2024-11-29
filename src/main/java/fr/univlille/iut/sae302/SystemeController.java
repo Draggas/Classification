@@ -29,6 +29,7 @@ public class SystemeController extends Stage implements Observer {
     private double ymin;
     private double ymax;
 
+
     public SystemeController(SystemeView view, Stage primaryStage) {
         this.view = view;
         this.primaryStage = primaryStage;
@@ -38,24 +39,18 @@ public class SystemeController extends Stage implements Observer {
         configureButtonActions();
     }
 
-    private void openNewProjectionTab(TabPane tabPane) {
-        NumberAxis xAxis = new NumberAxis(0, 9, 1.0);
-        NumberAxis yAxis = new NumberAxis(view.x, view.y, 1.0);
-        Tab newTab = new Tab(view.getProjectionComboBox().getValue() + "/" + view.getProjectionComboBox2().getValue());
-        ScatterChart<Number, Number> newChart = new ScatterChart<>(xAxis, yAxis);
-        XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
-        newChart.setLegendVisible(false);
-        newPerformProjection(newSeries, newChart);
-        newTab.setContent(newChart);
-        tabPane.getTabs().add(newTab);
-        tabPane.getSelectionModel().select(newTab);
-    }
-
     public void showHomePage() {
         Stage homeStage = new Stage();
         view.showHomePage(homeStage);
+        view.getLoadFileButton().setOnAction(e -> {
+            File selectedFile = openFile();
+            if (selectedFile != null) {
+                loadDataFromFile(selectedFile);
+                homeStage.close();
+            }
+        });
     }
-    
+
     private void configureOpenFileButton() {
         view.getOpenFileButton().setOnAction(event -> {
             File selectedFile = openFile();
@@ -89,6 +84,19 @@ public class SystemeController extends Stage implements Observer {
         } catch (IOException e) {
             view.showAlert("Erreur de chargement", "Impossible de lire le fichier sélectionné.");
         }
+    }
+
+    private void openNewProjectionTab(TabPane tabPane) {
+        NumberAxis xAxis = new NumberAxis(0, 9, 1.0);
+        NumberAxis yAxis = new NumberAxis(view.x, view.y, 1.0);
+        Tab newTab = new Tab(view.getProjectionComboBox().getValue() + "/" + view.getProjectionComboBox2().getValue());
+        ScatterChart<Number, Number> newChart = new ScatterChart<>(xAxis, yAxis);
+        XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+        newChart.setLegendVisible(false);
+        newPerformProjection(newSeries, newChart);
+        newTab.setContent(newChart);
+        tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
     }
 
     private void configureProjectionsAndLegend() {
