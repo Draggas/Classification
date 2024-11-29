@@ -11,13 +11,14 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-
+import javafx.scene.paint.Color; 
+import javafx.scene.shape.Circle; 
+import javafx.stage.FileChooser; 
+import javafx.stage.Modality; 
+import javafx.stage.Screen; 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -51,7 +52,7 @@ public class Systeme extends Stage implements Observer {
     private double xmax;
     private double ymin;
     private double ymax;
-    
+    public Stage homeStage;
 
     public Systeme() {
         initializeChart();
@@ -60,6 +61,60 @@ public class Systeme extends Stage implements Observer {
         configureUpdateAxisButtons();
         configureProjectionComboBox();
         configureButtonActions();
+    }
+
+    public void showHomePage() {
+        Label welcomeLabel = new Label("BIENVENUE DANS CLASSIFICATION");
+        welcomeLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;"); // Style du texte
+
+        Button loadFileButton = new Button("Charger un fichier .csv");
+        loadFileButton.setOnAction(e -> {
+            File selectedFile = openFile();
+            if (selectedFile != null) {
+                loadDataFromFile(selectedFile);
+                homeStage.close();
+            }
+        });
+
+        Button helpButton = new Button("Aide");
+        helpButton.setOnAction(e -> showHelpUnavailable());
+
+        Button closeButton = new Button("Fermer");
+        closeButton.setOnAction(e -> System.exit(0));
+
+        HBox buttonBox = new HBox(10, helpButton, closeButton);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(20, welcomeLabel, loadFileButton, buttonBox);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20));
+
+        Scene homeScene = new Scene(layout, 600, 400);
+
+        homeStage = new Stage();
+        homeStage.initModality(Modality.APPLICATION_MODAL);
+        homeStage.setScene(homeScene);
+
+        homeStage.setOnCloseRequest(event -> { System.exit(0);});
+
+        homeStage.showAndWait();
+    }
+
+    private void showHelpUnavailable() {
+        Stage helpStage = new Stage();
+        helpStage.initModality(Modality.APPLICATION_MODAL);
+        helpStage.setTitle("Aide");
+
+        Label helpLabel = new Label("Pas d'aide disponible");
+        helpLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        helpLabel.setPadding(new Insets(20));
+
+        VBox helpLayout = new VBox(20, helpLabel);
+        helpLayout.setAlignment(Pos.CENTER);
+
+        Scene helpScene = new Scene(helpLayout, 300, 200);
+        helpStage.setScene(helpScene);
+        helpStage.showAndWait();
     }
 
     private void initializeChart() {
@@ -71,48 +126,47 @@ public class Systeme extends Stage implements Observer {
         series = new XYChart.Series<>();
         chart.setLegendVisible(false);
         chart.getData().add(series);
-    
+
         tabPane = new TabPane();
         Tab initialTab = new Tab("Accueil");
         initialTab.setContent(chart);
         initialTab.setClosable(false);
         tabPane.getTabs().add(initialTab);
     }
-    
 
     private void initializeUIComponents() {
         xAxisLabel = new Label("L'axe X :");
         xAxisMinField = new TextField(String.valueOf(x));
         xAxisMaxField = new TextField(String.valueOf(y));
         updateXAxisButton = new Button("Mettre à jour l'axe X");
-    
+
         yAxisLabel = new Label("L'axe Y :");
         yAxisMinField = new TextField(String.valueOf(x));
         yAxisMaxField = new TextField(String.valueOf(y));
         updateYAxisButton = new Button("Mettre à jour l'axe Y");
-    
+
         projectionComboBox = new ComboBox<>();
         projectionComboBox.setValue(null);
-    
+
         projectionComboBox2 = new ComboBox<>();
         projectionComboBox2.setValue(null);
-    
+
         projectionComboBox.setDisable(true);
         projectionComboBox2.setDisable(true);
-    
+
         buttonProjection = new Button("Projection");
         buttonAddValue = new Button("Ajouter");
         buttonProjection.setDisable(true);
         buttonAddValue.setDisable(true);
-    
+
         HBox legende = new HBox();
         legende.setAlignment(Pos.CENTER);
-    
+
         nuage = new VBox(tabPane, legende);
-    
+
         configureUpdateAxisButtons();
     }
-    
+
     private void configureOpenFileButton() {
         openFileButton = new Button("Ouvrir");
         openFileButton.setOnAction(event -> {
@@ -124,7 +178,7 @@ public class Systeme extends Stage implements Observer {
             }
         });
     }
-    
+
     private File openFile() {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("Fichiers CSV (*.csv)", "*.csv");
@@ -133,18 +187,18 @@ public class Systeme extends Stage implements Observer {
         fileChooserStage.initModality(Modality.APPLICATION_MODAL);
         return fileChooser.showOpenDialog(fileChooserStage);
     }
-    
+
     private void loadDataFromFile(File selectedFile) {
         try {
             List<String> columns = ChargementDonneesUtil.getCsvColumns(selectedFile.getAbsolutePath());
             resetUI();
-    
+
             if (isPokemonCsv(columns)) {
                 loadPokemonData(selectedFile);
             } else if (isIrisCsv(columns)) {
                 loadIrisData(selectedFile);
             }
-    
+
             configureProjectionsAndLegend();
         } catch (IOException e) {
             showAlert("Erreur de chargement", "Impossible de lire le fichier sélectionné.");
