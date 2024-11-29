@@ -39,7 +39,7 @@ public class SystemeController extends Stage implements Observer {
     }
 
     private void openNewProjectionTab(TabPane tabPane) {
-        NumberAxis xAxis = new NumberAxis(0,9, 1.0);
+        NumberAxis xAxis = new NumberAxis(0, 9, 1.0);
         NumberAxis yAxis = new NumberAxis(view.x, view.y, 1.0);
         Tab newTab = new Tab(view.getProjectionComboBox().getValue() + "/" + view.getProjectionComboBox2().getValue());
         ScatterChart<Number, Number> newChart = new ScatterChart<>(xAxis, yAxis);
@@ -54,24 +54,8 @@ public class SystemeController extends Stage implements Observer {
     public void showHomePage() {
         Stage homeStage = new Stage();
         view.showHomePage(homeStage);
-
-        view.getLoadFileButton().setOnAction(e -> {
-            File selectedFile = openFile();
-            if (selectedFile != null) {
-                loadDataFromFile(selectedFile);
-                homeStage.close();
-            }
-        });
-
-        view.getHelpButton().setOnAction(e -> view.showHelpUnavailable());
-
-        view.getCloseButton().setOnAction(e -> System.exit(0));
-
-        homeStage.setOnCloseRequest(event -> System.exit(0));
-        homeStage.showAndWait();
     }
-
-
+    
     private void configureOpenFileButton() {
         view.getOpenFileButton().setOnAction(event -> {
             File selectedFile = openFile();

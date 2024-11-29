@@ -1,8 +1,5 @@
 package fr.univlille.iut.sae302;
 
-import fr.univlille.iut.sae302.utils.*;
-import fr.univlille.iut.sae302.utils.Observable;
-import fr.univlille.iut.sae302.utils.Observer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,17 +8,11 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color; 
 import javafx.scene.shape.Circle; 
-import javafx.stage.FileChooser; 
-import javafx.stage.Modality; 
-import javafx.stage.Screen; 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+
 
 public class SystemeView extends Stage {
     private ScatterChart<Number, Number> chart;
@@ -57,24 +48,16 @@ public class SystemeView extends Stage {
     public void showHomePage(Stage homeStage) {
         Label welcomeLabel = new Label("BIENVENUE DANS CLASSIFICATION");
         welcomeLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-
-        Button loadFileButton = new Button("Charger un fichier .csv");
-        Button helpButton = new Button("Aide");
-        Button closeButton = new Button("Fermer");
-
-        HBox buttonBox = new HBox(10, helpButton, closeButton);
-        buttonBox.setAlignment(Pos.CENTER);
-
-        VBox layout = new VBox(20, welcomeLabel, loadFileButton, buttonBox);
+    
+        VBox layout = new VBox(20, welcomeLabel);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(20));
-
+    
         Scene homeScene = new Scene(layout, 600, 400);
-
+    
         homeStage.initModality(Modality.APPLICATION_MODAL);
         homeStage.setScene(homeScene);
-        homeStage.setOnCloseRequest(event -> System.exit(0));
-        homeStage.showAndWait();
+        homeStage.show();
     }
 
     public void showHelpUnavailable() {
