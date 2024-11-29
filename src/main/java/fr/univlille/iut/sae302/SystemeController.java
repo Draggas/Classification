@@ -315,7 +315,14 @@ private void configureButtonActions() {
         distanceComboBox.getItems().addAll("Distance Euclidienne", "Distance Manhattan");
         distanceComboBox.setValue("Distance Euclidienne");
 
-        MethodeKnn knn = new MethodeKnn(new Data<>(this.data.getEData()));
+        Distance<?> distance;
+        if(distanceComboBox.getValue().equals("Distance Euclidienne")) {
+        distance = new DistanceEuclidienneNormalisee();
+        }else{
+        distance = new DistanceManhattanNormalisee();
+        }
+        
+        MethodeKnn<?> knn = new MethodeKnn<>(new Data<>(this.data.getEData()));
 
         Button buttonAdd = new Button("Ajouter");
         Label pourcentage = new Label("Pourcentage: 0%");
@@ -351,7 +358,7 @@ private void configureButtonActions() {
                     if (view.getProjectionComboBox2().getValue().equals("Petal Length")) tmp.setPetalLength(yNumber);
 
                     if (tmp.getVariety().equals("Defaut")) {
-                        tmp.setVariety(knnIris.classifierObjet(knnIris.trouverMeilleurK(new DistanceEuclidienneNormalisee()), tmp, new DistanceEuclidienneNormalisee()));
+                            tmp.setVariety(knnIris.classifierObjet(knnIris.trouverMeilleurK(distance), tmp, (Distance<Iris>) distance));
                     }
 
                     List<Iris> irisData = (List<Iris>) this.data.getEData();
@@ -462,7 +469,8 @@ private void configureButtonActions() {
         grid.add(varietyComboBox, 1, 3);
 
         grid.add(buttonAdd, 0, 4, 2, 1);
-        grid.add(pourcentage, 1, 4);
+        grid.add(distanceComboBox, 2, 4, 2, 1);
+        grid.add(pourcentage, 4, 4);
 
         GridPane.setMargin(nameLabel, new Insets(20, 5, 5, 20));
         GridPane.setMargin(nameInput, new Insets(5, 20, 10, 5));
