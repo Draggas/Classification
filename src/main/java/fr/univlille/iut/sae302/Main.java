@@ -12,7 +12,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Systeme systeme = new Systeme();
-        systeme.showHomePage();
+        //Systeme systeme = new Systeme();
+        //systeme.showHomePage();
     }
 }
