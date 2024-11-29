@@ -1,7 +1,6 @@
 package fr.univlille.iut.sae302;
 
 import fr.univlille.iut.sae302.utils.Distance;
-import fr.univlille.iut.sae302.utils.DistanceManhattan;
 
 import java.util.*;
 
@@ -249,6 +248,7 @@ public class MethodeKnn<T> {
      * @param distance La fonction de distance à utiliser.
      * @return La meilleure valeur de k.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public int trouverMeilleurK(Distance distance) {
         int meilleurK = 1;
         double meilleurPourcentage = 0;
@@ -310,7 +310,7 @@ public class MethodeKnn<T> {
      * @param amplitudeAttack L'amplitude de l'attribut Attack.
      */
     public void setAmplitudeAttack(double amplitudeAttack) {
-        this.amplitudeAttack = amplitudeAttack;
+        MethodeKnn.amplitudeAttack = amplitudeAttack;
     }
 
     /**
@@ -328,7 +328,7 @@ public class MethodeKnn<T> {
      * @param amplitudeBaseEggSteps L'amplitude de l'attribut BaseEggSteps.
      */
     public void setAmplitudeBaseEggSteps(double amplitudeBaseEggSteps) {
-        this.amplitudeBaseEggSteps = amplitudeBaseEggSteps;
+        MethodeKnn.amplitudeBaseEggSteps = amplitudeBaseEggSteps;
     }
 
     /**
@@ -346,7 +346,7 @@ public class MethodeKnn<T> {
      * @param amplitudeCaptureRate L'amplitude de l'attribut CaptureRate.
      */
     public void setAmplitudeCaptureRate(double amplitudeCaptureRate) {
-        this.amplitudeCaptureRate = amplitudeCaptureRate;
+        MethodeKnn.amplitudeCaptureRate = amplitudeCaptureRate;
     }
 
     /**
@@ -364,7 +364,7 @@ public class MethodeKnn<T> {
      * @param amplitudeDefense L'amplitude de l'attribut Defense.
      */
     public void setAmplitudeDefense(double amplitudeDefense) {
-        this.amplitudeDefense = amplitudeDefense;
+        MethodeKnn.amplitudeDefense = amplitudeDefense;
     }
 
     /**
@@ -382,7 +382,7 @@ public class MethodeKnn<T> {
      * @param amplitudeExperienceGrowth L'amplitude de l'attribut ExperienceGrowth.
      */
     public void setAmplitudeExperienceGrowth(double amplitudeExperienceGrowth) {
-        this.amplitudeExperienceGrowth = amplitudeExperienceGrowth;
+        MethodeKnn.amplitudeExperienceGrowth = amplitudeExperienceGrowth;
     }
 
     /**
@@ -401,7 +401,7 @@ public class MethodeKnn<T> {
      * @param amplitudeHp L'amplitude de l'attribut Hp.
      */
     public void setAmplitudeHp(double amplitudeHp) {
-        this.amplitudeHp = amplitudeHp;
+        MethodeKnn.amplitudeHp = amplitudeHp;
     }
 
     /**
@@ -419,7 +419,7 @@ public class MethodeKnn<T> {
      * @param amplitudeSpAttack L'amplitude de l'attribut SpAttack.
      */
     public void setAmplitudeSpAttack(double amplitudeSpAttack) {
-        this.amplitudeSpAttack = amplitudeSpAttack;
+        MethodeKnn.amplitudeSpAttack = amplitudeSpAttack;
     }
 
     /**
@@ -437,7 +437,7 @@ public class MethodeKnn<T> {
      * @param amplitudeSpDefense L'amplitude de l'attribut SpDefense.
      */
     public void setAmplitudeSpDefense(double amplitudeSpDefense) {
-        this.amplitudeSpDefense = amplitudeSpDefense;
+        MethodeKnn.amplitudeSpDefense = amplitudeSpDefense;
     }
 
     /**
@@ -455,7 +455,7 @@ public class MethodeKnn<T> {
      * @param amplitudeSpeed L'amplitude de l'attribut Speed.
      */
     public void setAmplitudeSpeed(double amplitudeSpeed) {
-        this.amplitudeSpeed = amplitudeSpeed;
+        MethodeKnn.amplitudeSpeed = amplitudeSpeed;
     }
 
     /**
@@ -473,6 +473,6 @@ public class MethodeKnn<T> {
      * @param amplitudeIsLegendary L'amplitude de l'attribut IsLegendary.
      */
     public void setAmplitudeIsLegendary(double amplitudeIsLegendary) {
-        this.amplitudeIsLegendary = amplitudeIsLegendary;
+        MethodeKnn.amplitudeIsLegendary = amplitudeIsLegendary;
     }
 }

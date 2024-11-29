@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class SystemeController extends Stage implements Observer {
+    @SuppressWarnings("rawtypes")
     private Data data;
     private SystemeView view;
     private Stage primaryStage;
@@ -197,6 +198,7 @@ public class SystemeController extends Stage implements Observer {
             if (newMin < newMax) {
                 Tab selectedTab = view.getTabPane().getSelectionModel().getSelectedItem();
                 if (selectedTab != null) {
+                    @SuppressWarnings("unchecked")
                     ScatterChart<Number, Number> selectedChart = (ScatterChart<Number, Number>) selectedTab.getContent();
                     NumberAxis selectedAxis = isXAxis ? (NumberAxis) selectedChart.getXAxis() : (NumberAxis) selectedChart.getYAxis();
                     selectedAxis.setLowerBound(newMin);
@@ -236,6 +238,7 @@ public class SystemeController extends Stage implements Observer {
         });
     }
 
+@SuppressWarnings("unchecked")
 private void configureButtonActions() {
     view.getButtonProjection().setOnAction(e -> {
         Tab selectedTab = view.getTabPane().getSelectionModel().getSelectedItem();
@@ -396,7 +399,6 @@ private void configureButtonActions() {
 
                     double xNumber = Double.parseDouble(xInput.getText());
                     double yNumber = Double.parseDouble(yInput.getText());
-                    String name = varietyComboBox.getValue();
                     MethodeKnn<Pokemon> knnPokemon = new MethodeKnn<>((Data<Pokemon>) this.data);
                     XYChart.Data<Number, Number> dataPoint = new XYChart.Data<>(xNumber, yNumber);
                     Pokemon tmp = new Pokemon(nameInput.getText(), 0, 0, 0, 0, 0, 0, 0, 0, null, null, 0, false);
@@ -609,7 +611,7 @@ private void configureButtonActions() {
                         newValue.setStyle(view.drawPokemon(((Pokemon) o).getType1()));
                     }
                     view.addTooltipToPoint(dataPoint, tooltipText);
-
+    
                     dataPoint.getNode().setOnMouseClicked(event -> {
                         Tab newTab = new Tab("Details");
                         VBox content = new VBox();
@@ -630,6 +632,7 @@ private void configureButtonActions() {
         calculateAxisLimits();
         updateAxes();
     }
+    
 
     private boolean isPokemonCsv(List<String> columns) {
         List<String> pokemonColumns = Arrays.asList("name", "attack", "base_egg_steps", "capture_rate", "defense",
@@ -646,10 +649,9 @@ private void configureButtonActions() {
         return new HashSet<>(normalizedColumns).containsAll(irisColumns);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private void updatePourcentageIfValid(TextField xInput, TextField yInput, Label pourcentage, ComboBox<String> distanceComboBox, MethodeKnn knn) {
         try {
-            double xNumber = Double.parseDouble(xInput.getText());
-            double yNumber = Double.parseDouble(yInput.getText());
 
             boolean useEuclidean = distanceComboBox.getValue().equals("Distance Euclidienne");
             DistanceEuclidienneNormalisee euclidienneCalc = new DistanceEuclidienneNormalisee();

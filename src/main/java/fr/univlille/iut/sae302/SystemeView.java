@@ -150,6 +150,7 @@ public class SystemeView extends Stage {
 
 
     public String drawIris(String variety) {
+        String baseStyle = "-fx-shape: 'M -7,0 A 7,7 0 1,1 7,0 A 7,7 0 1,1 -7,0';"; // Forme de cercle
         String color = switch (variety) {
             case "Versicolor" -> "-fx-background-color: red;";
             case "Virginica" -> "-fx-background-color: blue;";
@@ -157,10 +158,11 @@ public class SystemeView extends Stage {
             default -> "-fx-background-color: gray;";
         };
         String size = "-fx-background-radius: 7px; -fx-padding: 3.75px;";
-        return color + size;
+        return baseStyle + color + size;
     }
-
+    
     public String drawPokemon(Type type1) {
+        String baseStyle = "-fx-shape: 'M -7,0 A 7,7 0 1,1 7,0 A 7,7 0 1,1 -7,0';"; // Forme de cercle
         String color = switch (type1.getName().toLowerCase()) {
             case "fire" -> "-fx-background-color: orange;";
             case "water" -> "-fx-background-color: blue;";
@@ -169,8 +171,10 @@ public class SystemeView extends Stage {
             default -> "-fx-background-color: gray;";
         };
         String size = "-fx-background-radius: 7px; -fx-padding: 3.75px;";
-        return color + size;
+        return baseStyle + color + size;
     }
+    
+    
 
     public void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
