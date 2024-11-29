@@ -6,8 +6,7 @@ import fr.univlille.iut.sae302.utils.DistanceManhattan;
 import java.util.*;
 
 /** 
- * Constructeur générique de la classe. 
- * @param datas Les données utilisées pour l'algorithme KNN. 
+ * Constructeur générique de la classe.
  */
 public class MethodeKnn<T> {
     private Data<T> datas;
@@ -144,7 +143,7 @@ public class MethodeKnn<T> {
      * @param distance La fonction de distance à utiliser.
      * @return Un tableau des k plus proches voisins.
      */
-    public T[] getKPlusProchesVoisins(int k, T cible, Distance<T> distance) {
+    public List<T> getKPlusProchesVoisins(int k, T cible, Distance<T> distance) {
         List<T> autresObjets = new ArrayList<>(this.datas.getEData());
         autresObjets.removeIf(objet -> objet.equals(cible));
         k = Math.min(k, autresObjets.size());
@@ -154,9 +153,9 @@ public class MethodeKnn<T> {
             distances.add(new AbstractMap.SimpleEntry<>(objet, dist));
         }
         distances.sort(Map.Entry.comparingByValue());
-        T[] voisins = (T[]) new Object[k];
+        List<T> voisins = new ArrayList<>();
         for (int i = 0; i < k; i++) {
-            voisins[i] = distances.get(i).getKey();
+            voisins.add(distances.get(i).getKey());
         }
 
         return voisins;
@@ -171,7 +170,7 @@ public class MethodeKnn<T> {
      * @return La classe prédite pour l'objet cible.
      */
     public String classifierObjet(int k, T cible, Distance<T> distance) {
-        T[] voisins = getKPlusProchesVoisins(k, cible, distance);
+        List<T> voisins = getKPlusProchesVoisins(k, cible, distance);
         Map<String, Integer> voteMap = new HashMap<>();
 
         if (cible instanceof Iris) {
@@ -262,22 +261,6 @@ public class MethodeKnn<T> {
         }
         return meilleurK;
     }
-
-    /*public double getPetalLengthMin() {
-        return datas.getEData().stream().mapToDouble(iris -> iris.getPetalLength().doubleValue()).min().orElse(0);
-    }
-
-    public double getPetalWidthMin() {
-        return datas.getEData().stream().mapToDouble(iris -> iris.getPetalWidth().doubleValue()).min().orElse(0);
-    }
-
-    public double getSepalLengthMin() {
-        return datas.getEData().stream().mapToDouble(iris -> iris.getSepalLength().doubleValue()).min().orElse(0);
-    }
-
-    public double getSepalWidthMin() {
-        return datas.getEData().stream().mapToDouble(iris -> iris.getSepalWidth().doubleValue()).min().orElse(0);
-    }*/
 
     /**
      * Obtient les données utilisées par l'algorithme KNN.

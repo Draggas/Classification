@@ -57,6 +57,7 @@ public class SystemeView extends Stage {
         Scene homeScene = new Scene(layout, 600, 400);
     
         homeStage.initModality(Modality.APPLICATION_MODAL);
+        homeStage.setOnCloseRequest(event -> { System.exit(0);});
         homeStage.setScene(homeScene);
         homeStage.show();
     }

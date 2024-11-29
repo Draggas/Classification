@@ -16,8 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color; 
 import javafx.scene.shape.Circle; 
-import javafx.stage.FileChooser; 
-import javafx.stage.Modality; 
 import javafx.stage.Screen; 
 import java.io.File;
 import java.io.IOException;
@@ -25,13 +23,12 @@ import java.util.*;
 
 public class Systeme extends Stage implements Observer {
     private ScatterChart<Number, Number> chart;
-    private XYChart.Series<Number, Number> series;
     private Data<?> data;
     private ComboBox<String> projectionComboBox;
     private ComboBox<String> projectionComboBox2;
     private TabPane tabPane;
-    private double x = 0.0;
-    private double y = 9.0;
+    private final double x = 0.0;
+    private final double y = 9.0;
     private boolean isProjectionInProgress = false;
     NumberAxis xAxis;
     NumberAxis yAxis;
@@ -47,7 +44,6 @@ public class Systeme extends Stage implements Observer {
     Button buttonAddValue;
     Button openFileButton;
     VBox nuage;
-    NumberAxis selectedAxis;
     private double xmin;
     private double xmax;
     private double ymin;
@@ -123,7 +119,7 @@ public class Systeme extends Stage implements Observer {
         xAxis.setLabel("X Axis");
         yAxis.setLabel("Y Axis");
         chart = new ScatterChart<>(xAxis, yAxis);
-        series = new XYChart.Series<>();
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
         chart.setLegendVisible(false);
         chart.getData().add(series);
 
@@ -231,10 +227,7 @@ public class Systeme extends Stage implements Observer {
         updateAxes();
         data.attach(this);
     }
-    
-    
-    
-    
+
     private void loadIrisData(File selectedFile) throws IOException {
         List<FormatDonneeBrutIris> listBrutIris = ChargementDonneesUtil.charger(selectedFile.getAbsolutePath(), FormatDonneeBrutIris.class);
         List<Iris> irisData = new ArrayList<>();
@@ -251,8 +244,7 @@ public class Systeme extends Stage implements Observer {
         calculateAxisLimits();
         updateAxes();
     }
-    
-    
+
     private void calculateAxisLimits() {
         xmin = Double.MAX_VALUE;
         xmax = Double.MIN_VALUE;
@@ -260,18 +252,22 @@ public class Systeme extends Stage implements Observer {
         ymax = Double.MIN_VALUE;
     
         for (Object o : data.getEData()) {
-            if (o instanceof Iris) {
-                Iris iris = (Iris) o;
-                double xValue = projectionIris(projectionComboBox.getValue(), iris);
-                double yValue = projectionIris(projectionComboBox2.getValue(), iris);
+            if (o instanceof Iris iris) {
+                Double xProj = projectionIris(projectionComboBox.getValue(), iris);
+                Double yProj = projectionIris(projectionComboBox2.getValue(), iris);
+
+                double xValue = (xProj != null) ? xProj : 0.0;
+                double yValue = (yProj != null) ? yProj : 0.0;
                 xmin = Math.min(xmin, xValue);
                 xmax = Math.max(xmax, xValue);
                 ymin = Math.min(ymin, yValue);
                 ymax = Math.max(ymax, yValue);
-            } else if (o instanceof Pokemon) {
-                Pokemon pokemon = (Pokemon) o;
-                double xValue = projectionPokemon(projectionComboBox.getValue(), pokemon);
-                double yValue = projectionPokemon(projectionComboBox2.getValue(), pokemon);
+            } else if (o instanceof Pokemon pokemon) {
+                Double xProj = projectionPokemon(projectionComboBox.getValue(), pokemon);
+                Double yProj = projectionPokemon(projectionComboBox2.getValue(), pokemon);
+
+                double xValue = (xProj != null) ? xProj : 0.0;
+                double yValue = (yProj != null) ? yProj : 0.0;
                 xmin = Math.min(xmin, xValue);
                 xmax = Math.max(xmax, xValue);
                 ymin = Math.min(ymin, yValue);
@@ -300,16 +296,10 @@ public class Systeme extends Stage implements Observer {
     }
     
     private void configureUpdateAxisButtons() {
-        updateXAxisButton.setOnAction(e -> {
-            updateAxis(xAxisMinField, xAxisMaxField, true);
-        });
-    
-        updateYAxisButton.setOnAction(e -> {
-            updateAxis(yAxisMinField, yAxisMaxField, false);
-        });
+        updateXAxisButton.setOnAction(e -> updateAxis(xAxisMinField, xAxisMaxField, true));
+        updateYAxisButton.setOnAction(e -> updateAxis(yAxisMinField, yAxisMaxField, false));
     }
-    
-    
+
     private void updateAxis(TextField minField, TextField maxField, boolean isXAxis) {
         try {
             double newMin = Double.parseDouble(minField.getText());
@@ -323,10 +313,10 @@ public class Systeme extends Stage implements Observer {
                     selectedAxis.setLowerBound(newMin);
                     selectedAxis.setUpperBound(newMax);
                     selectedAxis.setTickUnit((newMax - newMin) / 10);
-    
+
                     // Assurer la mise à jour visuelle du graphique
                     selectedChart.layout();
-    
+
                 }
             } else {
                 showAlert("Min supérieur à Max", "Minimum ne peut pas être supérieur à max pour l'axe " + (isXAxis ? "X" : "Y") + ".");
@@ -335,9 +325,7 @@ public class Systeme extends Stage implements Observer {
             showAlert("Entrée non valide", "Entrez un nombre valide pour l'axe " + (isXAxis ? "X" : "Y") + ".");
         }
     }
-    
-    
-    
+
     private void configureProjectionComboBox() {
         projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null && newValue.equals(projectionComboBox2.getValue())) {
@@ -409,7 +397,7 @@ public class Systeme extends Stage implements Observer {
     
             Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
     
-            boolean isPokemon = false;
+            boolean isPokemon;
             Object firstElement = this.data.getEData().get(0);
             isPokemon = firstElement instanceof Pokemon;
             stage.setTitle(isPokemon ? "Ajouter un Pokemon" : "Ajouter un Iris");
@@ -439,19 +427,22 @@ public class Systeme extends Stage implements Observer {
             ComboBox<String> distanceComboBox = new ComboBox<>();
             distanceComboBox.getItems().addAll("Distance Euclidienne", "Distance Manhattan");
             distanceComboBox.setValue("Distance Euclidienne");
-    
-            MethodeKnn knn = new MethodeKnn(new Data<>(this.data.getEData()));
+
+            Distance<?> distance;
+            if(distanceComboBox.getValue().equals("Distance Euclidienne")) {
+                distance = new DistanceEuclidienneNormalisee();
+            }else{
+                distance = new DistanceManhattanNormalisee();
+            }
+
+            MethodeKnn<?> knn = new MethodeKnn<>(new Data<>(this.data.getEData()));
     
             Button buttonAdd = new Button("Ajouter");
             Label pourcentage = new Label("Pourcentage: 0%");
     
-            xInput.textProperty().addListener((observable, oldValue, newValue) -> {
-                updatePourcentageIfValid(xInput, yInput, pourcentage, distanceComboBox, knn);
-            });
+            xInput.textProperty().addListener((observable, oldValue, newValue) -> updatePourcentageIfValid(xInput, yInput, pourcentage, distanceComboBox, knn));
     
-            yInput.textProperty().addListener((observable, oldValue, newValue) -> {
-                updatePourcentageIfValid(xInput, yInput, pourcentage, distanceComboBox, knn);
-            });
+            yInput.textProperty().addListener((observable, oldValue, newValue) -> updatePourcentageIfValid(xInput, yInput, pourcentage, distanceComboBox, knn));
     
             buttonAdd.setOnAction(ev -> {
                 try {
@@ -476,7 +467,7 @@ public class Systeme extends Stage implements Observer {
                         if (projectionComboBox2.getValue().equals("Petal Length")) tmp.setPetalLength(yNumber);
     
                         if (tmp.getVariety().equals("Defaut")) {
-                            tmp.setVariety(knnIris.classifierObjet(knnIris.trouverMeilleurK(new DistanceEuclidienneNormalisee()), tmp, new DistanceEuclidienneNormalisee()));
+                            tmp.setVariety(knnIris.classifierObjet(knnIris.trouverMeilleurK(distance), tmp, (Distance<Iris>) distance));
                         }
     
                         List<Iris> irisData = (List<Iris>) this.data.getEData();
@@ -494,8 +485,8 @@ public class Systeme extends Stage implements Observer {
                                 dataPoint.getNode().setStyle(drawIris(tmp.getVariety()));
                                 String tooltipText = String.format(
                                         "X: %.2f\t Y: %.2f\t Variety: %s",
-                                        ((Number) Objects.requireNonNull(projectionIris(projectionComboBox.getValue(), tmp))).doubleValue(),
-                                        ((Number) Objects.requireNonNull(projectionIris(projectionComboBox2.getValue(), tmp))).doubleValue(),
+                                        Objects.requireNonNull(projectionIris(projectionComboBox.getValue(), tmp)).doubleValue(),
+                                        Objects.requireNonNull(projectionIris(projectionComboBox2.getValue(), tmp)).doubleValue(),
                                         tmp.getVariety()
                                 );
                                 addTooltipToPoint(dataPoint, tooltipText);
@@ -537,7 +528,8 @@ public class Systeme extends Stage implements Observer {
                         if (projectionComboBox2.getValue().equals("Sp Defense")) tmp.setSpDefense(yNumber);
     
                         if (tmp.getName().equals("Default")) {
-                            tmp.setType1(knnPokemon.classifierObjet(knnPokemon.trouverMeilleurK(new DistanceEuclidienneNormalisee()), tmp, new DistanceEuclidienneNormalisee()));
+
+                            tmp.setType1(knnPokemon.classifierObjet(knnPokemon.trouverMeilleurK(distance), tmp, (Distance<Pokemon>) distance));
                         }
     
                         List<Pokemon> pokemonData = (List<Pokemon>) this.data.getEData();
@@ -588,7 +580,8 @@ public class Systeme extends Stage implements Observer {
             grid.add(varietyComboBox, 1, 3);
     
             grid.add(buttonAdd, 0, 4, 2, 1);
-            grid.add(pourcentage, 1, 4);
+            grid.add(distanceComboBox, 1, 4, 2, 1);
+            grid.add(pourcentage, 2, 4);
     
             GridPane.setMargin(nameLabel, new Insets(20, 5, 5, 20));
             GridPane.setMargin(nameInput, new Insets(5, 20, 10, 5));
@@ -671,8 +664,8 @@ public class Systeme extends Stage implements Observer {
             case "Setosa" -> "-fx-background-color: green;";
             default -> "-fx-background-color: gray;";
         };
-        String size = "-fx-background-radius: 7px; -fx-padding: 3.75px;"; // Size
-        return color + size;
+        String shape = " -fx-shape: \"M50,10 A40,40 0 1,1 49.99,10 Z\"; -fx-background-radius: 7px; -fx-padding: 3.75px;"; // Size
+        return  color + shape;
     }
 
     /**
@@ -766,7 +759,6 @@ public class Systeme extends Stage implements Observer {
             showAlert("Details", details);
         });
     }
-    
 
     /**
      * Réalise une nouvelle projection des données dans un graphique de dispersion.
@@ -784,8 +776,7 @@ public class Systeme extends Stage implements Observer {
             Number xValue = null;
             Number yValue = null;
             String tooltipText;
-            if (o instanceof Iris) {
-                Iris iris = (Iris) o;
+            if (o instanceof Iris iris) {
                 xValue = projectionIris(projection, iris);
                 yValue = projectionIris(projection2, iris);
                 if (xValue == null || yValue == null) continue;
@@ -795,8 +786,7 @@ public class Systeme extends Stage implements Observer {
                         yValue.doubleValue(),
                         iris.getVariety()
                 );
-            } else if (o instanceof Pokemon) {
-                Pokemon pokemon = (Pokemon) o;
+            } else if (o instanceof Pokemon pokemon) {
                 xValue = projectionPokemon(projection, pokemon);
                 yValue = projectionPokemon(projection2, pokemon);
                 if (xValue == null || yValue == null) continue;
@@ -840,8 +830,6 @@ public class Systeme extends Stage implements Observer {
         calculateAxisLimits();
         updateAxes();
     }
-    
-    
 
     /**
      * Ouvre un nouvel onglet de projection dans un TabPane.
