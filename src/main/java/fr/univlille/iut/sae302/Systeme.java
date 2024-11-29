@@ -46,6 +46,12 @@ public class Systeme extends Stage implements Observer {
     Button buttonAddValue;
     Button openFileButton;
     VBox nuage;
+    NumberAxis selectedAxis;
+    private double xmin;
+    private double xmax;
+    private double ymin;
+    private double ymax;
+    
 
     public Systeme() {
         initializeChart();
@@ -59,49 +65,54 @@ public class Systeme extends Stage implements Observer {
     private void initializeChart() {
         xAxis = new NumberAxis(x, y, 1.0);
         yAxis = new NumberAxis(x, y, 1.0);
-        xAxis.setLabel(" ");
-        yAxis.setLabel(" ");
+        xAxis.setLabel("X Axis");
+        yAxis.setLabel("Y Axis");
         chart = new ScatterChart<>(xAxis, yAxis);
         series = new XYChart.Series<>();
         chart.setLegendVisible(false);
         chart.getData().add(series);
-
+    
         tabPane = new TabPane();
         Tab initialTab = new Tab("Accueil");
         initialTab.setContent(chart);
+        initialTab.setClosable(false);
         tabPane.getTabs().add(initialTab);
     }
+    
 
     private void initializeUIComponents() {
         xAxisLabel = new Label("L'axe X :");
         xAxisMinField = new TextField(String.valueOf(x));
         xAxisMaxField = new TextField(String.valueOf(y));
         updateXAxisButton = new Button("Mettre à jour l'axe X");
-
+    
         yAxisLabel = new Label("L'axe Y :");
         yAxisMinField = new TextField(String.valueOf(x));
         yAxisMaxField = new TextField(String.valueOf(y));
         updateYAxisButton = new Button("Mettre à jour l'axe Y");
-
+    
         projectionComboBox = new ComboBox<>();
         projectionComboBox.setValue(null);
-
+    
         projectionComboBox2 = new ComboBox<>();
         projectionComboBox2.setValue(null);
-
+    
         projectionComboBox.setDisable(true);
         projectionComboBox2.setDisable(true);
-
+    
         buttonProjection = new Button("Projection");
         buttonAddValue = new Button("Ajouter");
         buttonProjection.setDisable(true);
         buttonAddValue.setDisable(true);
-
+    
         HBox legende = new HBox();
         legende.setAlignment(Pos.CENTER);
-
+    
         nuage = new VBox(tabPane, legende);
+    
+        configureUpdateAxisButtons();
     }
+    
     private void configureOpenFileButton() {
         openFileButton = new Button("Ouvrir");
         openFileButton.setOnAction(event -> {
@@ -157,8 +168,18 @@ public class Systeme extends Stage implements Observer {
         }
         projectionComboBox.getItems().setAll("HP", "Attack", "Defense", "Speed", "Sp Attack", "Sp Defense");
         projectionComboBox2.getItems().setAll("HP", "Attack", "Defense", "Speed", "Sp Attack", "Sp Defense");
+        projectionComboBox.setValue("HP"); // Valeur par défaut
+        projectionComboBox2.setValue("Attack"); // Valeur par défaut
         data = new Data<>(pokemonData);
+    
+        // Ajuster les limites des axes en fonction des données
+        calculateAxisLimits();
+        updateAxes();
+        data.attach(this);
     }
+    
+    
+    
     
     private void loadIrisData(File selectedFile) throws IOException {
         List<FormatDonneeBrutIris> listBrutIris = ChargementDonneesUtil.charger(selectedFile.getAbsolutePath(), FormatDonneeBrutIris.class);
@@ -168,8 +189,49 @@ public class Systeme extends Stage implements Observer {
         }
         projectionComboBox.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
         projectionComboBox2.getItems().addAll("Sepal Width", "Sepal Length", "Petal Width", "Petal Length");
+        projectionComboBox.setValue("Sepal Width"); // Valeur par défaut
+        projectionComboBox2.setValue("Sepal Length"); // Valeur par défaut
         data = new Data<>(irisData);
+    
+        // Ajuster les limites des axes en fonction des données
+        calculateAxisLimits();
+        updateAxes();
     }
+    
+    
+    private void calculateAxisLimits() {
+        xmin = Double.MAX_VALUE;
+        xmax = Double.MIN_VALUE;
+        ymin = Double.MAX_VALUE;
+        ymax = Double.MIN_VALUE;
+    
+        for (Object o : data.getEData()) {
+            if (o instanceof Iris) {
+                Iris iris = (Iris) o;
+                double xValue = projectionIris(projectionComboBox.getValue(), iris);
+                double yValue = projectionIris(projectionComboBox2.getValue(), iris);
+                xmin = Math.min(xmin, xValue);
+                xmax = Math.max(xmax, xValue);
+                ymin = Math.min(ymin, yValue);
+                ymax = Math.max(ymax, yValue);
+            } else if (o instanceof Pokemon) {
+                Pokemon pokemon = (Pokemon) o;
+                double xValue = projectionPokemon(projectionComboBox.getValue(), pokemon);
+                double yValue = projectionPokemon(projectionComboBox2.getValue(), pokemon);
+                xmin = Math.min(xmin, xValue);
+                xmax = Math.max(xmax, xValue);
+                ymin = Math.min(ymin, yValue);
+                ymax = Math.max(ymax, yValue);
+            }
+        }
+    }    
+
+    private void updateAxes() {
+        xAxis.setLowerBound(xmin - 1);
+        xAxis.setUpperBound(xmax + 1);
+        yAxis.setLowerBound(ymin - 1);
+        yAxis.setUpperBound(ymax + 1);
+    }    
     
     private void configureProjectionsAndLegend() {
         projectionComboBox.setDisable(false);
@@ -184,12 +246,15 @@ public class Systeme extends Stage implements Observer {
     }
     
     private void configureUpdateAxisButtons() {
-        Button updateXAxisButton = new Button("Mettre à jour l'axe X");
-        updateXAxisButton.setOnAction(e -> updateAxis(xAxisMinField, xAxisMaxField, true));
+        updateXAxisButton.setOnAction(e -> {
+            updateAxis(xAxisMinField, xAxisMaxField, true);
+        });
     
-        Button updateYAxisButton = new Button("Mettre à jour l'axe Y");
-        updateYAxisButton.setOnAction(e -> updateAxis(yAxisMinField, yAxisMaxField, false));
+        updateYAxisButton.setOnAction(e -> {
+            updateAxis(yAxisMinField, yAxisMaxField, false);
+        });
     }
+    
     
     private void updateAxis(TextField minField, TextField maxField, boolean isXAxis) {
         try {
@@ -203,6 +268,11 @@ public class Systeme extends Stage implements Observer {
                     NumberAxis selectedAxis = isXAxis ? (NumberAxis) selectedChart.getXAxis() : (NumberAxis) selectedChart.getYAxis();
                     selectedAxis.setLowerBound(newMin);
                     selectedAxis.setUpperBound(newMax);
+                    selectedAxis.setTickUnit((newMax - newMin) / 10);
+    
+                    // Assurer la mise à jour visuelle du graphique
+                    selectedChart.layout();
+    
                 }
             } else {
                 showAlert("Min supérieur à Max", "Minimum ne peut pas être supérieur à max pour l'axe " + (isXAxis ? "X" : "Y") + ".");
@@ -211,6 +281,9 @@ public class Systeme extends Stage implements Observer {
             showAlert("Entrée non valide", "Entrez un nombre valide pour l'axe " + (isXAxis ? "X" : "Y") + ".");
         }
     }
+    
+    
+    
     private void configureProjectionComboBox() {
         projectionComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null && newValue.equals(projectionComboBox2.getValue())) {
@@ -244,18 +317,19 @@ public class Systeme extends Stage implements Observer {
                         alert.setTitle("Projection déjà effectuée");
                         alert.setHeaderText("Une projection est déjà en cours.");
                         alert.setContentText("Voulez-vous écraser la projection actuelle ou ouvrir un nouvel onglet ?");
-    
+                        
                         ButtonType overwriteButton = new ButtonType("Écraser");
                         ButtonType newTabButton = new ButtonType("Nouvel onglet");
                         ButtonType cancelButton = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
-    
+                        
                         alert.getButtonTypes().setAll(overwriteButton, newTabButton, cancelButton);
-    
+                        
                         alert.showAndWait().ifPresent(response -> {
                             if (response == overwriteButton) {
                                 selectedChart.getData().clear();
                                 XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
                                 newPerformProjection(newSeries, selectedChart);
+                                isProjectionInProgress = true; // Marque la projection comme en cours
                             } else if (response == newTabButton) {
                                 openNewProjectionTab(tabPane);
                             }
@@ -264,7 +338,7 @@ public class Systeme extends Stage implements Observer {
                         selectedChart.getData().clear();
                         XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
                         newPerformProjection(newSeries, selectedChart);
-                        isProjectionInProgress = true;
+                        isProjectionInProgress = true; // Marque la projection comme en cours
                     }
                 } else {
                     showAlert("Erreur", "Aucun graphique valide trouvé dans l'onglet sélectionné.");
@@ -273,6 +347,7 @@ public class Systeme extends Stage implements Observer {
                 showAlert("Erreur", "Veuillez sélectionner un onglet pour projeter les données.");
             }
         });
+        
     
         buttonAddValue.setOnAction(event -> {
             Stage stage = new Stage();
@@ -571,16 +646,17 @@ public class Systeme extends Stage implements Observer {
      * @param iris L'objet Iris dont on souhaite obtenir la valeur pour la projection.
      * @return La valeur de la caractéristique sélectionnée pour l'iris, ou null si la projection est invalide.
      */
-    private Number projectionIris(String projection, Iris iris) {
-        return switch (projection){
+    private Double projectionIris(String projection, Iris iris) {
+        Number value = switch (projection) {
             case "Sepal Width" -> iris.getSepalWidth();
             case "Sepal Length" -> iris.getSepalLength();
             case "Petal Width" -> iris.getPetalWidth();
             case "Petal Length" -> iris.getPetalLength();
             default -> null;
         };
+        return value != null ? value.doubleValue() : null;
     }
-
+    
     /**
      * Projette les valeurs d'un Pokémon en fonction d'une caractéristique sélectionnée.
      *
@@ -588,8 +664,8 @@ public class Systeme extends Stage implements Observer {
      * @param pokemon L'objet Pokémon dont on souhaite obtenir la valeur pour la projection.
      * @return La valeur de la caractéristique sélectionnée pour le Pokémon, ou null si la projection est invalide.
      */
-    private Number projectionPokemon(String projection, Pokemon pokemon) {
-        return switch (projection) {
+    private Double projectionPokemon(String projection, Pokemon pokemon) {
+        Number value = switch (projection) {
             case "HP" -> pokemon.getHp();
             case "Attack" -> pokemon.getAttack();
             case "Defense" -> pokemon.getDefense();
@@ -598,7 +674,8 @@ public class Systeme extends Stage implements Observer {
             case "Sp. Defense" -> pokemon.getSpDefense();
             default -> null;
         };
-    }
+        return value != null ? value.doubleValue() : null;
+    }    
 
     /**
      * Affiche une alerte avec un titre et un message spécifiés.
@@ -626,7 +703,16 @@ public class Systeme extends Stage implements Observer {
                 dataPoint.getNode().getStyle() + " -fx-scale-x: 1.5; -fx-scale-y: 1.5;"));
         dataPoint.getNode().setOnMouseExited(event -> dataPoint.getNode().setStyle(
                 dataPoint.getNode().getStyle() + " -fx-scale-x: 1; -fx-scale-y: 1;"));
+        dataPoint.getNode().setOnMouseClicked(event -> {
+            String details = String.format("X: %.2f\t Y: %.2f\nDetails: %s",
+                    dataPoint.getXValue().doubleValue(),
+                    dataPoint.getYValue().doubleValue(),
+                    tooltipText
+            );
+            showAlert("Details", details);
+        });
     }
+    
 
     /**
      * Réalise une nouvelle projection des données dans un graphique de dispersion.
@@ -679,13 +765,14 @@ public class Systeme extends Stage implements Observer {
                         newValue.setStyle(drawPokemon(((Pokemon) o).getType1()));
                     }
                     addTooltipToPoint(dataPoint, tooltipText);
-
+    
                     dataPoint.getNode().setOnMouseClicked(event -> {
-                        Tab newTab = new Tab("Iris Details");
+                        Tab newTab = new Tab("Details");
                         VBox content = new VBox();
                         content.getChildren().addAll(
                                 new Label("X: " + dataPoint.getXValue()),
-                                new Label("Y: " + dataPoint.getYValue())
+                                new Label("Y: " + dataPoint.getYValue()),
+                                new Label("Name: " + (o instanceof Pokemon ? ((Pokemon) o).getName() : ""))
                         );
                         newTab.setContent(content);
                         tabPane.getTabs().add(newTab);
@@ -696,7 +783,11 @@ public class Systeme extends Stage implements Observer {
             newSeries.getData().add(dataPoint);
         }
         newChart.getData().add(newSeries);
+        calculateAxisLimits();
+        updateAxes();
     }
+    
+    
 
     /**
      * Ouvre un nouvel onglet de projection dans un TabPane.
@@ -710,7 +801,7 @@ public class Systeme extends Stage implements Observer {
         ScatterChart<Number, Number> newChart = new ScatterChart<>(xAxis, yAxis);
         XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
         newChart.setLegendVisible(false);
-        newChart.getData().add(newSeries);
+        // newChart.getData().add(newSeries);
         newPerformProjection(newSeries, newChart);
         newTab.setContent(newChart);
         tabPane.getTabs().add(newTab);
